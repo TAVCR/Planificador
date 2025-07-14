@@ -105,6 +105,13 @@
                     <button id="year-2026" class="year-btn px-8 py-2.5 text-lg bg-[#EFEAE3] text-[#6B6661] font-semibold rounded-lg hover:bg-[#DED6CB] transition-all duration-300 transform hover:scale-105">2026</button>
                 </div>
                 
+                <div class="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 gap-y-2 mb-8 text-xs sm:text-sm text-gray-700">
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-green-opportunity mr-2 border border-gray-400"></span>Oportunidad Alta</div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-yellow-opportunity mr-2 border border-gray-400"></span>Riesgo Medio</div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-red-opportunity mr-2 border border-gray-400"></span>Riesgo Alto</div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-payday mr-2 border border-gray-400"></span>Día de Pago</div>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div id="calendars-container" class="lg:col-span-8">
                         <!-- Calendar Grids will be injected here by JS -->
@@ -260,13 +267,13 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-09-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
         '2025-09-05': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2025-09-06': { cat: 'red', day: 'Sábado', reason: 'Competencia de nicho rock/metal (Cradle of Filth).' },
-        '2025-09-12': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
-        '2025-09-13': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
+        '2025-09-12': { 'cat': 'green', 'day': 'Viernes', 'reason': 'Fin de semana de quincena. Oportunidad alta.' },
+        '2025-09-13': { 'cat': 'green', 'day': 'Sábado', 'reason': 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-09-15': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena y feriado (Día de la Independencia).' },
-        '2025-09-19': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2025-09-20': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-19': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-20': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
+        '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
         '2025-09-30': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
         '2025-10-03': { cat: 'red', day: 'Viernes', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
         '2025-10-04': { cat: 'red', day: 'Sábado', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
@@ -438,9 +445,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const climateData = [
-        { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Enero', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
-        { month: 'Marzo', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
         { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
         { month: 'Junio', risk: '🟡', justification: 'Plena temporada lluviosa. Alta probabilidad de lluvias por la tarde/noche. Plan B es esencial.' },
