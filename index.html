@@ -97,6 +97,13 @@
             opacity: 0.25;
             pointer-events: none;
         }
+        .priority-star {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
         @media print {
             body * {
                 visibility: hidden;
@@ -356,13 +363,13 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-09-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
         '2025-09-05': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2025-09-06': { cat: 'red', day: 'Sábado', reason: 'Competencia de nicho rock/metal (Cradle of Filth).' },
-        '2025-09-12': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
-        '2025-09-13': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
+        '2025-09-12': { 'cat': 'green', 'day': 'Viernes', 'reason': 'Fin de semana de quincena. Oportunidad alta.' },
+        '2025-09-13': { 'cat': 'green', 'day': 'Sábado', 'reason': 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-09-15': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena y feriado (Día de la Independencia).' },
-        '2025-09-19': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2025-09-20': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-19': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-20': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
+        '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
         '2025-09-30': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
         '2025-10-03': { cat: 'red', day: 'Viernes', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
         '2025-10-04': { cat: 'red', day: 'Sábado', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
@@ -451,6 +458,10 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-05-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-05-30': { cat: 'red', day: 'Sábado', reason: 'Final de la UEFA Champions League. Evento de visualización masiva.' },
         '2026-06-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio y en pleno mes del Mundial de Fútbol. Atención y presupuesto del público están en otro lado.' },
+        '2026-06-05': { cat: 'red', day: 'Viernes', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-06': { cat: 'red', day: 'Sábado', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-12': { cat: 'red', day: 'Viernes', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-13': { cat: 'red', day: 'Sábado', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
         '2026-06-19': { cat: 'green', day: 'Viernes', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
         '2026-06-20': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
         '2026-06-26': { cat: 'red', day: 'Viernes', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
@@ -629,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     additionalClasses += " text-gray-500";
                 }
                 
-                calendarHTML += `<div class="${dayClass} ${additionalClasses}" data-date="${dateString}">${day}</div>`;
+                calendarHTML += `<div class="${dayClass} ${additionalClasses}" data-date="${dateString}">${day}${eventData[dateString]?.cat === 'green' ? '<span class="priority-star">⭐</span>' : ''}</div>`;
             }
             calendarHTML += `</div></div>`;
         }
@@ -909,7 +920,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let riskClass = '';
             if (item.risk === '🟢') riskClass = 'text-green-700 bg-green-50';
             if (item.risk === '🟡') riskClass = 'text-yellow-700 bg-yellow-50';
-            if (item.risk === '�') riskClass = 'text-red-700 bg-red-50';
+            if (item.risk === '🔴') riskClass = 'text-red-700 bg-red-50';
 
             html += `
                 <tr class="border-b border-gray-200">
@@ -936,4 +947,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-�
