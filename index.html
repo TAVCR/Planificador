@@ -57,6 +57,7 @@
         .bg-green-opportunity { background-color: #2E7D32; color: white; }
         .bg-yellow-opportunity { background-color: #FFC107; color: #3D3B38; }
         .bg-red-opportunity { background-color: #C62828; color: white; }
+        .bg-blue-payday { background-color: #1565C0; color: white; }
         .bg-neutral-day { background-color: #EFEAE3; }
         .bg-empty-day { background-color: transparent; }
         .chart-container {
@@ -235,23 +236,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     const eventData = {
         '2025-07-01': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (temporada lluviosa) y post-quincena. Requiere plan B para lluvia.' },
+        '2025-07-03': { cat: 'green', day: 'Jueves', reason: 'Víspera de fin de semana largo (Anexión). Oportunidad de "Jueves de Escape".' },
         '2025-07-04': { cat: 'red', day: 'Viernes', reason: 'Inicio de vacaciones escolares MEP, alto éxodo de la GAM.' },
         '2025-07-05': { cat: 'red', day: 'Sábado', reason: 'Inicio de vacaciones escolares MEP, alto éxodo de la GAM.' },
         '2025-07-11': { cat: 'red', day: 'Viernes', reason: 'Plenas vacaciones escolares MEP, alto éxodo de la GAM.' },
         '2025-07-12': { cat: 'red', day: 'Sábado', reason: 'Plenas vacaciones escolares MEP, alto éxodo de la GAM.' },
+        '2025-07-14': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
         '2025-07-18': { cat: 'yellow', day: 'Viernes', reason: 'Fin de vacaciones escolares, posible regreso a la GAM. Cerca de quincena.' },
         '2025-07-19': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana post-vacaciones. Competencia de nicho (Stryper).' },
         '2025-07-25': { cat: 'red', day: 'Viernes', reason: 'Feriado (Anexión de Nicoya), fin de semana largo, alto éxodo. Competencia: Gandhi Sinfónico.' },
         '2025-07-26': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana largo post-quincena. Competencia: Gandhi Sinfónico.' },
+        '2025-07-30': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2025-08-01': { cat: 'red', day: 'Viernes', reason: 'Víspera de la Romería, paralización social y éxodo hacia Cartago.' },
         '2025-08-02': { cat: 'red', day: 'Sábado', reason: 'Día de la Virgen de los Ángeles, Romería.' },
         '2025-08-05': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio/alto (temporada lluviosa) y posicionado tras el fin de semana de la Romería, afectando el interés del público.' },
         '2025-08-08': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular, alejado de quincena.' },
         '2025-08-09': { cat: 'yellow', day: 'Sábado', reason: 'Competencia fuerte (Manuel Turizo en Parque Viva).' },
+        '2025-08-14': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena. Víspera del Día de la Madre.' },
         '2025-08-15': { cat: 'green', day: 'Viernes', reason: 'Día de la Madre. Alta demanda de celebraciones familiares, superando el riesgo de competencia externa.' },
         '2025-08-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día de la Madre. Alta demanda de celebraciones familiares.' },
-        '2025-08-22': { cat: 'green', day: 'Viernes', reason: 'Fin de semana post-quincena. Oportunidad alta.' },
-        '2025-08-23': { cat: 'green', day: 'Sábado', reason: 'Fin de semana post-quincena. Oportunidad alta.' },
+        '2025-08-22': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena. Poder de compra moderado.' },
+        '2025-08-23': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena. Poder de compra moderado.' },
         '2025-08-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-08-30': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Competencia media (Paulo Londra).' },
         '2025-09-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
@@ -259,19 +264,23 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-09-06': { cat: 'red', day: 'Sábado', reason: 'Competencia de nicho rock/metal (Cradle of Filth).' },
         '2025-09-12': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2025-09-13': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2025-09-19': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-09-20': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2025-09-19': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-09-20': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2025-09-26': { cat: 'green', day: 'Viernes', reason: 'Fin de semana previo a quincena de fin de mes.' },
         '2025-09-27': { cat: 'green', day: 'Sábado', reason: 'Fin de semana previo a quincena de fin de mes.' },
+        '2025-09-29': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
+        '2025-09-30': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
         '2025-10-03': { cat: 'red', day: 'Viernes', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
         '2025-10-04': { cat: 'red', day: 'Sábado', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
         '2025-10-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto) y posicionado entre fines de semana de conciertos masivos.' },
         '2025-10-10': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2025-10-11': { cat: 'red', day: 'Sábado', reason: 'Alta competencia (Danny Ocean y Kevin Kaarl).' },
-        '2025-10-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana post-quincena. Oportunidad alta.' },
+        '2025-10-14': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
+        '2025-10-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-10-18': { cat: 'yellow', day: 'Sábado', reason: 'Competencia media (Debi Nova en Parque Viva).' },
-        '2025-10-24': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-10-25': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2025-10-24': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-10-25': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-10-30': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
         '2025-10-31': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
         '2025-11-01': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-11-04': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (transición a temporada seca). Competencia masiva (Carin Leon) el mismo fin de semana.' },
@@ -279,8 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-11-08': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Carin Leon en Estadio Nacional.' },
         '2025-11-14': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad muy alta.' },
         '2025-11-15': { cat: 'yellow', day: 'Sábado', reason: 'Competencia fuerte (Ana Gabriel en Parque Viva).' },
-        '2025-11-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-11-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2025-11-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2025-11-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2025-11-28': { cat: 'green', day: 'Viernes', reason: 'Inicio de "Ventana Dorada" (post-Viernes Negro, pre-aguinaldo).' },
         '2025-11-29': { cat: 'green', day: 'Sábado', reason: 'Inicio de "Ventana Dorada". Oportunidad muy alta.' },
         '2025-12-02': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático (temporada seca) y en plena "Ventana Dorada" con alto poder adquisitivo (aguinaldo).' },
@@ -298,10 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-01-06': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático, pero en plena "cuesta de enero" y compitiendo con las Fiestas de Palmares.' },
         '2026-01-09': { cat: 'red', day: 'Viernes', reason: 'Inicio Fiestas de Palmares, éxodo masivo, "cuesta de enero".' },
         '2026-01-10': { cat: 'red', day: 'Sábado', reason: 'Plenas Fiestas de Palmares, "cuesta de enero".' },
+        '2026-01-14': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2026-01-16': { cat: 'red', day: 'Viernes', reason: 'Plenas Fiestas de Palmares. Post-quincena pero con éxodo.' },
         '2026-01-17': { cat: 'red', day: 'Sábado', reason: 'Plenas Fiestas de Palmares.' },
         '2026-01-23': { cat: 'red', day: 'Viernes', reason: 'Último fin de semana de Fiestas de Palmares.' },
         '2026-01-24': { cat: 'red', day: 'Sábado', reason: 'Último fin de semana de Fiestas de Palmares.' },
+        '2026-01-29': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
         '2026-01-30': { cat: 'red', day: 'Viernes', reason: 'Víspera de Elecciones Nacionales. Alta tensión política, posible Ley Seca.' },
         '2026-01-31': { cat: 'red', day: 'Sábado', reason: 'Víspera de Elecciones Nacionales. Alta tensión política, posible Ley Seca.' },
         '2026-02-03': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático, pero en un período de bajo consumo (post-elecciones, lejos de quincena).' },
@@ -318,28 +329,32 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-03-07': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
         '2026-03-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-03-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-03-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-03-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-03-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-03-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2026-03-27': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-03-28': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-03-30': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
         '2026-04-03': { cat: 'red', day: 'Viernes', reason: 'Semana Santa (Viernes Santo), feriado, éxodo masivo.' },
         '2026-04-04': { cat: 'red', day: 'Sábado', reason: 'Semana Santa (Sábado Santo), fin de semana largo, éxodo masivo.' },
         '2026-04-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Posiblemente en semana de segunda ronda electoral y post Semana Santa. Riesgo muy alto.' },
         '2026-04-10': { cat: 'red', day: 'Viernes', reason: 'Posible 2da Ronda Electoral (domingo 5). Fin de semana post-Semana Santa, bajo consumo.' },
         '2026-04-11': { cat: 'red', day: 'Sábado', reason: 'Posible 2da Ronda Electoral (domingo 5). Fin de semana post-Semana Santa, bajo consumo.' },
+        '2026-04-14': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
         '2026-04-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-04-18': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-04-24': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-04-25': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-04-24': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-04-25': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-04-29': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2026-05-01': { cat: 'green', day: 'Viernes', reason: 'Feriado (Día del Trabajo), quincena, fin de semana largo. Oportunidad alta.' },
         '2026-05-02': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena y feriado. Oportunidad alta.' },
         '2026-05-05': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (inicio de temporada lluviosa). Lejos de quincena.' },
         '2026-05-08': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2026-05-09': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-05-14': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
         '2026-05-15': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-05-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-05-22': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-05-23': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-05-22': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-05-23': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2026-05-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-05-30': { cat: 'red', day: 'Sábado', reason: 'Final de la UEFA Champions League. Evento de visualización masiva.' },
         '2026-06-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio y en pleno mes del Mundial de Fútbol. Atención y presupuesto del público están en otro lado.' },
@@ -363,8 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-08-08': { cat: 'yellow', day: 'Sábado', reason: 'Post-vacaciones, fin de semana regular.' },
         '2026-08-14': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-08-15': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-08-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-08-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-08-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-08-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2026-08-28': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-08-29': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
         '2026-09-01': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
@@ -372,28 +387,31 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-09-05': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
         '2026-09-11': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana de quincena. Cercanía a feriado.' },
         '2026-09-12': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana de quincena. Cercanía a feriado.' },
-        '2026-09-18': { cat: 'green', day: 'Viernes', reason: 'Fin de semana post-feriado y post-quincena.' },
-        '2026-09-19': { cat: 'green', day: 'Sábado', reason: 'Fin de semana post-feriado y post-quincena.' },
+        '2026-09-18': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana post-feriado, pero alejado de la quincena.' },
+        '2026-09-19': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana post-feriado, pero alejado de la quincena.' },
         '2026-09-25': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2026-09-26': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-09-29': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
         '2026-10-02': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-10-03': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
         '2026-10-06': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
         '2026-10-09': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2026-10-10': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-10-14': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2026-10-16': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-10-17': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-10-23': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-10-24': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-10-23': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-10-24': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-10-29': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
         '2026-10-30': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
         '2026-10-31': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
         '2026-11-03': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (transición a temporada seca). Semana tranquila, oportunidad aceptable.' },
         '2026-11-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
         '2026-11-07': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
-        '2026-11-13': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-11-14': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-11-20': { cat: 'green', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-11-21': { cat: 'green', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-11-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-11-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-11-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-11-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2026-11-27': { cat: 'green', day: 'Viernes', reason: 'Inicio "Ventana Dorada" (Viernes Negro).' },
         '2026-11-28': { cat: 'green', day: 'Sábado', reason: 'Inicio "Ventana Dorada".' },
         '2026-12-01': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático (temporada seca) y en plena "Ventana Dorada" con alto poder adquisitivo (aguinaldo).' },
@@ -409,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const analysisContent = [
         { title: 'El Restaurante como Destino: Celebraciones Familiares', content: 'Este es un factor clave que puede anular otros riesgos. Fechas como el Día de la Madre y el Día del Padre son oportunidades de primer nivel (Verde), ya que las familias buscan activamente un lugar especial para celebrar. En estos días, la competencia externa tiene un impacto menor porque Antologías no es solo una opción de ocio, sino el destino principal de la celebración.' },
-        { title: 'El Pulso Económico: Quincenas y Aguinaldo', content: 'El factor más influyente. Los fines de semana que siguen a los días de pago son consistentemente los mejores. La "Ventana Dorada" (finales de noviembre a la tercera semana de diciembre) es el pico de gasto anual gracias al aguinaldo.' },
+        { title: 'El Pulso Económico: Quincenas y Aguinaldo', content: 'El factor más influyente. Los fines de semana inmediatamente posteriores a los días de pago son consistentemente los mejores. La "Ventana Dorada" (finales de noviembre a la tercera semana de diciembre) es el pico de gasto anual gracias al aguinaldo.' },
         { title: 'El Éxodo Urbano: Vacaciones y Fines de Semana Largos', content: 'Los feriados que crean fines de semana de 3 días y las vacaciones escolares (julio y diciembre-febrero) provocan una salida masiva de la población de la GAM hacia zonas turísticas, reduciendo drásticamente la audiencia potencial.' },
         { title: 'Las Grandes Fiestas Populares: Competencia Masiva', content: 'Eventos como las Fiestas de Zapote y Palmares son una competencia directa y abrumadora. La Romería (1-2 de agosto) paraliza la actividad social. Estas fechas son de altísimo riesgo, aunque abren la puerta a la contraprogramación.' },
         { title: 'El Fenómeno "Sillón-Ball": Eventos Deportivos', content: 'Partidos clave de "La Sele", finales del torneo local y eventos como la final de la Champions League o el Super Bowl mantienen a la audiencia en casa. Dado que sus eventos inician post 8:00 PM, los partidos vespertinos representan un riesgo menor (Amarillo), pues el público puede salir después. Sin embargo, los partidos en horario estelar (post 7:00 PM) siguen siendo un riesgo alto (Rojo) por el conflicto directo.' },
@@ -475,6 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.cat === 'green') return 'bg-green-opportunity';
             if (data.cat === 'yellow') return 'bg-yellow-opportunity';
             if (data.cat === 'red') return 'bg-red-opportunity';
+            if (data.cat === 'blue') return 'bg-blue-payday';
         }
         return 'bg-neutral-day';
     };
@@ -534,15 +553,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-700';
             } else if (data.cat === 'yellow') {
                 emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-600';
-            } else {
+            } else if (data.cat === 'red') {
                 emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = 'text-red-700';
+            } else if (data.cat === 'blue') {
+                emoji = '🔵'; statusText = 'Día de Pago'; colorClass = 'text-blue-700';
             }
             html += `<p class="font-semibold ${colorClass}">${emoji} ${statusText}</p>`;
             html += `<p class="text-sm text-gray-600 mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
         } else {
             const dayOfWeek = date.getDay();
             if (dayOfWeek === 5 || dayOfWeek === 6) {
-                 html += `<p class="font-semibold text-gray-700">🟢 Oportunidad Neutra</p>`;
+                 html += `<p class="font-semibold text-gray-700">⚪ Oportunidad Neutra</p>`;
                  html += `<p class="text-sm text-gray-600 mt-2"><span class="font-semibold">Justificación:</span> Fin de semana regular sin factores negativos o positivos mayores identificados. Se considera una buena oportunidad base. </p>`;
             } else {
                  html += `<p class="font-semibold text-gray-500">Día entre semana</p>`;
