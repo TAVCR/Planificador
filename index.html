@@ -248,8 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-08-05': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio/alto (temporada lluviosa) y posicionado tras el fin de semana de la Romería, afectando el interés del público.' },
         '2025-08-08': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular, alejado de quincena.' },
         '2025-08-09': { cat: 'yellow', day: 'Sábado', reason: 'Competencia fuerte (Manuel Turizo en Parque Viva).' },
-        '2025-08-15': { cat: 'red', day: 'Viernes', reason: 'Feriado (Día de la Madre), fin de semana largo, alto éxodo. Competencia (Charlie Zaa).' },
-        '2025-08-16': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Carlos Vives y Fonseca.' },
+        '2025-08-15': { cat: 'green', day: 'Viernes', reason: 'Día de la Madre. Alta demanda de celebraciones familiares, superando el riesgo de competencia externa.' },
+        '2025-08-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día de la Madre. Alta demanda de celebraciones familiares.' },
         '2025-08-22': { cat: 'green', day: 'Viernes', reason: 'Fin de semana post-quincena. Oportunidad alta.' },
         '2025-08-23': { cat: 'green', day: 'Sábado', reason: 'Fin de semana post-quincena. Oportunidad alta.' },
         '2025-08-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
@@ -343,12 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-05-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-05-30': { cat: 'red', day: 'Sábado', reason: 'Final de la UEFA Champions League. Evento de visualización masiva.' },
         '2026-06-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio y en pleno mes del Mundial de Fútbol. Atención y presupuesto del público están en otro lado.' },
-        '2026-06-05': { cat: 'yellow', day: 'Viernes', reason: 'Fase de grupos del Mundial. Riesgo medio por partidos vespertinos que afectan el presupuesto y ánimo.' },
-        '2026-06-06': { cat: 'yellow', day: 'Sábado', reason: 'Fase de grupos del Mundial. Riesgo medio por partidos vespertinos que afectan el presupuesto y ánimo.' },
-        '2026-06-12': { cat: 'yellow', day: 'Viernes', reason: 'Fase de grupos del Mundial. Riesgo medio por partidos vespertinos.' },
-        '2026-06-13': { cat: 'red', day: 'Sábado', reason: 'Partidos del Mundial en fin de semana. Alta probabilidad de conflicto de horario o de interés del público.' },
-        '2026-06-19': { cat: 'yellow', day: 'Viernes', reason: 'Fase de grupos del Mundial. Riesgo medio por partidos vespertinos.' },
-        '2026-06-20': { cat: 'red', day: 'Sábado', reason: 'Partidos del Mundial en fin de semana. Alta probabilidad de conflicto de horario o de interés del público.' },
+        '2026-06-19': { cat: 'green', day: 'Viernes', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
+        '2026-06-20': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
         '2026-06-26': { cat: 'red', day: 'Viernes', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
         '2026-06-27': { cat: 'red', day: 'Sábado', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
         '2026-07-03': { cat: 'red', day: 'Viernes', reason: 'Cuartos de final del Mundial y vacaciones escolares. Riesgo muy alto.' },
@@ -412,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const analysisContent = [
+        { title: 'El Restaurante como Destino: Celebraciones Familiares', content: 'Este es un factor clave que puede anular otros riesgos. Fechas como el Día de la Madre y el Día del Padre son oportunidades de primer nivel (Verde), ya que las familias buscan activamente un lugar especial para celebrar. En estos días, la competencia externa tiene un impacto menor porque Antologías no es solo una opción de ocio, sino el destino principal de la celebración.' },
         { title: 'El Pulso Económico: Quincenas y Aguinaldo', content: 'El factor más influyente. Los fines de semana que siguen a los días de pago son consistentemente los mejores. La "Ventana Dorada" (finales de noviembre a la tercera semana de diciembre) es el pico de gasto anual gracias al aguinaldo.' },
         { title: 'El Éxodo Urbano: Vacaciones y Fines de Semana Largos', content: 'Los feriados que crean fines de semana de 3 días y las vacaciones escolares (julio y diciembre-febrero) provocan una salida masiva de la población de la GAM hacia zonas turísticas, reduciendo drásticamente la audiencia potencial.' },
         { title: 'Las Grandes Fiestas Populares: Competencia Masiva', content: 'Eventos como las Fiestas de Zapote y Palmares son una competencia directa y abrumadora. La Romería (1-2 de agosto) paraliza la actividad social. Estas fechas son de altísimo riesgo, aunque abren la puerta a la contraprogramación.' },
@@ -421,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const climateData = [
-        { month: 'Enero', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
@@ -792,4 +789,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-�
