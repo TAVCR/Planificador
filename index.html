@@ -76,6 +76,9 @@
             overflow: hidden;
             transition: max-height 0.4s ease-in-out;
         }
+        .modal-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -106,9 +109,9 @@
                         <!-- Calendar Grids will be injected here by JS -->
                     </div>
 
-                    <div id="details-panel" class="lg:col-span-4 p-6 bg-white rounded-2xl shadow-lg self-start sticky top-8">
+                    <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 bg-white rounded-2xl shadow-lg self-start sticky top-8">
                         <h3 class="font-bold text-xl mb-4 text-[#6D5D4B]">Detalles del Día</h3>
-                        <div id="details-content" class="text-gray-700 space-y-3 min-h-[150px]">
+                        <div id="details-content-desktop" class="text-gray-700 space-y-3 min-h-[150px]">
                             <p class="text-center text-gray-500 pt-8">Selecciona una fecha en el calendario.</p>
                         </div>
                     </div>
@@ -213,6 +216,19 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Mobile Modal -->
+    <div id="details-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-xl text-[#6D5D4B]">Detalles del Día</h3>
+                <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <div id="details-content-mobile" class="text-gray-700 space-y-3">
+                <!-- Mobile details will be injected here -->
+            </div>
+        </div>
     </div>
 
 <script>
@@ -405,13 +421,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const climateData = [
-        { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Enero', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
         { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
         { month: 'Junio', risk: '🟡', justification: 'Plena temporada lluviosa. Alta probabilidad de lluvias por la tarde/noche. Plan B es esencial.' },
-        { month: 'Julio', risk: ' ', justification: 'Temporada lluviosa. Posibilidad del "Veranillo de San Juan" pero no es garantizado. Plan B es esencial.' },
+        { month: 'Julio', risk: '🟡', justification: 'Temporada lluviosa. Posibilidad del "Veranillo de San Juan" pero no es garantizado. Plan B es esencial.' },
         { month: 'Agosto', risk: '🟡', justification: 'Temporada lluviosa. Mes caracterizado por alta precipitación. Plan B es esencial.' },
         { month: 'Septiembre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
         { month: 'Octubre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
@@ -423,7 +439,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedDayElement = null;
     let opportunityChart = null;
     const calendarsContainer = document.getElementById('calendars-container');
-    const detailsContent = document.getElementById('details-content');
+    const detailsContentDesktop = document.getElementById('details-content-desktop');
+    const detailsContentMobile = document.getElementById('details-content-mobile');
+    const modal = document.getElementById('details-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
 
     const views = {
         calendario: document.getElementById('view-calendario'),
@@ -532,8 +552,33 @@ document.addEventListener('DOMContentLoaded', () => {
                  html += `<p class="text-sm text-gray-500 mt-2">No se han analizado factores estratégicos específicos para esta fecha.</p>`;
             }
         }
-        detailsContent.innerHTML = html;
+        
+        if (window.innerWidth < 1024) {
+            detailsContentMobile.innerHTML = html;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        } else {
+            detailsContentDesktop.innerHTML = html;
+        }
     }
+
+    function closeModal() {
+        modal.classList.add('opacity-0');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
 
     calendarsContainer.addEventListener('click', (e) => {
         const dayElement = e.target.closest('.day');
@@ -566,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('calendar-grid-2025').classList.toggle('hidden', year !== 2025);
         document.getElementById('calendar-grid-2026').classList.toggle('hidden', year !== 2026);
         
-        detailsContent.innerHTML = '<p class="text-center text-gray-500 pt-8">Selecciona una fecha en el calendario.</p>';
+        detailsContentDesktop.innerHTML = '<p class="text-center text-gray-500 pt-8">Selecciona una fecha en el calendario.</p>';
         if(selectedDayElement) {
             selectedDayElement.classList.remove('selected');
             selectedDayElement = null;
@@ -747,4 +792,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
- 
+�
