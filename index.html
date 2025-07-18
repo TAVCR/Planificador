@@ -62,10 +62,6 @@
             box-shadow: 0 0 0 3px #A99D8B;
             z-index: 20;
         }
-        .bg-green-opportunity { background-color: #2E7D32; color: white; }
-        .bg-yellow-opportunity { background-color: #FFC107; color: #3D3B38; }
-        .bg-red-opportunity { background-color: #C62828; color: white; }
-        .bg-blue-payday { background-color: #1565C0; color: white; }
         .bg-neutral-day { background-color: #EFEAE3; }
         .bg-empty-day { background-color: transparent; }
         .chart-container {
@@ -296,6 +292,41 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // =================================================================================
+    // CONFIGURACIÓN CENTRAL DE COLORES
+    // Modifique estos valores para cambiar la paleta de colores de toda la aplicación.
+    // =================================================================================
+    const colorPalette = {
+        opportunityHigh: {
+            bg: '#2E7D32', // Verde
+            text: '#FFFFFF'
+        },
+        opportunityMedium: {
+            bg: '#FFC107', // Amarillo
+            text: '#3D3B38'
+        },
+        opportunityLow: {
+            bg: '#C62828', // Rojo
+            text: '#FFFFFF'
+        },
+        payday: {
+            bg: '#1565C0', // Azul
+            text: '#FFFFFF'
+        }
+    };
+
+    // Función para inyectar los estilos de color dinámicamente
+    const injectColorStyles = () => {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .bg-green-opportunity { background-color: ${colorPalette.opportunityHigh.bg}; color: ${colorPalette.opportunityHigh.text}; }
+            .bg-yellow-opportunity { background-color: ${colorPalette.opportunityMedium.bg}; color: ${colorPalette.opportunityMedium.text}; }
+            .bg-red-opportunity { background-color: ${colorPalette.opportunityLow.bg}; color: ${colorPalette.opportunityLow.text}; }
+            .bg-blue-payday { background-color: ${colorPalette.payday.bg}; color: ${colorPalette.payday.text}; }
+        `;
+        document.head.appendChild(style);
+    };
+
     // Function to generate a dynamic icon and manifest for PWA
     const setupPwaAssets = () => {
         const canvas = document.createElement('canvas');
@@ -353,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-08-02': { cat: 'red', day: 'Sábado', reason: 'Día de la Virgen de los Ángeles, Romería.' },
         '2025-08-05': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio/alto (temporada lluviosa) y posicionado tras el fin de semana de la Romería, afectando el interés del público.' },
         '2025-08-08': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular, alejado de quincena.' },
-        '2025-08-09': { cat: 'yellow', day: 'Sábado', reason: 'Competencia fuerte (Manuel Turizo en Parque Viva).' },
+        '2025-08-09': { cat: 'yellow', day: 'Sábado', reason: 'Competencia indirecta (público joven) en Parque Viva.' },
         '2025-08-15': { cat: 'green', day: 'Viernes', reason: 'Día de la Madre y día de pago. Alta demanda de celebraciones familiares, superando el riesgo de competencia externa.' },
         '2025-08-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día de la Madre. Alta demanda de celebraciones familiares.' },
         '2025-08-22': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena. Poder de compra moderado.' },
@@ -371,11 +402,11 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
         '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
         '2025-09-30': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
-        '2025-10-03': { cat: 'red', day: 'Viernes', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
-        '2025-10-04': { cat: 'red', day: 'Sábado', reason: 'Competencia muy fuerte (Eladio Carrión en Parque Viva).' },
+        '2025-10-03': { cat: 'yellow', day: 'Viernes', reason: 'Competencia indirecta (público joven) pero de alto impacto en el mercado general.' },
+        '2025-10-04': { cat: 'yellow', day: 'Sábado', reason: 'Competencia indirecta (público joven) pero de alto impacto en el mercado general.' },
         '2025-10-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto) y posicionado entre fines de semana de conciertos masivos.' },
         '2025-10-10': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-10-11': { cat: 'red', day: 'Sábado', reason: 'Alta competencia (Danny Ocean y Kevin Kaarl).' },
+        '2025-10-11': { cat: 'yellow', day: 'Sábado', reason: 'Competencia indirecta (público joven) pero de alto impacto en el mercado general.' },
         '2025-10-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2025-10-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-10-18': { cat: 'yellow', day: 'Sábado', reason: 'Competencia media (Debi Nova en Parque Viva).' },
@@ -542,7 +573,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: 'El Fenómeno "Sillón-Ball": Eventos Deportivos', content: 'Partidos clave de "La Sele", finales del torneo local y eventos como la final de la Champions League o el Super Bowl mantienen a la audiencia en casa. Dado que sus eventos inician post 8:00 PM, los partidos vespertinos representan un riesgo menor (Amarillo), pues el público puede salir después. Sin embargo, los partidos en horario estelar (post 7:00 PM) siguen siendo un riesgo alto (Rojo) por el conflicto directo.' },
         { title: 'El Escenario Competitivo: La Batalla por la Atención', content: 'Mega-conciertos en recintos como el Estadio Nacional o Parque Viva consumen el presupuesto de ocio y la atención del mercado para ese fin de semana. Es crucial monitorear los anuncios de nuevos eventos y analizar el solapamiento de audiencias.' },
         { title: 'El Factor Político: Elecciones Nacionales 2026', content: 'Las elecciones generales (1 de febrero y posible segunda ronda el 5 de abril de 2026) dominarán la atención pública. Los fines de semana de las elecciones son de nula actividad comercial y deben marcarse como de riesgo máximo.' },
-        { title: 'Análisis del Público: Actual vs. Potencial', content: 'Tus datos demográficos revelan dos perfiles: 1) **Público Actual (Seguidores):** Un núcleo leal, mayoritariamente femenino (64-71%), con edades entre 35-54 años y concentrado en la GAM. Este perfil valida la estrategia de enfocar esfuerzos en fechas de celebración familiar (Día de la Madre/Padre) y quincenas. 2) **Público Potencial (Alcance):** Un mercado mucho más amplio y joven (25-44 años), con una distribución de género equitativa y presencia nacional. Para atraer a este grupo, se podrían considerar eventos con artistas de géneros más actuales o promociones específicas para un público más joven en fechas de riesgo medio (amarillas).' }
+        { title: 'Análisis del Público: Actual vs. Potencial', content: 'Tus datos demográficos revelan dos perfiles: 1) **Público Actual (Seguidores):** Un núcleo leal, mayoritariamente femenino (64-71%), con edades entre 35-54 años y concentrado en la GAM. Este perfil valida la estrategia de enfocar esfuerzos en fechas de celebración familiar (Día de la Madre/Padre) y quincenas. 2) **Público Potencial (Alcance):** Un mercado mucho más amplio y joven (25-44 años), con una distribución de género equitativa y presencia nacional. Para atraer a este grupo, se podrían considerar eventos con artistas de géneros más actuales o promociones específicas para un público más joven en fechas de riesgo medio (amarillas).' },
+        { 
+            title: 'Análisis de Público y Competencia', 
+            content: 'La investigación confirma la percepción inicial: Fiestas como las de Palmares atraen un público significativamente más joven (18-35 años) con afinidad por géneros urbanos y artistas internacionales, representando un mercado distinto al núcleo del restaurante. En contraste, las fiestas de Zapote se orientan a un público más familiar con talento nacional, y las de Santa Cruz a un perfil cultural-folclórico. Musicalmente, la competencia directa y fuerte para el público objetivo (35-54 años) son los conciertos de baladistas y artistas clásicos en español (ej. Chayanne, Joaquín Sabina, Pandora & Flans en 2025). A esto se suman giras de artistas de pop-rock internacionales consolidados (ej. Eros Ramazzotti en nov. 2026) y leyendas del rock (Guns N\' Roses en oct. 2025), que compiten directamente por el mismo segmento demográfico. Géneros como Reggaetón o Rock Alternativo (ej. Foster the People en nov. 2025), aunque populares, son una competencia indirecta al atraer a un segmento de edad diferente. Finalmente, el análisis político indica una alta probabilidad de una segunda ronda electoral en abril de 2026 debido a la fragmentación partidaria histórica, un factor estratégico clave a considerar para la planificación de ese trimestre.' 
+        }
     ];
 
     const climateData = [
@@ -938,6 +973,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize the application
     setupPwaAssets();
+    injectColorStyles();
     calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026);
     document.getElementById('calendar-grid-2026').classList.add('hidden');
     
