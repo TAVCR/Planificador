@@ -156,11 +156,12 @@
                     <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-payday mr-2 border border-gray-400"></span>Día de Pago</div>
                 </div>
 
-                <div id="filter-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 p-2 bg-[#EFEAE3] rounded-full max-w-lg mx-auto">
+                <div id="filter-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 p-2 bg-[#EFEAE3] rounded-full max-w-2xl mx-auto">
                     <button class="filter-btn filter-btn-active flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="all">Todos</button>
                     <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="green">🟢 Verdes</button>
                     <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="yellow">🟡 Amarillos</button>
                     <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="red">🔴 Rojos</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="blue">🔵 Días de Pago</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -806,6 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (day.classList.contains('bg-green-opportunity')) dayCategory = 'green';
             else if (day.classList.contains('bg-yellow-opportunity')) dayCategory = 'yellow';
             else if (day.classList.contains('bg-red-opportunity')) dayCategory = 'red';
+            else if (day.classList.contains('bg-blue-payday')) dayCategory = 'blue';
             
             if (category !== dayCategory) {
                 day.classList.add('day-filtered');
