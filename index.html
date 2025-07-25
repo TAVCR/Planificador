@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased">
-
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-screen-2xl">
         <header class="text-center mb-4">
             <h1 class="text-3xl md:text-5xl font-bold header-main">Planificador Estratégico de Eventos</h1>
@@ -33,21 +32,14 @@
                 <div class="flex items-center">
                     <span class="text-sm font-medium text-muted mr-2" title="Modo Oscuro">🌙</span>
                     <div class="relative inline-block w-10 align-middle select-none">
-                        <input type="checkbox" name="theme-toggle" id="theme-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                        <label for="theme-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <span class="text-sm font-medium text-muted mr-2" title="Modo Daltónico">👁️</span>
-                     <div class="relative inline-block w-10 align-middle select-none">
-                        <input type="checkbox" name="vision-toggle" id="vision-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                        <label for="vision-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        <input type="checkbox" name="theme-toggle" id="theme-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full border-4 appearance-none cursor-pointer"/>
+                        <label for="theme-toggle" class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"></label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <nav class="flex flex-wrap justify-center mb-8 nav-bg rounded-full p-1 max-w-xl mx-auto shadow-inner">
+        <nav class="nav-bg flex flex-wrap justify-center mb-8 rounded-full p-1 max-w-xl mx-auto shadow-inner">
             <button id="nav-calendario" class="nav-btn nav-active flex-1 py-2 px-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300">📅 Calendario</button>
             <button id="nav-analisis" class="nav-btn nav-inactive flex-1 py-2 px-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300">🔍 Análisis</button>
             <button id="nav-estrategias" class="nav-btn nav-inactive flex-1 py-2 px-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300">💡 Estrategias</button>
@@ -57,7 +49,7 @@
         <main id="main-content">
             <!-- CALENDAR VIEW -->
             <div id="view-calendario">
-                <p class="text-center text-muted mb-6 max-w-3xl mx-auto">Esta es tu herramienta principal de planificación. Selecciona un año para ver el calendario de oportunidades. Haz clic en cualquier día para ver el análisis detallado de por qué se clasificó con un color específico, ayudándote a tomar decisiones informadas sobre programación, marketing y asignación de recursos.</p>
+                <p class="text-center text-muted mb-6 max-w-3xl mx-auto">Esta es tu herramienta principal de planificación. Selecciona un año para ver el calendario de oportunidades. Haz clic en cualquier día para ver el análisis detallado.</p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
                     <button id="year-2025" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">2025</button>
                     <button id="year-2026" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">2026</button>
@@ -71,20 +63,19 @@
                     <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-payday mr-2 border border-gray-400"></span>Día de Pago</div>
                 </div>
 
-                <div id="filter-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 p-2 nav-bg rounded-full max-w-2xl mx-auto">
+                <div id="filter-container" class="nav-bg flex flex-wrap justify-center items-center gap-2 mb-8 p-2 rounded-full max-w-2xl mx-auto">
                     <button class="filter-btn filter-btn-active flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="all">Todos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full card-bg" data-filter="green">🟢 Verdes</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full card-bg" data-filter="yellow">🟡 Amarillos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full card-bg" data-filter="red">🔴 Rojos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full card-bg" data-filter="blue">🔵 Días de Pago</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="green">🟢 Verdes</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="yellow">🟡 Amarillos</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="red">🔴 Rojos</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="blue">🔵 Días de Pago</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div id="calendars-container" class="lg:col-span-8">
                         <!-- Calendar Grids will be injected here by JS -->
                     </div>
-
-                    <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 card-bg rounded-2xl shadow-lg self-start sticky top-8">
+                    <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 card rounded-2xl shadow-lg self-start sticky top-8">
                         <h3 class="font-bold text-xl mb-4 header-main">Detalles del Día</h3>
                         <div id="details-content-desktop" class="text-primary space-y-3 min-h-[150px]">
                             <p class="text-center text-muted pt-8">Selecciona una fecha en el calendario.</p>
@@ -92,7 +83,7 @@
                     </div>
                 </div>
 
-                <div class="mt-12 p-6 card-bg rounded-2xl shadow-lg">
+                <div class="mt-12 p-6 card rounded-2xl shadow-lg">
                     <h2 class="text-2xl font-bold text-center mb-6 header-main">Comparativa de Oportunidades (Viernes y Sábados)</h2>
                      <div class="chart-container">
                         <canvas id="opportunityChart"></canvas>
@@ -102,12 +93,10 @@
             
             <!-- ANALYSIS VIEW -->
             <div id="view-analisis" class="hidden">
-                 <div class="max-w-4xl mx-auto p-4 md:p-8 card-bg rounded-2xl shadow-lg">
+                 <div class="max-w-4xl mx-auto p-4 md:p-8 card rounded-2xl shadow-lg">
                     <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 header-main">Factores Clave de Decisión</h2>
-                    <p class="text-center text-muted mb-8">La clasificación de cada fecha responde a la interacción de estas seis fuerzas principales. Comprenderlas es fundamental para interpretar el calendario y anticipar el comportamiento del público. Haz clic en cada factor para expandir la información.</p>
-                    <div class="space-y-4" id="accordion-container">
-                        <!-- Accordion items will be injected here -->
-                    </div>
+                    <p class="text-center text-muted mb-8">La clasificación de cada fecha responde a la interacción de estas seis fuerzas principales. Haz clic en cada factor para expandir la información.</p>
+                    <div class="space-y-4" id="accordion-container"></div>
                 </div>
             </div>
 
@@ -115,54 +104,54 @@
             <div id="view-estrategias" class="hidden">
                  <div class="max-w-6xl mx-auto">
                     <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 header-main">Recomendaciones Estratégicas</h2>
-                     <p class="text-center text-muted mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas. La clave no es solo saber *cuándo* actuar, sino *cómo* hacerlo.</p>
+                     <p class="text-center text-muted mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <div class="strategy-card border-l-4 border-green-600 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="strategy-card-green border-l-4 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Invertir en artistas de mayor convocatoria y costo.</li>
                                 <li>Lanzar campañas de marketing agresivas y con antelación.</li>
-                                <li>Crear "eventos de firma" recurrentes para generar expectativa (ej. "Viernes de Quincena").</li>
+                                <li>Crear "eventos de firma" recurrentes para generar expectativa.</li>
                                  <li>Considerar precios de entrada diferenciados o paquetes premium.</li>
                             </ul>
                         </div>
-                        <div class="strategy-card border-l-4 border-yellow-500 text-yellow-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="strategy-card-yellow border-l-4 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Fechas Amarillas: Navegar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Aplicar contraprogramación: si hay un concierto masivo de pop, ofrecer una noche de jazz o trova.</li>
-                                <li>Ofrecer paquetes de complemento: "Cena + Música Acústica + Ver el Partido" en noches de fútbol.</li>
-                                <li>Apuntar a nichos de mercado que buscan activamente una alternativa al evento principal.</li>
-                                <li>Usar promociones tácticas (ej. 2x1 en cócteles) para incentivar la visita.</li>
+                                <li>Aplicar contraprogramación: si hay un concierto masivo, ofrecer una noche de jazz.</li>
+                                <li>Ofrecer paquetes de complemento: "Cena + Música Acústica + Ver el Partido".</li>
+                                <li>Apuntar a nichos de mercado que buscan activamente una alternativa.</li>
+                                <li>Usar promociones tácticas (ej. 2x1) para incentivar la visita.</li>
                             </ul>
                         </div>
-                         <div class="strategy-card border-l-4 border-red-600 text-red-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                         <div class="strategy-card-red border-l-4 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar</h3>
                              <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Considerar no programar eventos abiertos. Promover el local para eventos privados.</li>
-                                <li>Optar por programación de muy bajo costo (músicos de la casa, talento emergente).</li>
-                                <li>Planificar cierres estratégicos para mantenimiento o descanso del personal.</li>
-                                <li>Enfocar la comunicación en el servicio de restaurante, no en el evento musical.</li>
+                                <li>Promover el local para eventos privados.</li>
+                                <li>Optar por programación de muy bajo costo (talento emergente).</li>
+                                <li>Planificar cierres estratégicos para mantenimiento o descanso.</li>
+                                <li>Enfocar la comunicación en el servicio de restaurante.</li>
                             </ul>
                         </div>
                     </div>
-                     <div class="mt-10 card-bg p-8 rounded-2xl shadow-lg">
+                     <div class="mt-10 card p-8 rounded-2xl shadow-lg">
                         <h3 class="font-bold text-xl mb-6 header-main text-center">💡 Oportunidades Tácticas Adicionales</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-                            <div class="p-4 rounded-lg tactic-card-bg">
+                            <div class="p-4 rounded-lg tactic-card">
                                 <h4 class="font-semibold text-lg header-sub">Jueves de Escape</h4>
-                                <p class="text-sm mt-1">Programar eventos los jueves previos a un fin de semana largo para capturar al público antes de que viaje.</p>
+                                <p class="text-sm mt-1 text-muted">Programar eventos los jueves previos a un fin de semana largo.</p>
                             </div>
-                            <div class="p-4 rounded-lg tactic-card-bg">
+                            <div class="p-4 rounded-lg tactic-card">
                                 <h4 class="font-semibold text-lg header-sub">Vísperas de Feriado</h4>
-                                <p class="text-sm mt-1">La noche previa a un feriado entre semana (ej. un lunes o martes) es una oportunidad de alta convocatoria.</p>
+                                <p class="text-sm mt-1 text-muted">La noche previa a un feriado entre semana es una oportunidad de alta convocatoria.</p>
                             </div>
-                            <div class="p-4 rounded-lg tactic-card-bg">
+                            <div class="p-4 rounded-lg tactic-card">
                                 <h4 class="font-semibold text-lg header-sub">Festival Anti-Éxodo</h4>
-                                <p class="text-sm mt-1">Crear un evento temático para los que se quedan en la ciudad durante las vacaciones de medio año.</p>
+                                <p class="text-sm mt-1 text-muted">Crear un evento temático para los que se quedan en la ciudad durante vacaciones.</p>
                             </div>
-                            <div class="p-4 rounded-lg tactic-card-bg">
+                            <div class="p-4 rounded-lg tactic-card">
                                 <h4 class="font-semibold text-lg header-sub">Celebración Cultural</h4>
-                                <p class="text-sm mt-1">Desarrollar eventos temáticos únicos como "Fin de la Cosecha Cafetalera" para diferenciar la oferta.</p>
+                                <p class="text-sm mt-1 text-muted">Desarrollar eventos temáticos únicos para diferenciar la oferta.</p>
                             </div>
                         </div>
                     </div>
@@ -171,11 +160,11 @@
             
             <!-- CLIMATE VIEW -->
             <div id="view-clima" class="hidden">
-                <div class="max-w-4xl mx-auto p-4 md:p-8 card-bg rounded-2xl shadow-lg">
+                <div class="max-w-4xl mx-auto p-4 md:p-8 card rounded-2xl shadow-lg">
                     <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 header-main">Análisis de Riesgo Climático</h2>
-                    <p class="text-center text-muted mb-8">Esta sección evalúa el riesgo de lluvia para la exhibición de vehículos históricos (primer martes de cada mes, 6 PM - 10 PM), basado en patrones históricos del Valle Central. No es un pronóstico, sino una guía para la planificación logística (ej. necesidad de carpas) y la comunicación con el público.</p>
+                    <p class="text-center text-muted mb-8">Esta sección evalúa el riesgo de lluvia para la exhibición de vehículos históricos (primer martes de cada mes), basado en patrones históricos.</p>
                     <div class="overflow-x-auto">
-                        <table id="climate-table" class="w-full text-sm text-left text-muted">
+                        <table id="climate-table" class="w-full text-sm text-left">
                            <thead class="text-xs header-main uppercase nav-bg">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 rounded-l-lg">Mes</th>
@@ -190,20 +179,19 @@
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <!-- Mobile Modal -->
-    <div id="details-modal" class="fixed inset-0 bg-black bg-opacity-50 p-4 z-50">
-        <div class="card-bg rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-xl header-main">Detalles del Día</h3>
-                <button id="modal-close-btn" class="text-muted hover:text-primary text-3xl">&times;</button>
+            <!-- DETAILS VIEW (for Mobile) -->
+            <div id="view-detalles" class="hidden">
+                <div class="max-w-2xl mx-auto p-4 md:p-8 card rounded-2xl shadow-lg">
+                    <div id="details-content-mobile" class="space-y-4">
+                        <!-- Mobile details will be injected here -->
+                    </div>
+                    <button id="back-to-calendar-btn" class="mt-6 w-full text-center py-3 px-4 rounded-lg nav-active-bg nav-active-text font-semibold hover:opacity-90 transition-opacity">
+                        &#8592; Volver al Calendario
+                    </button>
+                </div>
             </div>
-            <div id="details-content-mobile" class="text-primary space-y-3">
-                <!-- Mobile details will be injected here -->
-            </div>
-        </div>
+        </main>
     </div>
 
 <script src="script.js"></script>
