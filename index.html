@@ -24,8 +24,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212; /* Dark background */
-            color: #E0E0E0; /* Light text */
+            background-color: #121212; /* Dark background default */
+            color: #E0E0E0; /* Light text default */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
         }
         .nav-active {
             background-color: #A99D8B; /* Muted accent */
@@ -50,7 +51,7 @@
         }
         .day {
             aspect-ratio: 1 / 1;
-            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background-color 0.3s, color 0.3s; /* Add color transitions */
             position: relative;
         }
         .day:hover {
@@ -106,7 +107,7 @@
              color: rgba(255, 255, 255, 0.8); /* Light star for dark backgrounds */
         }
 
-        /* Custom dark mode overrides */
+        /* Custom dark mode overrides (default) */
         .dark-mode-bg { background-color: #1E1E1E; }
         .dark-mode-text { color: #E0E0E0; }
         .dark-mode-text-muted { color: #A0A0A0; }
@@ -116,6 +117,80 @@
         .dark-mode-border { border-color: #444444; }
         .dark-mode-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4); }
         .dark-mode-inner-shadow { box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.5); }
+
+        /* =================================================================================
+           LIGHT MODE STYLES
+           These styles will be applied when the 'light-mode' class is added to the body.
+           They override the dark mode styles.
+           ================================================================================= */
+        body.light-mode {
+            background-color: #F0F0F0; /* Light background */
+            color: #333333; /* Dark text */
+        }
+        body.light-mode .dark-mode-bg { background-color: #FFFFFF; }
+        body.light-mode .dark-mode-text { color: #333333; }
+        body.light-mode .dark-mode-text-muted { color: #666666; }
+        body.light-mode .dark-mode-text-header { color: #1A1A1A; }
+        body.light-mode .dark-mode-text-accent { color: #6D5D4B; }
+        body.light-mode .dark-mode-surface { background-color: #FFFFFF; }
+        body.light-mode .dark-mode-border { border-color: #CCCCCC; }
+        body.light-mode .dark-mode-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); }
+        body.light-mode .dark-mode-inner-shadow { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05); }
+
+        body.light-mode .nav-inactive {
+            background-color: #E0E0E0; /* Lighter inactive background */
+            color: #555555; /* Darker muted text */
+        }
+        body.light-mode .filter-btn {
+            background-color: #E0E0E0; /* Lighter filter button background */
+            color: #555555;
+        }
+        body.light-mode .filter-btn-active {
+            background-color: #A99D8B !important; /* Active filter button */
+            color: white !important;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode .bg-neutral-day { 
+            background-color: #F5F5F5; /* Lighter neutral day */
+            color: #555555;
+        }
+        body.light-mode .day:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Lighter shadow for light mode */
+        }
+        body.light-mode .day.selected {
+            box-shadow: 0 0 0 3px #A99D8B;
+        }
+        body.light-mode .priority-star {
+            color: rgba(0, 0, 0, 0.7); /* Dark star for light backgrounds */
+        }
+        body.light-mode .bg-green-opportunity .priority-star,
+        body.light-mode .bg-red-opportunity .priority-star,
+        body.light-mode .bg-blue-payday .priority-star {
+             color: rgba(0, 0, 0, 0.7); /* Dark star for colored backgrounds in light mode */
+        }
+        body.light-mode .accordion-button {
+            background-color: #E0E0E0;
+        }
+        body.light-mode .accordion-button:hover {
+            background-color: #D5D5D5;
+        }
+        body.light-mode .bg-gray-800 { /* For strategy cards */
+            background-color: #E0E0E0;
+            color: #333333;
+        }
+        body.light-mode #climate-table thead {
+            background-color: #E0E0E0;
+            color: #333333;
+        }
+        body.light-mode #climate-table tbody tr {
+            border-color: #E5E5E5;
+        }
+        body.light-mode .text-green-300 { color: #1E88E5; } /* Adjust for contrast in light mode */
+        body.light-mode .bg-green-900 { background-color: #E8F5E9; }
+        body.light-mode .text-yellow-300 { color: #FFA000; }
+        body.light-mode .bg-yellow-900 { background-color: #FFFDE7; }
+        body.light-mode .text-red-300 { color: #D32F2F; }
+        body.light-mode .bg-red-900 { background-color: #FFEBEE; }
 
         @media print {
             body * {
@@ -144,9 +219,14 @@
 </head>
 <body class="dark-mode-text antialiased">
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-screen-2xl">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Estratégico de Eventos</h1>
-            <p class="text-lg dark-mode-text-accent mt-2">Restaurante Antologías: 2025-2026</p>
+        <header class="text-center mb-8 flex flex-col sm:flex-row justify-between items-center">
+            <!-- Wrapped title and subtitle for better stacking on small screens -->
+            <div class="flex flex-col items-center sm:items-start flex-grow">
+                <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Estratégico de Eventos</h1>
+                <p class="text-lg dark-mode-text-accent mt-2">Restaurante Antologías: 2025-2026</p>
+            </div>
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 mt-4 sm:mt-0 sm:ml-4">☀️</button>
         </header>
 
         <nav class="flex flex-wrap justify-center mb-8 dark-mode-surface rounded-full p-1 max-w-xl mx-auto dark-mode-inner-shadow">
@@ -621,6 +701,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailsContentMobile = document.getElementById('details-content-mobile');
     const modal = document.getElementById('details-modal');
     const modalCloseBtn = document.getElementById('modal-close-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
 
 
     const views = {
@@ -708,12 +790,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString('es-ES', options);
 
-        let html = `<h4 class="font-bold text-lg text-gray-100 capitalize">${formattedDate}</h4>`;
+        let html = `<h4 class="font-bold text-lg text-gray-100 capitalize">${formattedDate}</h4>`; // Text color is adjusted by light/dark mode CSS
+
+        // Adjust text color based on current theme for details panel
+        const textColorClass = body.classList.contains('light-mode') ? 'text-gray-700' : 'text-gray-100';
+        const mutedTextColorClass = body.classList.contains('light-mode') ? 'text-gray-600' : 'text-gray-300';
+        const veryMutedTextColorClass = body.classList.contains('light-mode') ? 'text-gray-500' : 'text-gray-500';
+
+        html = `<h4 class="font-bold text-lg ${textColorClass} capitalize">${formattedDate}</h4>`;
         
         if (data) {
             let emoji, colorClass, statusText;
             if(data.cat === 'green') {
-                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400';
+                emoji = '�'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400';
             } else if (data.cat === 'yellow') {
                 emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-400';
             } else if (data.cat === 'red') {
@@ -722,15 +811,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 emoji = '🔵'; statusText = 'Día de Pago'; colorClass = 'text-blue-400';
             }
             html += `<p class="font-semibold ${colorClass}">${emoji} ${statusText}</p>`;
-            html += `<p class="text-sm text-gray-300 mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
+            html += `<p class="text-sm ${mutedTextColorClass} mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
         } else {
             const dayOfWeek = date.getDay();
             if (dayOfWeek === 5 || dayOfWeek === 6) {
-                 html += `<p class="font-semibold text-gray-300">⚪ Oportunidad Neutra</p>`;
-                 html += `<p class="text-sm text-gray-400 mt-2"><span class="font-semibold">Justificación:</span> Fin de semana regular sin factores negativos o positivos mayores identificados. Se considera una buena oportunidad base. </p>`;
+                 html += `<p class="font-semibold ${mutedTextColorClass}">⚪ Oportunidad Neutra</p>`;
+                 html += `<p class="text-sm ${veryMutedTextColorClass} mt-2"><span class="font-semibold">Justificación:</span> Fin de semana regular sin factores negativos o positivos mayores identificados. Se considera una buena oportunidad base. </p>`;
             } else {
-                 html += `<p class="font-semibold text-gray-500">Día entre semana</p>`;
-                 html += `<p class="text-sm text-gray-500 mt-2">No se han analizado factores estratégicos específicos para esta fecha.</p>`;
+                 html += `<p class="font-semibold ${veryMutedTextColorClass}">Día entre semana</p>`;
+                 html += `<p class="text-sm ${veryMutedTextColorClass} mt-2">No se han analizado factores estratégicos específicos para esta fecha.</p>`;
             }
         }
         
@@ -779,8 +868,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const year2025Btn = document.getElementById('year-2025');
         const year2026Btn = document.getElementById('year-2026');
 
-        const activeClasses = ['bg-[#A99D8B]', 'text-black'];
-        const inactiveClasses = ['dark-mode-surface', 'dark-mode-text'];
+        const activeClasses = ['bg-[#C3B8A8]', 'text-black'];
+        const inactiveClasses = ['dark-mode-surface', 'dark-mode-text']; // These will be overridden by light-mode if active
 
         year2025Btn.classList.toggle(activeClasses[0], year === 2025);
         year2025Btn.classList.toggle(activeClasses[1], year === 2025);
@@ -801,7 +890,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedDayElement = null;
         }
 
-        updateChartAppearance();
+        updateChartColors(); // Call to update chart colors based on current theme
     }
     
     document.getElementById('year-2025').addEventListener('click', () => updateActiveYear(2025));
@@ -813,8 +902,12 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             filterButtons.forEach(btn => {
                 btn.classList.remove('filter-btn-active');
-                btn.classList.remove('bg-[#383838]');
-                btn.classList.add('bg-[#383838]');
+                // Remove specific dark mode background if it was applied
+                btn.classList.remove('bg-[#383838]'); 
+                // Add default background, which will be overridden by light-mode if active
+                if (!body.classList.contains('light-mode')) {
+                    btn.classList.add('bg-[#383838]'); 
+                }
             });
             button.classList.add('filter-btn-active');
             filterCalendar(button.dataset.filter);
@@ -855,13 +948,37 @@ document.addEventListener('DOMContentLoaded', () => {
         return counts;
     }
 
-    function updateChartAppearance() {
+    // Function to update chart colors based on the current theme
+    function updateChartColors() {
         if (!opportunityChart) return;
 
-        const activeColor = '#8C7B6C';
-        const inactiveColor = '#555555';
-        const activeBorder = '#6D5D4B';
-        const inactiveBorder = '#888888';
+        const isLightMode = body.classList.contains('light-mode');
+
+        const gridColor = isLightMode ? '#BBBBBB' : '#444444';
+        const tickColor = isLightMode ? '#333333' : '#E0E0E0';
+        const labelColor = isLightMode ? '#333333' : '#E0E0E0';
+        const tooltipBg = isLightMode ? '#FFFFFF' : '#121212';
+        const tooltipBorder = isLightMode ? '#CCCCCC' : '#444444';
+        const tooltipColor = isLightMode ? '#333333' : '#E0E0E0';
+
+        // Update grid and tick colors
+        opportunityChart.options.scales.y.grid.color = gridColor;
+        opportunityChart.options.scales.y.ticks.color = tickColor;
+        opportunityChart.options.scales.y.title.color = labelColor;
+        opportunityChart.options.scales.x.ticks.color = tickColor;
+
+        // Update legend and tooltip colors
+        opportunityChart.options.plugins.legend.labels.color = labelColor;
+        opportunityChart.options.plugins.tooltip.backgroundColor = tooltipBg;
+        opportunityChart.options.plugins.tooltip.borderColor = tooltipBorder;
+        opportunityChart.options.plugins.tooltip.titleColor = tooltipColor;
+        opportunityChart.options.plugins.tooltip.bodyColor = tooltipColor;
+
+        // Update bar colors based on active year and theme
+        const activeColor = isLightMode ? '#6D5D4B' : '#A99D8B'; // Adjusted for light mode
+        const inactiveColor = isLightMode ? '#AAAAAA' : '#555555';
+        const activeBorder = isLightMode ? '#4A3D30' : '#6D5D4B';
+        const inactiveBorder = isLightMode ? '#888888' : '#888888';
 
         opportunityChart.data.datasets[0].backgroundColor = currentYear === 2025 ? activeColor : inactiveColor;
         opportunityChart.data.datasets[0].borderColor = currentYear === 2025 ? activeBorder : inactiveBorder;
@@ -903,17 +1020,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: '#444444'
+                            color: '#444444' // Default dark mode color
                         },
                         ticks: {
                            stepSize: 5,
-                           color: '#E0E0E0'
+                           color: '#E0E0E0' // Default dark mode color
                         },
                         title: {
                             display: true,
                             text: 'Número de Viernes y Sábados',
                             font: { size: 14 },
-                            color: '#E0E0E0'
+                            color: '#E0E0E0' // Default dark mode color
                         }
                     },
                     x: {
@@ -921,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             display: false
                         },
                         ticks: {
-                            color: '#E0E0E0'
+                            color: '#E0E0E0' // Default dark mode color
                         }
                     }
                 },
@@ -929,11 +1046,11 @@ document.addEventListener('DOMContentLoaded', () => {
                      legend: {
                         position: 'top',
                         labels: {
-                            color: '#E0E0E0'
+                            color: '#E0E0E0' // Default dark mode color
                         }
                      },
                      tooltip: {
-                        backgroundColor: '#121212',
+                        backgroundColor: '#121212', // Default dark mode color
                         titleFont: { size: 16 },
                         bodyFont: { size: 14 },
                         callbacks: {
@@ -948,6 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+        updateChartColors(); // Initial call to set colors based on current theme
     }
 
     function createAccordion() {
@@ -972,11 +1090,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const content = button.nextElementSibling;
                 const icon = button.querySelector('svg');
                 
-                const isOpening = !content.style.maxHeight;
+                const isOpening = !content.style.maxHeight || content.style.maxHeight === '0px'; // Check for '0px' too
 
+                // Close all other accordions
                 container.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
                 container.querySelectorAll('.accordion-button svg').forEach(i => i.style.transform = 'rotate(0deg)');
                 
+                // Open the clicked accordion if it was closed
                 if (isOpening) {
                     content.style.maxHeight = content.scrollHeight + "px";
                     icon.style.transform = 'rotate(180deg)';
@@ -990,6 +1110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         climateData.forEach(item => {
             let riskClass = '';
+            // These classes are already defined with specific colors and backgrounds
+            // and will be overridden by light-mode CSS if active.
             if (item.risk === '🟢') riskClass = 'text-green-300 bg-green-900';
             if (item.risk === '🟡') riskClass = 'text-yellow-300 bg-yellow-900';
             if (item.risk === '🔴') riskClass = 'text-red-300 bg-red-900';
@@ -1005,7 +1127,39 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = html;
     }
 
-    // Initialize the application
+    // =================================================================================
+    // LÓGICA DE CAMBIO DE TEMA
+    // =================================================================================
+    let isLightMode = localStorage.getItem('theme') === 'light';
+
+    const applyTheme = (lightMode) => {
+        if (lightMode) {
+            body.classList.add('light-mode');
+            themeToggleBtn.textContent = '🌙'; // Icono de luna para cambiar a modo oscuro
+        } else {
+            body.classList.remove('light-mode');
+            themeToggleBtn.textContent = '☀️'; // Icono de sol para cambiar a modo claro
+        }
+        // Reaplicar estilos de botones de filtro basados en el nuevo tema
+        filterButtons.forEach(btn => {
+            btn.classList.remove('bg-[#383838]'); // Remover fondo específico de modo oscuro
+            if (!lightMode && !btn.classList.contains('filter-btn-active')) {
+                btn.classList.add('bg-[#383838]'); // Añadir fondo específico de modo oscuro si no está activo y en modo oscuro
+            }
+        });
+        updateChartColors(); // Actualizar colores del gráfico cada vez que el tema cambia
+    };
+
+    // Establecer el tema inicial al cargar
+    applyTheme(isLightMode);
+
+    themeToggleBtn.addEventListener('click', () => {
+        isLightMode = !isLightMode;
+        localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        applyTheme(isLightMode);
+    });
+
+    // Inicializar la aplicación
     setupPwaAssets();
     injectColorStyles();
     calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026);
@@ -1013,10 +1167,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     createAccordion();
     createClimateTable();
-    createChart();
-    updateActiveYear(2025);
+    createChart(); // Esto también llamará a updateChartColors()
+    updateActiveYear(2025); // Esto también llamará a updateChartColors()
 });
 </script>
 
 </body>
 </html>
+�
