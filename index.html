@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,11 @@
     <link id="apple-touch-icon-link" rel="apple-touch-icon">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,10 +121,10 @@
         .dark-mode-inner-shadow { box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.5); }
 
         /* =================================================================================
-           LIGHT MODE STYLES
-           These styles will be applied when the 'light-mode' class is added to the body.
-           They override the dark mode styles.
-           ================================================================================= */
+            LIGHT MODE STYLES
+            These styles will be applied when the 'light-mode' class is added to the body.
+            They override the dark mode styles.
+            ================================================================================= */
         body.light-mode {
             background-color: #F0F0F0; /* Light background */
             color: #333333; /* Dark text */
@@ -171,7 +176,7 @@
         body.light-mode .accordion-button:hover {
             background-color: #D5D5D5;
         }
-        body.light-mode .bg-gray-800 { /* For strategy cards */
+        body.light-mode .bg-gray-800 { /* For strategy cards - this will be removed and replaced by dynamic styles */
             background-color: #E0E0E0;
             color: #333333;
         }
@@ -182,12 +187,13 @@
         body.light-mode #climate-table tbody tr {
             border-color: #E5E5E5;
         }
-        body.light-mode .text-green-300 { color: #1E88E5; } /* Adjust for contrast in light mode */
-        body.light-mode .bg-green-900 { background-color: #E8F5E9; }
-        body.light-mode .text-yellow-300 { color: #FFA000; }
-        body.light-mode .bg-yellow-900 { background-color: #FFFDE7; }
-        body.light-mode .text-red-300 { color: #D32F2F; }
-        body.light-mode .bg-red-900 { background-color: #FFEBEE; }
+        /* These specific color classes will be replaced by dynamic CSS variables for strategy cards */
+        /* body.light-mode .text-green-300 { color: #1E88E5; } */
+        /* body.light-mode .bg-green-900 { background-color: #E8F5E9; } */
+        /* body.light-mode .text-yellow-300 { color: #FFA000; } */
+        /* body.light-mode .bg-yellow-900 { background-color: #FFFDE7; } */
+        /* body.light-mode .text-red-300 { color: #D32F2F; } */
+        /* body.light-mode .bg-red-900 { background-color: #FFEBEE; } */
 
         /* Specific styles for year buttons to ensure proper theme application */
         .year-btn-active-dark {
@@ -222,6 +228,53 @@
         }
         .year-btn-inactive-light:hover {
             background-color: #D5D5D5 !important; /* Slightly darker on hover */
+        }
+
+        /* CSS Variables for Strategy Cards - Default (Dark Mode) */
+        :root {
+            --strategy-green-bg: rgba(46, 125, 50, 0.2); /* Green with opacity */
+            --strategy-green-border: #2E7D32; /* Solid green border */
+            --strategy-green-text: #A7D9A9; /* Lighter green for dark background */
+
+            --strategy-yellow-bg: rgba(255, 193, 7, 0.2);
+            --strategy-yellow-border: #FFC107;
+            --strategy-yellow-text: #FFECB3;
+
+            --strategy-red-bg: rgba(198, 40, 40, 0.2); /* Red with opacity */
+            --strategy-red-border: #C62828;
+            --strategy-red-text: #FFCDD2; /* Lighter red for dark background */
+        }
+
+        /* Light Mode Overrides for Strategy Card Colors */
+        body.light-mode {
+            --strategy-green-bg: #E8F5E9;
+            --strategy-green-border: #2E7D32;
+            --strategy-green-text: #1B5E20; /* Darker green for light background */
+
+            --strategy-yellow-bg: #FFFDE7;
+            --strategy-yellow-border: #FFC107;
+            --strategy-yellow-text: #FF6F00;
+
+            --strategy-red-bg: #FFEBEE;
+            --strategy-red-border: #C62828;
+            --strategy-red-text: #D32F2F; /* Darker red for light background */
+        }
+
+        /* Apply CSS variables to strategy cards */
+        .strategy-card[data-category="green"] {
+            background-color: var(--strategy-green-bg);
+            border-left: 4px solid var(--strategy-green-border);
+            color: var(--strategy-green-text);
+        }
+        .strategy-card[data-category="yellow"] {
+            background-color: var(--strategy-yellow-bg);
+            border-left: 4px solid var(--strategy-yellow-border);
+            color: var(--strategy-yellow-text);
+        }
+        .strategy-card[data-category="red"] {
+            background-color: var(--strategy-red-bg);
+            border-left: 4px solid var(--strategy-red-border);
+            color: var(--strategy-red-text);
         }
 
         @media print {
@@ -343,7 +396,7 @@
                     <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Recomendaciones Estratégicas</h2>
                      <p class="text-center dark-mode-text-muted mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas. La clave no es solo saber *cuándo* actuar, sino *cómo* hacerlo.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <div class="bg-gray-800 border-l-4 border-green-600 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div id="strategy-card-green" class="strategy-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300" data-category="green">
                             <h3 id="strategy-green-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Invertir en artistas de mayor convocatoria y costo.</li>
@@ -352,7 +405,7 @@
                                  <li>Considerar precios de entrada diferenciados o paquetes premium.</li>
                             </ul>
                         </div>
-                        <div class="bg-gray-800 border-l-4 border-yellow-500 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div id="strategy-card-yellow" class="strategy-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300" data-category="yellow">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Fechas Amarillas: Navegar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Aplicar contraprogramación: si hay un concierto masivo de pop, ofrecer una noche de jazz o trova.</li>
@@ -361,7 +414,7 @@
                                 <li>Usar promociones tácticas (ej. 2x1 en cócteles) para incentivar la visita.</li>
                             </ul>
                         </div>
-                         <div class="bg-gray-800 border-l-4 border-red-600 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                         <div id="strategy-card-red" class="strategy-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300" data-category="red">
                             <h3 id="strategy-red-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar</h3>
                              <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Considerar no programar eventos abiertos. Promover el local para eventos privados.</li>
@@ -494,6 +547,44 @@ document.addEventListener('DOMContentLoaded', () => {
             .bg-red-opportunity { background-color: ${palette.opportunityLow.bg}; color: ${palette.opportunityLow.text}; }
             .bg-blue-payday { background-color: ${palette.payday.bg}; color: ${palette.payday.text}; }
         `;
+
+        const root = document.documentElement; // Target the root element for CSS variables
+
+        // Update strategy card border colors based on the active palette
+        root.style.setProperty('--strategy-green-border', palette.opportunityHigh.bg);
+        root.style.setProperty('--strategy-red-border', palette.opportunityLow.bg);
+        root.style.setProperty('--strategy-yellow-border', palette.opportunityMedium.bg); // Yellow border is always yellow
+
+        // Update strategy card background and text colors based on colorblind mode and light/dark mode
+        if (isColorblindMode) {
+            // Colorblind mode specific background/text for dark theme
+            root.style.setProperty('--strategy-green-bg', `${palette.opportunityHigh.bg}20`); // Purple with opacity
+            root.style.setProperty('--strategy-green-text', '#CC99FF'); // Light purple text
+
+            root.style.setProperty('--strategy-red-bg', `${palette.opportunityLow.bg}20`); // Orange with opacity
+            root.style.setProperty('--strategy-red-text', '#FFCC99'); // Light orange text
+
+            // Yellow card background/text remains constant for both colorblind and non-colorblind modes
+            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
+            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
+
+            // Light mode specific for colorblind - define these as overrides in the CSS directly
+            // and let the CSS cascade handle it. No need to set light mode specific variables here.
+            // Ensure the CSS for light mode strategy cards is updated to use the colorblind palette's actual colors
+            // or a suitable light-mode equivalent if the colorblind palette's colors are too dark for light backgrounds.
+            // For now, I'll assume the existing light-mode overrides in CSS are acceptable or will be adjusted.
+        } else {
+            // Default (non-colorblind) background/text for dark theme
+            root.style.setProperty('--strategy-green-bg', `rgba(46, 125, 50, 0.2)`);
+            root.style.setProperty('--strategy-green-text', `#A7D9A9`);
+
+            root.style.setProperty('--strategy-red-bg', `rgba(198, 40, 40, 0.2)`);
+            root.style.setProperty('--strategy-red-text', `#FFCDD2`);
+
+            // Yellow card background/text remains constant for both colorblind and non-colorblind modes
+            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
+            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
+        }
     };
 
     // Function to generate a dynamic icon and manifest for PWA
@@ -600,7 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-12-13': { cat: 'green', day: 'Sábado', reason: 'Plena "Ventana Dorada" (aguinaldo). Oportunidad máxima.' },
         '2025-12-15': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
         '2025-12-19': { cat: 'green', day: 'Viernes', reason: 'Última gran oportunidad pre-Navidad, pleno apogeo de la "Ventana Dorada".' },
-        '2025-12-20': { cat: 'green', day: 'Sábado', reason: 'Última gran oportunidad del año.' },
+        '2025-12-20': { cat: 'green', day: 'Sábado', reason: 'Último fin de semana de alto consumo antes de Navidad.' },
         '2025-12-26': { cat: 'red', day: 'Viernes', reason: 'Fiestas de Zapote en pleno apogeo. Éxodo de fin de año.' },
         '2025-12-27': { cat: 'red', day: 'Sábado', reason: 'Fiestas de Zapote en pleno apogeo. Éxodo de fin de año.' },
         '2025-12-31': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
@@ -621,7 +712,118 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-02-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana post-elecciones. Ambiente de normalización.' },
         '2026-02-07': { cat: 'yellow', day: 'Sábado', reason: 'Víspera del Super Bowl LX (domingo 8).' },
         '2026-02-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Víspera de San Valentín.' },
-        '2026-02-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Día de San Valentín.' }
+        '2026-02-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Día de San Valentín.' },
+        '2026-02-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
+        '2026-02-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-02-27': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-02-28': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-03-03': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático y en una semana tranquila sin grandes eventos competidores.' },
+        '2026-03-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
+        '2026-03-07': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-03-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-03-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-03-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-03-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-03-27': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-03-28': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-03-31': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
+        '2026-04-03': { cat: 'red', day: 'Viernes', reason: 'Semana Santa (Viernes Santo), feriado, éxodo masivo.' },
+        '2026-04-04': { cat: 'red', day: 'Sábado', reason: 'Semana Santa (Sábado Santo), fin de semana largo, éxodo masivo.' },
+        '2026-04-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Posiblemente en semana de segunda ronda electoral y post Semana Santa. Riesgo muy alto.' },
+        '2026-04-10': { cat: 'red', day: 'Viernes', reason: 'Posible 2da Ronda Electoral (domingo 5). Fin de semana post-Semana Santa, bajo consumo.' },
+        '2026-04-11': { cat: 'red', day: 'Sábado', reason: 'Posible 2da Ronda Electoral (domingo 5). Fin de semana post-Semana Santa, bajo consumo.' },
+        '2026-04-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
+        '2026-04-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-04-18': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-04-24': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-04-25': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-04-30': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
+        '2026-05-01': { cat: 'green', day: 'Viernes', reason: 'Feriado (Día del Trabajo), quincena, fin de semana largo. Oportunidad alta.' },
+        '2026-05-02': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena y feriado. Oportunidad alta.' },
+        '2026-05-05': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (inicio de temporada lluviosa). Lejos de quincena.' },
+        '2026-05-08': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
+        '2026-05-09': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-05-15': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-05-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-05-22': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-05-23': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-05-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-05-30': { cat: 'red', day: 'Sábado', reason: 'Final de la UEFA Champions League. Evento de visualización masiva.' },
+        '2026-06-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio y en pleno mes del Mundial de Fútbol. Atención y presupuesto del público están en otro lado.' },
+        '2026-06-05': { cat: 'red', day: 'Viernes', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-06': { cat: 'red', day: 'Sábado', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-12': { cat: 'red', day: 'Viernes', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-13': { cat: 'red', day: 'Sábado', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
+        '2026-06-19': { cat: 'green', day: 'Viernes', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
+        '2026-06-20': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
+        '2026-06-26': { cat: 'red', day: 'Viernes', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
+        '2026-06-27': { cat: 'red', day: 'Sábado', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
+        '2026-07-03': { cat: 'red', day: 'Viernes', reason: 'Cuartos de final del Mundial y vacaciones escolares. Riesgo muy alto.' },
+        '2026-07-04': { cat: 'red', day: 'Sábado', reason: 'Cuartos de final del Mundial y vacaciones escolares. Riesgo muy alto.' },
+        '2026-07-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio, pero en plenas vacaciones escolares y en la semana de semifinales del Mundial.' },
+        '2026-07-10': { cat: 'red', day: 'Viernes', reason: 'Semifinales del Mundial y plenas vacaciones escolares. Riesgo máximo.' },
+        '2026-07-11': { cat: 'red', day: 'Sábado', reason: 'Semifinales del Mundial y plenas vacaciones escolares. Riesgo máximo.' },
+        '2026-07-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
+        '2026-07-17': { cat: 'yellow', day: 'Viernes', reason: 'Fin de vacaciones escolares. Fin de semana post-Mundial, posible fatiga de gasto.' },
+        '2026-07-18': { cat: 'yellow', day: 'Sábado', reason: 'Fin de vacaciones escolares. Fin de semana post-Mundial, posible fatiga de gasto.' },
+        '2026-07-24': { cat: 'red', day: 'Viernes', reason: 'Fin de semana feriado (Anexión). Riesgo por fin de semana largo y éxodo.' },
+        '2026-07-25': { cat: 'red', day: 'Sábado', reason: 'Fin de semana feriado (Anexión). Riesgo por fin de semana largo y éxodo.' },
+        '2026-07-31': { cat: 'red', day: 'Viernes', reason: 'Víspera de la Romería.' },
+        '2026-08-01': { cat: 'red', day: 'Sábado', reason: 'Día de la Romería.' },
+        '2026-08-04': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio/alto (temporada lluviosa) y posicionado tras el fin de semana de la Romería.' },
+        '2026-08-07': { cat: 'yellow', day: 'Viernes', reason: 'Post-vacaciones, fin de semana regular.' },
+        '2026-08-08': { cat: 'yellow', day: 'Sábado', reason: 'Post-vacaciones, fin de semana regular.' },
+        '2026-08-14': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-08-15': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-08-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-08-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-08-28': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-08-29': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-08-31': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
+        '2026-09-01': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
+        '2026-09-04': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
+        '2026-09-05': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-09-11': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
+        '2026-09-12': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
+        '2026-09-15': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena y feriado (Día de la Independencia).' },
+        '2026-09-18': { 'cat': 'green', 'day': 'Viernes', 'reason': 'Fin de semana inmediato a la quincena. Oportunidad alta.' },
+        '2026-09-19': { 'cat': 'green', 'day': 'Sábado', 'reason': 'Fin de semana inmediato a la quincena. Oportunidad alta.' },
+        '2026-09-25': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-09-26': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-09-30': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
+        '2026-10-02': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-10-03': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-10-06': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
+        '2026-10-09': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
+        '2026-10-10': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-10-15': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
+        '2026-10-16': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-10-17': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-10-23': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-10-24': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-10-30': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
+        '2026-10-31': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
+        '2026-11-03': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (transición a temporada seca). Semana tranquila, oportunidad aceptable.' },
+        '2026-11-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
+        '2026-11-07': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
+        '2026-11-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
+        '2026-11-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
+        '2026-11-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-11-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
+        '2026-11-27': { cat: 'green', day: 'Viernes', reason: 'Inicio "Ventana Dorada" (Viernes Negro).' },
+        '2026-11-28': { cat: 'green', day: 'Sábado', reason: 'Inicio "Ventana Dorada".' },
+        '2026-11-30': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
+        '2026-12-01': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático (temporada seca) y en plena "Ventana Dorada" con alto poder adquisitivo (aguinaldo).' },
+        '2026-12-04': { cat: 'green', day: 'Viernes', reason: 'Plena "Ventana Dorada" (aguinaldo).' },
+        '2026-12-05': { cat: 'green', day: 'Sábado', reason: 'Plena "Ventana Dorada". Oportunidad máxima.' },
+        '2026-12-11': { cat: 'green', day: 'Viernes', reason: 'Plena "Ventana Dorada".' },
+        '2026-12-12': { cat: 'green', day: 'Sábado', reason: 'Plena "Ventana Dorada".' },
+        '2026-12-15': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
+        '2026-12-18': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Última gran oportunidad del año.' },
+        '2026-12-19': { cat: 'green', day: 'Sábado', reason: 'Última gran oportunidad del año.' },
+        '2026-12-25': { cat: 'red', day: 'Viernes', reason: 'Feriado (Navidad). Fiestas de Zapote. Éxodo masivo.' },
+        '2026-12-26': { cat: 'red', day: 'Sábado', reason: 'Fiestas de Zapote en pleno apogeo. Éxodo de fin de año.' },
+        '2026-12-31': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' }
     };
 
     const analysisContent = [
@@ -641,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const climateData = [
         { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
-        { month: 'Febrero', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
         { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
@@ -852,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', () => {
             year2026Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
         } else { // currentYear === 2026
             year2026Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
-            year205Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
+            year2025Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
         }
     }
 
@@ -1300,10 +1502,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isColorblindMode) {
             if (strategyGreenTitle) {
-                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">🟢</span> Fechas Púrpuras: Maximizar`;
+                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E3;</span> Fechas Púrpuras: Maximizar`; // Purple circle emoji
             }
             if (strategyRedTitle) {
-                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">🔴</span> Fechas Naranjas: Mitigar`;
+                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E0;</span> Fechas Naranjas: Mitigar`; // Orange circle emoji
             }
         } else {
             if (strategyGreenTitle) {
@@ -1346,4 +1548,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-�
