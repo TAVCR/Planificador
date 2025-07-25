@@ -192,6 +192,30 @@
         body.light-mode .text-red-300 { color: #D32F2F; }
         body.light-mode .bg-red-900 { background-color: #FFEBEE; }
 
+        /* Specific styles for year buttons to ensure proper theme application */
+        .year-btn-active-dark {
+            background-color: #A99D8B; /* Dark mode active color */
+            color: #121212; /* Dark mode active text */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .year-btn-inactive-dark {
+            background-color: #2C2C2C; /* Darker inactive background */
+            color: #A0A0A0; /* Lighter muted text */
+        }
+
+        .year-btn-active-light {
+            background-color: #C3B8A8; /* Light mode active color (lighter accent) */
+            color: #FFFFFF; /* White text for contrast */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+
+        .year-btn-inactive-light {
+            background-color: #E0E0E0; /* Lighter inactive background */
+            color: #555555; /* Darker muted text */
+        }
+
+
         @media print {
             body * {
                 visibility: hidden;
@@ -241,8 +265,9 @@
             <div id="view-calendario">
                 <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">Esta es tu herramienta principal de planificación. Selecciona un año para ver el calendario de oportunidades. Haz clic en cualquier día para ver el análisis detallado de por qué se clasificó con un color específico, ayudándote a tomar decisiones informadas sobre programación, marketing y asignación de recursos.</p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
-                    <button id="year-2025" class="year-btn px-8 py-2.5 text-lg bg-[#C3B8A8] text-white font-semibold rounded-lg shadow-md hover:bg-[#A99D8B] transition-all duration-300 transform hover:scale-105">2025</button>
-                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg dark-mode-surface dark-mode-text font-semibold rounded-lg hover:bg-[#383838] transition-all duration-300 transform hover:scale-105">2026</button>
+                    <!-- Removed initial color classes from HTML, will be applied via JS -->
+                    <button id="year-2025" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md hover:bg-[#A99D8B] transition-all duration-300 transform hover:scale-105">2025</button>
+                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg hover:bg-[#383838] transition-all duration-300 transform hover:scale-105">2026</button>
                     <button id="print-btn" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">🖨️</button>
                 </div>
                 
@@ -686,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
         { month: 'Junio', risk: '🟡', justification: 'Plena temporada lluviosa. Alta probabilidad de lluvias por la tarde/noche. Plan B es esencial.' },
         { month: 'Julio', risk: '🟡', justification: 'Temporada lluviosa. Posibilidad del "Veranillo de San Juan" pero no es garantizado. Plan B es esencial.' },
-        { month: 'Agosto', risk: '🟡', justification: 'Temporada lluviosa. Mes caracterizado por alta precipitación. Plan B es esencial.' },
+        { month: 'Agosto', risk: '�', justification: 'Temporada lluviosa. Mes caracterizado por alta precipitación. Plan B es esencial.' },
         { month: 'Septiembre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
         { month: 'Octubre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
         { month: 'Noviembre', risk: '🟡', justification: 'Mes de transición hacia la temporada seca, pero aún con alta probabilidad de lluvia. Plan B es esencial.' },
@@ -802,7 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data) {
             let emoji, colorClass, statusText;
             if(data.cat === 'green') {
-                emoji = '�'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400';
+                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400';
             } else if (data.cat === 'yellow') {
                 emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-400';
             } else if (data.cat === 'red') {
@@ -863,24 +888,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function updateActiveYear(year) {
-        currentYear = year;
+    // Function to update the styles of the year buttons based on active year and theme
+    function updateYearButtonStyles() {
         const year2025Btn = document.getElementById('year-2025');
         const year2026Btn = document.getElementById('year-2026');
+        const isLightMode = body.classList.contains('light-mode');
 
-        const activeClasses = ['bg-[#C3B8A8]', 'text-black'];
-        const inactiveClasses = ['dark-mode-surface', 'dark-mode-text']; // These will be overridden by light-mode if active
-
-        year2025Btn.classList.toggle(activeClasses[0], year === 2025);
-        year2025Btn.classList.toggle(activeClasses[1], year === 2025);
-        year2025Btn.classList.toggle(inactiveClasses[0], year !== 2025);
-        year2025Btn.classList.toggle(inactiveClasses[1], year !== 2025);
+        // Clear all year-button specific classes first
+        year2025Btn.classList.remove('year-btn-active-dark', 'year-btn-inactive-dark', 'year-btn-active-light', 'year-btn-inactive-light');
+        year2026Btn.classList.remove('year-btn-active-dark', 'year-btn-inactive-dark', 'year-btn-active-light', 'year-btn-inactive-light');
         
-        year2026Btn.classList.toggle(activeClasses[0], year === 2026);
-        year2026Btn.classList.toggle(activeClasses[1], year === 2026);
-        year2026Btn.classList.toggle(inactiveClasses[0], year !== 2026);
-        year2026Btn.classList.toggle(inactiveClasses[1], year !== 2026);
+        // Apply classes based on current year and theme
+        if (currentYear === 2025) {
+            year2025Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
+            year2026Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
+        } else { // currentYear === 2026
+            year2026Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
+            year2025Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
+        }
+    }
 
+    function updateActiveYear(year) {
+        currentYear = year;
         document.getElementById('calendar-grid-2025').classList.toggle('hidden', year !== 2025);
         document.getElementById('calendar-grid-2026').classList.toggle('hidden', year !== 2026);
         
@@ -890,6 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedDayElement = null;
         }
 
+        updateYearButtonStyles(); // Update button styles
         updateChartColors(); // Call to update chart colors based on current theme
     }
     
@@ -1147,6 +1177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.classList.add('bg-[#383838]'); // Añadir fondo específico de modo oscuro si no está activo y en modo oscuro
             }
         });
+        updateYearButtonStyles(); // Update year button styles when theme changes
         updateChartColors(); // Actualizar colores del gráfico cada vez que el tema cambia
     };
 
@@ -1168,7 +1199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createAccordion();
     createClimateTable();
     createChart(); // Esto también llamará a updateChartColors()
-    updateActiveYear(2025); // Esto también llamará a updateChartColors()
+    updateActiveYear(2025); // Esto también llamará a updateYearButtonStyles() y updateChartColors()
 });
 </script>
 
