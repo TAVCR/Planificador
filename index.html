@@ -22,25 +22,26 @@
 </head>
 <body class="antialiased">
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-screen-2xl">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-5xl font-bold text-title">Planificador Estratégico de Eventos</h1>
-            <p class="text-lg text-subtitle mt-2">Restaurante Antologías: 2025-2026</p>
-        </header>
-
-        <div class="absolute top-4 right-4 flex items-center space-x-4">
-            <!-- Colorblind Mode Toggle -->
-            <div class="flex items-center">
-                <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mr-2">Daltónico</span>
-                <label for="colorblind-toggle" class="inline-flex relative items-center cursor-pointer">
-                    <input type="checkbox" value="" id="colorblind-toggle" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-accent"></div>
-                </label>
+        <div class="flex justify-between items-center mb-8 flex-wrap">
+            <header class="text-left">
+                <h1 class="text-3xl md:text-5xl font-bold text-title">Planificador Estratégico de Eventos</h1>
+                <p class="text-lg text-subtitle mt-2">Restaurante Antologías: 2025-2026</p>
+            </header>
+            <div class="flex items-center space-x-2 sm:space-x-4 mt-4 sm:mt-0">
+                <!-- Colorblind Mode Toggle -->
+                <div class="flex items-center">
+                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mr-2">Daltónico</span>
+                    <label for="colorblind-toggle" class="inline-flex relative items-center cursor-pointer">
+                        <input type="checkbox" value="" id="colorblind-toggle" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-accent"></div>
+                    </label>
+                </div>
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                    <svg id="theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z"></path></svg>
+                </button>
             </div>
-            <!-- Dark Mode Toggle -->
-            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                <svg id="theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                <svg id="theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z"></path></svg>
-            </button>
         </div>
 
         <nav class="flex flex-wrap justify-center mb-8 bg-light-accent rounded-full p-1 max-w-xl mx-auto shadow-inner">
