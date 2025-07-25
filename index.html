@@ -489,146 +489,99 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // =================================================================================
-    // CENTRAL COLOR CONFIGURATION
-    // Modify these values to change the color palette of the entire application.
+    // CONFIGURACIÓN CENTRAL DE COLORES
+    // Modifique estos valores para cambiar la paleta de colores de toda la aplicación.
     // =================================================================================
     const defaultColorPalette = {
         opportunityHigh: {
-            bg: '#2E7D32', // Green
+            bg: '#2E7D32', // Verde
             text: '#FFFFFF'
         },
         opportunityMedium: {
-            bg: '#FFC107', // Yellow
+            bg: '#FFC107', // Amarillo
             text: '#3D3B38'
         },
         opportunityLow: {
-            bg: '#C62828', // Red
+            bg: '#C62828', // Rojo
             text: '#FFFFFF'
         },
         payday: {
-            bg: '#1565C0', // Blue
+            bg: '#1565C0', // Azul
             text: '#FFFFFF'
         }
     };
 
-    // Colorblind-friendly palette (Purple for Green, Orange for Red)
+    // Paleta de colores amigable para daltónicos (Púrpura para Verde, Naranja para Rojo)
     const colorblindColorPalette = {
         opportunityHigh: {
-            bg: '#9933CC', // Distinct Purple for High Opportunity (was Strong Blue)
+            bg: '#9933CC', // Púrpura distinto para Oportunidad Alta
             text: '#FFFFFF'
         },
         opportunityMedium: {
-            bg: '#FFC107', // Yellow (same as default) for Medium Risk
+            bg: '#FFC107', // Amarillo (igual que el predeterminado) para Riesgo Medio
             text: '#3D3B38'
         },
         opportunityLow: {
-            bg: '#FF6600', // Bright Orange for High Risk
+            bg: '#FF6600', // Naranja brillante para Riesgo Alto
             text: '#FFFFFF'
         },
         payday: {
-            bg: '#1565C0', // Blue (same as default) for Payday
+            bg: '#1565C0', // Azul (igual que el predeterminado) para Día de Pago
             text: '#FFFFFF'
         }
     };
 
-    let currentActiveColorPalette; // This will be set based on isColorblindMode
+    let currentActiveColorPalette; // Se establecerá en función de isColorblindMode
 
-    // Function to dynamically inject color styles based on the active palette
-    const injectColorStyles = (palette) => {
-        let style = document.getElementById('dynamic-color-styles');
-        if (!style) {
-            style = document.createElement('style');
-            style.id = 'dynamic-color-styles';
-            document.head.appendChild(style);
-        }
-        style.innerHTML = `
-            .bg-green-opportunity { background-color: ${palette.opportunityHigh.bg}; color: ${palette.opportunityHigh.text}; }
-            .bg-yellow-opportunity { background-color: ${palette.opportunityMedium.bg}; color: ${palette.opportunityMedium.text}; }
-            .bg-red-opportunity { background-color: ${palette.opportunityLow.bg}; color: ${palette.opportunityLow.text}; }
-            .bg-blue-payday { background-color: ${palette.payday.bg}; color: ${palette.payday.text}; }
-        `;
+    // Variables de estado
+    let currentYear = 2025;
+    let selectedDayElement = null;
+    let opportunityChart = null;
+    let paydayChart = null; 
+    let isLightMode = localStorage.getItem('theme') === 'light';
+    let isColorblindMode = localStorage.getItem('colorblind') === 'true';
 
-        const root = document.documentElement; // Target the root element for CSS variables
+    // Referencias a elementos del DOM
+    const calendarsContainer = document.getElementById('calendars-container');
+    const detailsContentDesktop = document.getElementById('details-content-desktop');
+    const detailsContentMobile = document.getElementById('details-content-mobile');
+    const modal = document.getElementById('details-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const colorblindToggleBtn = document.getElementById('colorblind-toggle');
+    const body = document.body;
 
-        // Update strategy card border colors based on the active palette
-        root.style.setProperty('--strategy-green-border', palette.opportunityHigh.bg);
-        root.style.setProperty('--strategy-red-border', palette.opportunityLow.bg);
-        root.style.setProperty('--strategy-yellow-border', palette.opportunityMedium.bg); // Yellow border is always yellow
-
-        // Update strategy card background and text colors based on colorblind mode and light/dark mode
-        if (isColorblindMode) {
-            // Colorblind mode specific background/text for dark theme
-            root.style.setProperty('--strategy-green-bg', `${palette.opportunityHigh.bg}20`); // Purple with opacity
-            root.style.setProperty('--strategy-green-text', '#CC99FF'); // Light purple text
-
-            root.style.setProperty('--strategy-red-bg', `${palette.opportunityLow.bg}20`); // Orange with opacity
-            root.style.setProperty('--strategy-red-text', '#FFCC99'); // Light orange text
-
-            // Yellow card background/text remains constant for both colorblind and non-colorblind modes
-            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
-            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
-
-            // Light mode specific for colorblind - define these as overrides in the CSS directly
-            // and let the CSS cascade handle it. No need to set light mode specific variables here.
-            // Ensure the CSS for light mode strategy cards is updated to use the colorblind palette's actual colors
-            // or a suitable light-mode equivalent if the colorblind palette's colors are too dark for light backgrounds.
-            // For now, I'll assume the existing light-mode overrides in CSS are acceptable or will be adjusted.
-        } else {
-            // Default (non-colorblind) background/text for dark theme
-            root.style.setProperty('--strategy-green-bg', `rgba(46, 125, 50, 0.2)`);
-            root.style.setProperty('--strategy-green-text', `#A7D9A9`);
-
-            root.style.setProperty('--strategy-red-bg', `rgba(198, 40, 40, 0.2)`);
-            root.style.setProperty('--strategy-red-text', `#FFCDD2`);
-
-            // Yellow card background/text remains constant for both colorblind and non-colorblind modes
-            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
-            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
-        }
+    const views = {
+        calendario: document.getElementById('view-calendario'),
+        analisis: document.getElementById('view-analisis'),
+        estrategias: document.getElementById('view-estrategias'),
+        clima: document.getElementById('view-clima'),
     };
 
-    // Function to generate a dynamic icon and manifest for PWA
-    const setupPwaAssets = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 192;
-        canvas.height = 192;
-        const ctx = canvas.getContext('2d');
-
-        // Draw Icon
-        ctx.fillStyle = '#6D5D4B'; // Background color
-        ctx.fillRect(0, 0, 192, 192);
-        ctx.font = 'bold 120px sans-serif';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('A', 192 / 2, 192 / 2 + 10);
-        
-        const iconUrl = canvas.toDataURL('image/png');
-        
-        document.getElementById('apple-touch-icon-link').href = iconUrl;
-
-        // Create Manifest
-        const manifest = {
-            "name": "Planificador Antologías",
-            "short_name": "Antologías",
-            "start_url": ".",
-            "display": "standalone",
-            "background_color": "#121212",
-            "theme_color": "#1E1E1E",
-            "icons": [
-                {
-                    "src": iconUrl,
-                    "sizes": "192x192",
-                    "type": "image/png"
-                }
-            ]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        const manifestUrl = URL.createObjectURL(manifestBlob);
-        document.getElementById('manifest-link').href = manifestUrl;
+    const navButtons = {
+        calendario: document.getElementById('nav-calendario'),
+        analisis: document.getElementById('nav-analisis'),
+        estrategias: document.getElementById('nav-estrategias'),
+        clima: document.getElementById('nav-clima'),
     };
 
-    // Event Data for Calendar
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtonLabels = { 
+        'all': 'Todos',
+        'green': 'Verdes',
+        'yellow': 'Amarillos',
+        'red': 'Rojos',
+        'blue': 'Días de Pago'
+    };
+    const colorblindFilterButtonLabels = { 
+        'all': 'Todos',
+        'green': 'Púrpuras', 
+        'yellow': 'Amarillos',
+        'red': 'Naranjas', 
+        'blue': 'Días de Pago'
+    };
+
+    // Datos de eventos y contenido
     const eventData = {
         '2025-07-01': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (temporada lluviosa) y post-quincena. Requiere plan B para lluvia.' },
         '2025-07-04': { cat: 'red', day: 'Viernes', reason: 'Inicio de vacaciones escolares MEP, alto éxodo de la GAM.' },
@@ -842,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const climateData = [
-        { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Enero', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
@@ -856,51 +809,93 @@ document.addEventListener('DOMContentLoaded', () => {
         { month: 'Diciembre', risk: '🟢', justification: 'Inicio de la temporada seca. La probabilidad de lluvia disminuisce drásticamente. Planificar con confianza.' },
     ];
 
-    let currentYear = 2025;
-    let selectedDayElement = null;
-    let opportunityChart = null;
-    let paydayChart = null; // New chart instance for Paydays
-    const calendarsContainer = document.getElementById('calendars-container');
-    const detailsContentDesktop = document.getElementById('details-content-desktop');
-    const detailsContentMobile = document.getElementById('details-content-mobile');
-    const modal = document.getElementById('details-modal');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const colorblindToggleBtn = document.getElementById('colorblind-toggle'); // Get the new toggle button
-    const body = document.body;
+    // Función para inyectar los estilos de color dinámicamente
+    const injectColorStyles = (palette) => {
+        let style = document.getElementById('dynamic-color-styles');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'dynamic-color-styles';
+            document.head.appendChild(style);
+        }
+        style.innerHTML = `
+            .bg-green-opportunity { background-color: ${palette.opportunityHigh.bg}; color: ${palette.opportunityHigh.text}; }
+            .bg-yellow-opportunity { background-color: ${palette.opportunityMedium.bg}; color: ${palette.opportunityMedium.text}; }
+            .bg-red-opportunity { background-color: ${palette.opportunityLow.bg}; color: ${palette.opportunityLow.text}; }
+            .bg-blue-payday { background-color: ${palette.payday.bg}; color: ${palette.payday.text}; }
+        `;
 
+        const root = document.documentElement; 
 
-    const views = {
-        calendario: document.getElementById('view-calendario'),
-        analisis: document.getElementById('view-analisis'),
-        estrategias: document.getElementById('view-estrategias'),
-        clima: document.getElementById('view-clima'),
+        // Actualizar los colores de borde de las tarjetas de estrategia según la paleta activa
+        root.style.setProperty('--strategy-green-border', palette.opportunityHigh.bg);
+        root.style.setProperty('--strategy-red-border', palette.opportunityLow.bg);
+        root.style.setProperty('--strategy-yellow-border', palette.opportunityMedium.bg); 
+
+        // Actualizar el fondo y el color del texto de las tarjetas de estrategia
+        if (isColorblindMode) {
+            root.style.setProperty('--strategy-green-bg', `${palette.opportunityHigh.bg}20`); 
+            root.style.setProperty('--strategy-green-text', '#CC99FF'); 
+
+            root.style.setProperty('--strategy-red-bg', `${palette.opportunityLow.bg}20`); 
+            root.style.setProperty('--strategy-red-text', '#FFCC99'); 
+
+            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
+            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
+
+        } else {
+            root.style.setProperty('--strategy-green-bg', `rgba(46, 125, 50, 0.2)`);
+            root.style.setProperty('--strategy-green-text', `#A7D9A9`);
+
+            root.style.setProperty('--strategy-red-bg', `rgba(198, 40, 40, 0.2)`);
+            root.style.setProperty('--strategy-red-text', `#FFCDD2`);
+
+            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
+            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
+        }
     };
 
-    const navButtons = {
-        calendario: document.getElementById('nav-calendario'),
-        analisis: document.getElementById('nav-analisis'),
-        estrategias: document.getElementById('nav-estrategias'),
-        clima: document.getElementById('nav-clima'),
-    };
-    
-    function switchView(viewName) {
-        Object.values(views).forEach(v => v.classList.add('hidden'));
-        Object.values(navButtons).forEach(b => b.classList.replace('nav-active', 'nav-inactive'));
+    // Función para generar un icono dinámico y un manifiesto para PWA
+    const setupPwaAssets = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 192;
+        canvas.height = 192;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = '#6D5D4B'; 
+        ctx.fillRect(0, 0, 192, 192);
+        ctx.font = 'bold 120px sans-serif';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('A', 192 / 2, 192 / 2 + 10);
         
-        views[viewName].classList.remove('hidden');
-        navButtons[viewName].classList.replace('nav-inactive', 'nav-active');
-        window.scrollTo(0, 0);
-    }
+        const iconUrl = canvas.toDataURL('image/png');
+        
+        document.getElementById('apple-touch-icon-link').href = iconUrl;
 
-    Object.keys(navButtons).forEach(key => {
-        navButtons[key].addEventListener('click', () => switchView(key));
-    });
+        const manifest = {
+            "name": "Planificador Antologías",
+            "short_name": "Antologías",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#121212",
+            "theme_color": "#1E1E1E",
+            "icons": [
+                {
+                    "src": iconUrl,
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        document.getElementById('manifest-link').href = manifestUrl;
+    };
 
     const getDayClass = (dateString) => {
         const data = eventData[dateString];
         if (data) {
-            // These classes are dynamically mapped to the currentActiveColorPalette
             if (data.cat === 'green') return 'bg-green-opportunity';
             if (data.cat === 'yellow') return 'bg-yellow-opportunity';
             if (data.cat === 'red') return 'bg-red-opportunity';
@@ -956,18 +951,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString('es-ES', options);
 
-        let html = `<h4 class="font-bold text-lg text-gray-100 capitalize">${formattedDate}</h4>`; // Text color is adjusted by light/dark mode CSS
-
-        // Adjust text color based on current theme for details panel
         const textColorClass = body.classList.contains('light-mode') ? 'text-gray-700' : 'text-gray-100';
         const mutedTextColorClass = body.classList.contains('light-mode') ? 'text-gray-600' : 'text-gray-300';
         const veryMutedTextColorClass = body.classList.contains('light-mode') ? 'text-gray-500' : 'text-gray-500';
 
-        html = `<h4 class="font-bold text-lg ${textColorClass} capitalize">${formattedDate}</h4>`;
+        let html = `<h4 class="font-bold text-lg ${textColorClass} capitalize">${formattedDate}</h4>`;
         
         if (data) {
             let emoji, statusText;
-            // Determine emoji and status text based on original category, not colorblind mapping
             if(data.cat === 'green') {
                 emoji = '🟢'; statusText = 'Oportunidad Alta';
             } else if (data.cat === 'yellow') {
@@ -978,7 +969,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 emoji = '🔵'; statusText = 'Día de Pago';
             }
 
-            // Use inline style for color to ensure it reflects the active palette correctly
             let detailColor = '';
             if (data.cat === 'green') detailColor = currentActiveColorPalette.opportunityHigh.bg;
             else if (data.cat === 'yellow') detailColor = currentActiveColorPalette.opportunityMedium.bg;
@@ -1018,41 +1008,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
-    modalCloseBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    calendarsContainer.addEventListener('click', (e) => {
-        const dayElement = e.target.closest('.day');
-        if (dayElement) {
-            const date = dayElement.dataset.date;
-            if (selectedDayElement) {
-                selectedDayElement.classList.remove('selected');
-            }
-            dayElement.classList.add('selected');
-            selectedDayElement = dayElement;
-            showDayDetails(date);
-        }
-    });
-
-    // Function to update the styles of the year buttons based on active year and theme
+    // Función para actualizar los estilos de los botones de año
     function updateYearButtonStyles() {
         const year2025Btn = document.getElementById('year-2025');
         const year2026Btn = document.getElementById('year-2026');
         const isLightMode = body.classList.contains('light-mode');
 
-        // Clear all year-button specific classes first
         year2025Btn.classList.remove('year-btn-active-dark', 'year-btn-inactive-dark', 'year-btn-active-light', 'year-btn-inactive-light');
         year2026Btn.classList.remove('year-btn-active-dark', 'year-btn-inactive-dark', 'year-btn-active-light', 'year-btn-inactive-light');
         
-        // Apply classes based on current year and theme
         if (currentYear === 2025) {
             year2025Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
             year2026Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
-        } else { // currentYear === 2026
+        } else { 
             year2026Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
             year2025Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
         }
@@ -1069,52 +1037,16 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedDayElement = null;
         }
 
-        updateYearButtonStyles(); // Update button styles
-        updateChartColors(); // Call to update chart colors based on current theme
-        createPaydayChart(); // Re-create payday chart as well
+        updateYearButtonStyles(); 
+        updateChartColors(); 
+        createPaydayChart(); 
     }
     
-    document.getElementById('year-2025').addEventListener('click', () => updateActiveYear(2025));
-    document.getElementById('year-2026').addEventListener('click', () => updateActiveYear(2026));
-    document.getElementById('print-btn').addEventListener('click', () => window.print());
-
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const filterButtonLabels = { // Map original filter data-filter to display text
-        'all': 'Todos',
-        'green': 'Verdes',
-        'yellow': 'Amarillos',
-        'red': 'Rojos',
-        'blue': 'Días de Pago'
-    };
-    const colorblindFilterButtonLabels = { // Map for colorblind mode
-        'all': 'Todos',
-        'green': 'Púrpuras', // Changed from Verdes
-        'yellow': 'Amarillos',
-        'red': 'Naranjas', // Changed from Rojos
-        'blue': 'Días de Pago'
-    };
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            filterButtons.forEach(btn => {
-                btn.classList.remove('filter-btn-active');
-                // Remove specific dark mode background if it was applied
-                btn.classList.remove('bg-[#383838]'); 
-                // Add default background, which will be overridden by light-mode if active
-                if (!body.classList.contains('light-mode')) {
-                    btn.classList.add('bg-[#383838]'); 
-                }
-            });
-            button.classList.add('filter-btn-active');
-            filterCalendar(button.dataset.filter);
-        });
-    });
-
     function updateFilterButtonLabels() {
         const labelsToUse = isColorblindMode ? colorblindFilterButtonLabels : filterButtonLabels;
         filterButtons.forEach(button => {
             const dataFilter = button.dataset.filter;
-            button.innerHTML = `<span>${labelsToUse[dataFilter]}</span>`; // Update text content
+            button.innerHTML = `<span>${labelsToUse[dataFilter]}</span>`; 
         });
     }
 
@@ -1152,7 +1084,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return counts;
     }
 
-    // Function to count payday events
     function countPaydays(year) {
         let count = 0;
         for (const dateString in eventData) {
@@ -1163,7 +1094,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return count;
     }
 
-    // Function to update chart colors based on the current theme
     function updateChartColors() {
         if (!opportunityChart) return;
 
@@ -1176,21 +1106,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const tooltipBorder = isLightMode ? '#CCCCCC' : '#444444';
         const tooltipColor = isLightMode ? '#333333' : '#E0E0E0';
 
-        // Update grid and tick colors for opportunityChart
         opportunityChart.options.scales.y.grid.color = gridColor;
         opportunityChart.options.scales.y.ticks.color = tickColor;
         opportunityChart.options.scales.y.title.color = labelColor;
         opportunityChart.options.scales.x.ticks.color = tickColor;
 
-        // Update legend and tooltip colors for opportunityChart
         opportunityChart.options.plugins.legend.labels.color = labelColor;
         opportunityChart.options.plugins.tooltip.backgroundColor = tooltipBg;
         opportunityChart.options.plugins.tooltip.borderColor = tooltipBorder;
         opportunityChart.options.plugins.tooltip.titleColor = tooltipColor;
         opportunityChart.options.plugins.tooltip.bodyColor = tooltipColor;
 
-        // Update bar colors based on active year and theme for opportunityChart
-        const activeColor = isLightMode ? '#6D5D4B' : '#A99D8B'; // Adjusted for light mode
+        const activeColor = isLightMode ? '#6D5D4B' : '#A99D8B'; 
         const inactiveColor = isLightMode ? '#AAAAAA' : '#555555';
         const activeBorder = isLightMode ? '#4A3D30' : '#6D5D4B';
         const inactiveBorder = isLightMode ? '#888888' : '#888888';
@@ -1203,7 +1130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         opportunityChart.update();
 
-        // Update colors for paydayChart if it exists
         if (paydayChart) {
             paydayChart.options.scales.y.grid.color = gridColor;
             paydayChart.options.scales.y.ticks.color = tickColor;
@@ -1215,7 +1141,6 @@ document.addEventListener('DOMContentLoaded', () => {
             paydayChart.options.plugins.tooltip.titleColor = tooltipColor;
             paydayChart.options.plugins.tooltip.bodyColor = tooltipColor;
 
-            // Update bar colors for paydayChart
             paydayChart.data.datasets[0].backgroundColor = currentYear === 2025 ? currentActiveColorPalette.payday.bg : inactiveColor;
             paydayChart.data.datasets[0].borderColor = currentYear === 2025 ? currentActiveColorPalette.payday.bg : inactiveBorder;
             paydayChart.data.datasets[1].backgroundColor = currentYear === 2026 ? currentActiveColorPalette.payday.bg : inactiveColor;
@@ -1255,17 +1180,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: '#444444' // Default dark mode color
+                            color: '#444444' 
                         },
                         ticks: {
                            stepSize: 5,
-                           color: '#E0E0E0' // Default dark mode color
+                           color: '#E0E0E0' 
                         },
                         title: {
                             display: true,
                             text: 'Número de Viernes y Sábados',
                             font: { size: 14 },
-                            color: '#E0E0E0' // Default dark mode color
+                            color: '#E0E0E0' 
                         }
                     },
                     x: {
@@ -1273,7 +1198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             display: false
                         },
                         ticks: {
-                            color: '#E0E0E0' // Default dark mode color
+                            color: '#E0E0E0' 
                         }
                     }
                 },
@@ -1281,11 +1206,11 @@ document.addEventListener('DOMContentLoaded', () => {
                      legend: {
                         position: 'top',
                         labels: {
-                            color: '#E0E0E0' // Default dark mode color
+                            color: '#E0E0E0' 
                         }
                      },
                      tooltip: {
-                        backgroundColor: '#121212', // Default dark mode color
+                        backgroundColor: '#121212', 
                         titleFont: { size: 16 },
                         bodyFont: { size: 14 },
                         callbacks: {
@@ -1300,17 +1225,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        // updateChartColors(); // Initial call to set colors based on current theme, now handled by updateActiveYear
     }
 
-    // New function to create the Payday chart
     function createPaydayChart() {
         const ctx = document.getElementById('paydayChart').getContext('2d');
         const paydays2025 = countPaydays('2025');
         const paydays2026 = countPaydays('2026');
 
         if (paydayChart) {
-            paydayChart.destroy(); // Destroy existing chart instance if it exists
+            paydayChart.destroy(); 
         }
         
         paydayChart = new Chart(ctx, {
@@ -1321,16 +1244,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: '2025',
                         data: [paydays2025],
-                        backgroundColor: currentActiveColorPalette.payday.bg, // Use dynamic color
-                        borderColor: currentActiveColorPalette.payday.bg, // Use dynamic color
+                        backgroundColor: currentActiveColorPalette.payday.bg, 
+                        borderColor: currentActiveColorPalette.payday.bg, 
                         borderWidth: 2,
                         borderRadius: 5,
                     },
                     {
                         label: '2026',
                         data: [paydays2026],
-                        backgroundColor: currentActiveColorPalette.payday.bg, // Use dynamic color
-                        borderColor: currentActiveColorPalette.payday.bg, // Use dynamic color
+                        backgroundColor: currentActiveColorPalette.payday.bg, 
+                        borderColor: currentActiveColorPalette.payday.bg, 
                         borderWidth: 2,
                         borderRadius: 5,
                     }
@@ -1346,7 +1269,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             color: '#444444'
                         },
                         ticks: {
-                           stepSize: 1, // Paydays are typically fewer, so smaller step size
+                           stepSize: 1, 
                            color: '#E0E0E0'
                         },
                         title: {
@@ -1388,7 +1311,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        // updateChartColors(); // Initial call to set colors, handled by updateActiveYear
     }
 
     function createAccordion() {
@@ -1413,13 +1335,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const content = button.nextElementSibling;
                 const icon = button.querySelector('svg');
                 
-                const isOpening = !content.style.maxHeight || content.style.maxHeight === '0px'; // Check for '0px' too
+                const isOpening = !content.style.maxHeight || content.style.maxHeight === '0px'; 
 
-                // Close all other accordions
                 container.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
                 container.querySelectorAll('.accordion-button svg').forEach(i => i.style.transform = 'rotate(0deg)');
                 
-                // Open the clicked accordion if it was closed
                 if (isOpening) {
                     content.style.maxHeight = content.scrollHeight + "px";
                     icon.style.transform = 'rotate(180deg)';
@@ -1433,9 +1353,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         climateData.forEach(item => {
             let riskClass = '';
-            // These classes are already defined with specific colors and backgrounds
-            // and will be overridden by light-mode CSS if active.
-            // For colorblind mode, these will map to the currentActiveColorPalette
             if (item.risk === '🟢') riskClass = 'text-green-300 bg-green-900';
             if (item.risk === '🟡') riskClass = 'text-yellow-300 bg-yellow-900';
             if (item.risk === '🔴') riskClass = 'text-red-300 bg-red-900';
@@ -1451,61 +1368,53 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = html;
     }
 
-    // =================================================================================
-    // THEME TOGGLE LOGIC
-    // =================================================================================
-    let isLightMode = localStorage.getItem('theme') === 'light';
-    let isColorblindMode = localStorage.getItem('colorblind') === 'true';
-
+    // Función para aplicar el tema (claro/oscuro)
     const applyTheme = (lightMode) => {
         if (lightMode) {
             body.classList.add('light-mode');
-            themeToggleBtn.textContent = '🌙'; // Moon icon for dark mode
+            themeToggleBtn.textContent = '🌙'; 
         } else {
             body.classList.remove('light-mode');
-            themeToggleBtn.textContent = '☀️'; // Sun icon for light mode
+            themeToggleBtn.textContent = '☀️'; 
         }
-        // Reapply filter button styles based on new theme
         filterButtons.forEach(btn => {
-            btn.classList.remove('bg-[#383838]'); // Remove dark mode specific background
+            btn.classList.remove('bg-[#383838]'); 
             if (!lightMode && !btn.classList.contains('filter-btn-active')) {
                 btn.classList.add('bg-[#383838]'); 
             }
         });
-        updateYearButtonStyles(); // Update year button styles when theme changes
-        updateChartColors(); // Update chart colors whenever theme changes
+        updateYearButtonStyles(); 
+        updateChartColors(); 
     };
 
-    // Function to update colorblind mode
+    // Función para actualizar el modo daltónico
     const updateColorblindMode = (enable) => {
         isColorblindMode = enable;
         localStorage.setItem('colorblind', enable);
         currentActiveColorPalette = enable ? colorblindColorPalette : defaultColorPalette;
-        injectColorStyles(currentActiveColorPalette); // Re-inject styles for the new palette
+        injectColorStyles(currentActiveColorPalette); 
         
-        // Re-render calendar and climate table to apply new colors
         calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026);
-        document.getElementById('calendar-grid-2026').classList.add('hidden'); // Ensure correct year is hidden
-        createClimateTable(); // Re-create table with new colors
-        updateActiveYear(currentYear); // Re-apply year button styles and chart colors
-        updateFilterButtonLabels(); // Update filter button labels
-        updateStrategyCardTitles(); // Update strategy card titles
+        document.getElementById('calendar-grid-2026').classList.add('hidden'); 
+        createClimateTable(); 
+        updateActiveYear(currentYear); 
+        updateFilterButtonLabels(); 
+        updateStrategyCardTitles(); 
 
-        // Update toggle button text/icon
-        colorblindToggleBtn.textContent = isColorblindMode ? '🎨' : '🌈'; // Paint palette for active CB mode, rainbow for default
+        colorblindToggleBtn.textContent = isColorblindMode ? '🎨' : '🌈'; 
     };
 
-    // Function to update strategy card titles
+    // Función para actualizar los títulos de las tarjetas de estrategia (incluyendo emojis)
     function updateStrategyCardTitles() {
         const strategyGreenTitle = document.getElementById('strategy-green-title');
         const strategyRedTitle = document.getElementById('strategy-red-title');
 
         if (isColorblindMode) {
             if (strategyGreenTitle) {
-                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E3;</span> Fechas Púrpuras: Maximizar`; // Purple circle emoji
+                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E3;</span> Fechas Púrpuras: Maximizar`; // Emoji de círculo púrpura
             }
             if (strategyRedTitle) {
-                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E0;</span> Fechas Naranjas: Mitigar`; // Orange circle emoji
+                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E0;</span> Fechas Naranjas: Mitigar`; // Emoji de círculo naranja
             }
         } else {
             if (strategyGreenTitle) {
@@ -1517,34 +1426,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Función principal de inicialización de la aplicación
+    const initApp = () => {
+        setupPwaAssets();
+        applyTheme(isLightMode); 
+        updateColorblindMode(isColorblindMode); 
+        createAccordion();
+        createChart(); 
+        createPaydayChart(); 
+        updateActiveYear(2025); 
+        setupEventListeners();
+    };
 
-    // Set initial themes on load
-    applyTheme(isLightMode); // Apply light/dark mode first
-    updateColorblindMode(isColorblindMode); // Then apply colorblind mode, which will also re-render colors
+    // Configuración de los escuchadores de eventos
+    const setupEventListeners = () => {
+        document.getElementById('year-2025').addEventListener('click', () => updateActiveYear(2025));
+        document.getElementById('year-2026').addEventListener('click', () => updateActiveYear(2026));
+        document.getElementById('print-btn').addEventListener('click', () => window.print());
 
-    themeToggleBtn.addEventListener('click', () => {
-        isLightMode = !isLightMode;
-        localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
-        applyTheme(isLightMode);
-    });
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('filter-btn-active');
+                    btn.classList.remove('bg-[#383838]'); 
+                    if (!isLightMode && !btn.classList.contains('filter-btn-active')) {
+                        btn.classList.add('bg-[#383838]'); 
+                    }
+                });
+                button.classList.add('filter-btn-active');
+                filterCalendar(button.dataset.filter);
+            });
+        });
 
-    colorblindToggleBtn.addEventListener('click', () => {
-        updateColorblindMode(!isColorblindMode);
-    });
+        calendarsContainer.addEventListener('click', (e) => {
+            const dayElement = e.target.closest('.day');
+            if (dayElement) {
+                const date = dayElement.dataset.date;
+                if (selectedDayElement) {
+                    selectedDayElement.classList.remove('selected');
+                }
+                dayElement.classList.add('selected');
+                selectedDayElement = dayElement;
+                showDayDetails(date);
+            }
+        });
 
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
 
-    // Initialize the application
-    setupPwaAssets();
-    // injectColorStyles is now called by applyTheme and updateColorblindMode
-    // calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026); // This is now called by updateColorblindMode
-    // document.getElementById('calendar-grid-2026').classList.add('hidden'); // This is now called by updateColorblindMode
-    
-    createAccordion();
-    // createClimateTable(); // This is now called by updateColorblindMode
-    createChart(); // Create the main opportunity chart
-    createPaydayChart(); // Create the new payday chart
-    updateActiveYear(2025); // This will call updateYearButtonStyles() and updateChartColors() for both charts
+        themeToggleBtn.addEventListener('click', () => {
+            isLightMode = !isLightMode;
+            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+            applyTheme(isLightMode);
+        });
+
+        colorblindToggleBtn.addEventListener('click', () => {
+            updateColorblindMode(!isColorblindMode);
+        });
+
+        Object.keys(navButtons).forEach(key => {
+            navButtons[key].addEventListener('click', () => switchView(key));
+        });
+    };
+
+    // Inicializar la aplicación cuando el DOM esté completamente cargado
+    initApp();
 });
 </script>
 </body>
 </html>
+�
