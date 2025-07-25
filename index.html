@@ -313,7 +313,7 @@
                     </div>
                 </div>
 
-                <div class="mt-12 p-6 dark-mode-surface rounded-2xl dark-mode-shadow">
+                <div class="mt-12 p-4 dark-mode-surface rounded-2xl dark-mode-shadow"> <!-- Changed p-6 to p-4 here -->
                     <h2 class="text-2xl font-bold text-center mb-6 dark-mode-text-header">Comparativa de Oportunidades (Viernes y Sábados)</h2>
                      <div class="chart-container">
                         <canvas id="opportunityChart"></canvas>
@@ -453,10 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Colorblind-friendly palette (Blue for Green, Orange for Red)
+    // Colorblind-friendly palette (Purple for Green, Orange for Red)
     const colorblindColorPalette = {
         opportunityHigh: {
-            bg: '#3366CC', // Strong Blue for High Opportunity
+            bg: '#9933CC', // Distinct Purple for High Opportunity (was Strong Blue)
             text: '#FFFFFF'
         },
         opportunityMedium: {
@@ -868,34 +868,19 @@ document.addEventListener('DOMContentLoaded', () => {
         html = `<h4 class="font-bold text-lg ${textColorClass} capitalize">${formattedDate}</h4>`;
         
         if (data) {
-            let emoji, colorClass, statusText;
-            // Use currentActiveColorPalette for display in details panel
+            let emoji, statusText;
+            // Determine emoji and status text based on original category, not colorblind mapping
             if(data.cat === 'green') {
-                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = `text-[${currentActiveColorPalette.opportunityHigh.bg}]`;
+                emoji = '🟢'; statusText = 'Oportunidad Alta';
             } else if (data.cat === 'yellow') {
-                emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = `text-[${currentActiveColorPalette.opportunityMedium.bg}]`;
+                emoji = '🟡'; statusText = 'Riesgo Medio';
             } else if (data.cat === 'red') {
-                emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = `text-[${currentActiveColorPalette.opportunityLow.bg}]`;
+                emoji = '🔴'; statusText = 'Riesgo Alto';
             } else if (data.cat === 'blue') {
-                emoji = '🔵'; statusText = 'Día de Pago'; colorClass = `text-[${currentActiveColorPalette.payday.bg}]`;
-            }
-            // Tailwind JIT mode needs full class names, so direct hex values in text-[] might not work without safelisting.
-            // For simplicity and direct application, we'll use the pre-defined Tailwind classes that are mapped via injectColorStyles.
-            // However, for the emoji and status text, we can use the original logic.
-            // The text color of the emoji/status will be handled by the general text color of the panel,
-            // but for the sake of showing the color, we can use the hex value directly.
-            // Let's revert to using the pre-defined classes for consistency with the calendar.
-            if(data.cat === 'green') {
-                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400'; // This will be overridden by dynamic styles
-            } else if (data.cat === 'yellow') {
-                emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-400';
-            } else if (data.cat === 'red') {
-                emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = 'text-red-400';
-            } else if (data.cat === 'blue') {
-                emoji = '🔵'; statusText = 'Día de Pago'; colorClass = 'text-blue-400';
+                emoji = '🔵'; statusText = 'Día de Pago';
             }
 
-            // To ensure the color in the details panel reflects the active palette, we can use inline style for this specific text.
+            // Use inline style for color to ensure it reflects the active palette correctly
             let detailColor = '';
             if (data.cat === 'green') detailColor = currentActiveColorPalette.opportunityHigh.bg;
             else if (data.cat === 'yellow') detailColor = currentActiveColorPalette.opportunityMedium.bg;
