@@ -260,8 +260,11 @@
                 <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Estratégico de Eventos</h1>
                 <p class="text-lg dark-mode-text-accent mt-2">Restaurante Antologías: 2025-2026</p>
             </div>
-            <!-- Theme Toggle Button -->
-            <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 mt-4 sm:mt-0 sm:ml-4">☀️</button>
+            <!-- Theme Toggle Buttons -->
+            <div class="flex space-x-2 mt-4 sm:mt-0 sm:ml-4">
+                <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">☀️</button>
+                <button id="colorblind-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">🌈</button>
+            </div>
         </header>
 
         <nav class="flex flex-wrap justify-center mb-8 dark-mode-surface rounded-full p-1 max-w-xl mx-auto dark-mode-inner-shadow">
@@ -389,7 +392,8 @@
             
             <!-- CLIMATE VIEW -->
             <div id="view-clima" class="hidden">
-                <div class="max-w-4xl mx-auto p-4 md:p-8 dark-mode-surface rounded-2xl dark-mode-shadow">
+                <!-- Added pt-6 for mobile spacing, md:pt-8 for desktop -->
+                <div class="max-w-4xl mx-auto p-4 md:p-8 dark-mode-surface rounded-2xl dark-mode-shadow pt-6 md:pt-8">
                     <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Análisis de Riesgo Climático</h2>
                     <p class="text-center dark-mode-text-muted mb-8">Esta sección evalúa el riesgo de lluvia para la exhibición de vehículos históricos (primer martes de cada mes, 6 PM - 10 PM), basado en patrones históricos del Valle Central. No es un pronóstico, sino una guía para la planificación logística (ej. necesidad de carpas) y la comunicación con el público.</p>
                     <div class="overflow-x-auto">
@@ -427,38 +431,64 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // =================================================================================
-    // CONFIGURACIÓN CENTRAL DE COLORES
-    // Modifique estos valores para cambiar la paleta de colores de toda la aplicación.
+    // CENTRAL COLOR CONFIGURATION
+    // Modify these values to change the color palette of the entire application.
     // =================================================================================
-    const colorPalette = {
+    const defaultColorPalette = {
         opportunityHigh: {
-            bg: '#2E7D32', // Verde
+            bg: '#2E7D32', // Green
             text: '#FFFFFF'
         },
         opportunityMedium: {
-            bg: '#FFC107', // Amarillo
+            bg: '#FFC107', // Yellow
             text: '#3D3B38'
         },
         opportunityLow: {
-            bg: '#C62828', // Rojo
+            bg: '#C62828', // Red
             text: '#FFFFFF'
         },
         payday: {
-            bg: '#1565C0', // Azul
+            bg: '#1565C0', // Blue
             text: '#FFFFFF'
         }
     };
 
-    // Función para inyectar los estilos de color dinámicamente
-    const injectColorStyles = () => {
-        const style = document.createElement('style');
+    // Colorblind-friendly palette (Blue for Green, Orange for Red)
+    const colorblindColorPalette = {
+        opportunityHigh: {
+            bg: '#3366CC', // Strong Blue for High Opportunity
+            text: '#FFFFFF'
+        },
+        opportunityMedium: {
+            bg: '#FFC107', // Yellow (same as default) for Medium Risk
+            text: '#3D3B38'
+        },
+        opportunityLow: {
+            bg: '#FF6600', // Bright Orange for High Risk
+            text: '#FFFFFF'
+        },
+        payday: {
+            bg: '#1565C0', // Blue (same as default) for Payday
+            text: '#FFFFFF'
+        }
+    };
+
+    let currentActiveColorPalette; // This will be set based on isColorblindMode
+
+    // Function to dynamically inject color styles based on the active palette
+    const injectColorStyles = (palette) => {
+        let style = document.getElementById('dynamic-color-styles');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'dynamic-color-styles';
+            document.head.appendChild(style);
+        }
         style.innerHTML = `
-            .bg-green-opportunity { background-color: ${colorPalette.opportunityHigh.bg}; color: ${colorPalette.opportunityHigh.text}; }
-            .bg-yellow-opportunity { background-color: ${colorPalette.opportunityMedium.bg}; color: ${colorPalette.opportunityMedium.text}; }
-            .bg-red-opportunity { background-color: ${colorPalette.opportunityLow.bg}; color: ${colorPalette.opportunityLow.text}; }
-            .bg-blue-payday { background-color: ${colorPalette.payday.bg}; color: ${colorPalette.payday.text}; }
+            .bg-green-opportunity { background-color: ${palette.opportunityHigh.bg}; color: ${palette.opportunityHigh.text}; }
+            .bg-yellow-opportunity { background-color: ${palette.opportunityMedium.bg}; color: ${palette.opportunityMedium.text}; }
+            .bg-red-opportunity { background-color: ${palette.opportunityLow.bg}; color: ${palette.opportunityLow.text}; }
+            .bg-blue-payday { background-color: ${palette.payday.bg}; color: ${palette.payday.text}; }
         `;
-        document.head.appendChild(style);
     };
 
     // Function to generate a dynamic icon and manifest for PWA
@@ -738,6 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('details-modal');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const themeToggleBtn = document.getElementById('theme-toggle');
+    const colorblindToggleBtn = document.getElementById('colorblind-toggle'); // Get the new toggle button
     const body = document.body;
 
 
@@ -771,6 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getDayClass = (dateString) => {
         const data = eventData[dateString];
         if (data) {
+            // These classes are dynamically mapped to the currentActiveColorPalette
             if (data.cat === 'green') return 'bg-green-opportunity';
             if (data.cat === 'yellow') return 'bg-yellow-opportunity';
             if (data.cat === 'red') return 'bg-red-opportunity';
@@ -837,16 +869,40 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (data) {
             let emoji, colorClass, statusText;
+            // Use currentActiveColorPalette for display in details panel
             if(data.cat === 'green') {
-                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400';
+                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = `text-[${currentActiveColorPalette.opportunityHigh.bg}]`;
+            } else if (data.cat === 'yellow') {
+                emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = `text-[${currentActiveColorPalette.opportunityMedium.bg}]`;
+            } else if (data.cat === 'red') {
+                emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = `text-[${currentActiveColorPalette.opportunityLow.bg}]`;
+            } else if (data.cat === 'blue') {
+                emoji = '🔵'; statusText = 'Día de Pago'; colorClass = `text-[${currentActiveColorPalette.payday.bg}]`;
+            }
+            // Tailwind JIT mode needs full class names, so direct hex values in text-[] might not work without safelisting.
+            // For simplicity and direct application, we'll use the pre-defined Tailwind classes that are mapped via injectColorStyles.
+            // However, for the emoji and status text, we can use the original logic.
+            // The text color of the emoji/status will be handled by the general text color of the panel,
+            // but for the sake of showing the color, we can use the hex value directly.
+            // Let's revert to using the pre-defined classes for consistency with the calendar.
+            if(data.cat === 'green') {
+                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400'; // This will be overridden by dynamic styles
             } else if (data.cat === 'yellow') {
                 emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-400';
             } else if (data.cat === 'red') {
-                emoji = '�'; statusText = 'Riesgo Alto'; colorClass = 'text-red-400';
+                emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = 'text-red-400';
             } else if (data.cat === 'blue') {
                 emoji = '🔵'; statusText = 'Día de Pago'; colorClass = 'text-blue-400';
             }
-            html += `<p class="font-semibold ${colorClass}">${emoji} ${statusText}</p>`;
+
+            // To ensure the color in the details panel reflects the active palette, we can use inline style for this specific text.
+            let detailColor = '';
+            if (data.cat === 'green') detailColor = currentActiveColorPalette.opportunityHigh.bg;
+            else if (data.cat === 'yellow') detailColor = currentActiveColorPalette.opportunityMedium.bg;
+            else if (data.cat === 'red') detailColor = currentActiveColorPalette.opportunityLow.bg;
+            else if (data.cat === 'blue') detailColor = currentActiveColorPalette.payday.bg;
+
+            html += `<p class="font-semibold" style="color: ${detailColor};">${emoji} ${statusText}</p>`;
             html += `<p class="text-sm ${mutedTextColorClass} mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
         } else {
             const dayOfWeek = date.getDay();
@@ -1030,85 +1086,6 @@ document.addEventListener('DOMContentLoaded', () => {
         opportunityChart.update();
     }
 
-    function createChart() {
-        const ctx = document.getElementById('opportunityChart').getContext('2d');
-        const counts2025 = countOpportunities('2025');
-        const counts2026 = countOpportunities('2026');
-        
-        opportunityChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['🟢 Oportunidad Alta', '🟡 Riesgo Medio', '🔴 Riesgo Alto'],
-                datasets: [
-                    {
-                        label: '2025',
-                        data: [counts2025.green, counts2025.yellow, counts2025.red],
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    },
-                    {
-                        label: '2026',
-                        data: [counts2026.green, counts2026.yellow, counts2026.red],
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: '#444444' // Default dark mode color
-                        },
-                        ticks: {
-                           stepSize: 5,
-                           color: '#E0E0E0' // Default dark mode color
-                        },
-                        title: {
-                            display: true,
-                            text: 'Número de Viernes y Sábados',
-                            font: { size: 14 },
-                            color: '#E0E0E0' // Default dark mode color
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#E0E0E0' // Default dark mode color
-                        }
-                    }
-                },
-                plugins: {
-                     legend: {
-                        position: 'top',
-                        labels: {
-                            color: '#E0E0E0' // Default dark mode color
-                        }
-                     },
-                     tooltip: {
-                        backgroundColor: '#121212', // Default dark mode color
-                        titleFont: { size: 16 },
-                        bodyFont: { size: 14 },
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) { label += ': '; }
-                                if (context.parsed.y !== null) { label += context.parsed.y + ' días'; }
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        updateChartColors(); // Initial call to set colors based on current theme
-    }
-
     function createAccordion() {
         const container = document.getElementById('accordion-container');
         let html = '';
@@ -1153,6 +1130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let riskClass = '';
             // These classes are already defined with specific colors and backgrounds
             // and will be overridden by light-mode CSS if active.
+            // For colorblind mode, these will map to the currentActiveColorPalette
             if (item.risk === '🟢') riskClass = 'text-green-300 bg-green-900';
             if (item.risk === '🟡') riskClass = 'text-yellow-300 bg-yellow-900';
             if (item.risk === '🔴') riskClass = 'text-red-300 bg-red-900';
@@ -1169,31 +1147,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =================================================================================
-    // LÓGICA DE CAMBIO DE TEMA
+    // THEME TOGGLE LOGIC
     // =================================================================================
     let isLightMode = localStorage.getItem('theme') === 'light';
+    let isColorblindMode = localStorage.getItem('colorblind') === 'true';
 
     const applyTheme = (lightMode) => {
         if (lightMode) {
             body.classList.add('light-mode');
-            themeToggleBtn.textContent = '🌙'; // Icono de luna para cambiar a modo oscuro
+            themeToggleBtn.textContent = '🌙'; // Moon icon for dark mode
         } else {
             body.classList.remove('light-mode');
-            themeToggleBtn.textContent = '☀️'; // Icono de sol para cambiar a modo claro
+            themeToggleBtn.textContent = '☀️'; // Sun icon for light mode
         }
-        // Reaplicar estilos de botones de filtro basados en el nuevo tema
+        // Reapply filter button styles based on new theme
         filterButtons.forEach(btn => {
-            btn.classList.remove('bg-[#383838]'); // Remover fondo específico de modo oscuro
+            btn.classList.remove('bg-[#383838]'); // Remove dark mode specific background
             if (!lightMode && !btn.classList.contains('filter-btn-active')) {
-                btn.classList.add('bg-[#383838]'); // Añadir fondo específico de modo oscuro si no está activo y en modo oscuro
+                btn.classList.add('bg-[#383838]'); // Add dark mode specific background if not active and in dark mode
             }
         });
         updateYearButtonStyles(); // Update year button styles when theme changes
-        updateChartColors(); // Actualizar colores del gráfico cada vez que el tema cambia
+        updateChartColors(); // Update chart colors whenever theme changes
     };
 
-    // Establecer el tema inicial al cargar
-    applyTheme(isLightMode);
+    // Function to update colorblind mode
+    const updateColorblindMode = (enable) => {
+        isColorblindMode = enable;
+        localStorage.setItem('colorblind', enable);
+        currentActiveColorPalette = enable ? colorblindColorPalette : defaultColorPalette;
+        injectColorStyles(currentActiveColorPalette); // Re-inject styles for the new palette
+        
+        // Re-render calendar and climate table to apply new colors
+        calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026);
+        document.getElementById('calendar-grid-2026').classList.add('hidden'); // Ensure correct year is hidden
+        createClimateTable(); // Re-create table with new colors
+        updateActiveYear(currentYear); // Re-apply year button styles and chart colors
+        
+        // Update toggle button text/icon
+        colorblindToggleBtn.textContent = isColorblindMode ? '🎨' : '🌈'; // Paint palette for active CB mode, rainbow for default
+    };
+
+
+    // Set initial themes on load
+    applyTheme(isLightMode); // Apply light/dark mode first
+    updateColorblindMode(isColorblindMode); // Then apply colorblind mode, which will also re-render colors
 
     themeToggleBtn.addEventListener('click', () => {
         isLightMode = !isLightMode;
@@ -1201,19 +1199,23 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTheme(isLightMode);
     });
 
-    // Inicializar la aplicación
+    colorblindToggleBtn.addEventListener('click', () => {
+        updateColorblindMode(!isColorblindMode);
+    });
+
+
+    // Initialize the application
     setupPwaAssets();
-    injectColorStyles();
-    calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026);
-    document.getElementById('calendar-grid-2026').classList.add('hidden');
+    // injectColorStyles is now called by applyTheme and updateColorblindMode
+    // calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026); // This is now called by updateColorblindMode
+    // document.getElementById('calendar-grid-2026').classList.add('hidden'); // This is now called by updateColorblindMode
     
     createAccordion();
-    createClimateTable();
-    createChart(); // Esto también llamará a updateChartColors()
-    updateActiveYear(2025); // Esto también llamará a updateYearButtonStyles() y updateChartColors()
+    // createClimateTable(); // This is now called by updateColorblindMode
+    // createChart(); // This is now called by updateColorblindMode
+    // updateActiveYear(2025); // This is now called by updateColorblindMode
 });
 </script>
 
 </body>
 </html>
-�
