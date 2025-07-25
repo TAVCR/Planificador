@@ -344,7 +344,7 @@
                      <p class="text-center dark-mode-text-muted mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas. La clave no es solo saber *cuándo* actuar, sino *cómo* hacerlo.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
                         <div class="bg-gray-800 border-l-4 border-green-600 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                            <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar</h3>
+                            <h3 id="strategy-green-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Invertir en artistas de mayor convocatoria y costo.</li>
                                 <li>Lanzar campañas de marketing agresivas y con antelación.</li>
@@ -362,7 +362,7 @@
                             </ul>
                         </div>
                          <div class="bg-gray-800 border-l-4 border-red-600 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                            <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar</h3>
+                            <h3 id="strategy-red-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar</h3>
                              <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Considerar no programar eventos abiertos. Promover el local para eventos privados.</li>
                                 <li>Optar por programación de muy bajo costo (músicos de la casa, talento emergente).</li>
@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const climateData = [
         { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
-        { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
+        { month: 'Febrero', risk: '�', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
         { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
             year2026Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
         } else { // currentYear === 2026
             year2026Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
-            year2025Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
+            year205Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
         }
     }
 
@@ -1287,10 +1287,33 @@ document.addEventListener('DOMContentLoaded', () => {
         createClimateTable(); // Re-create table with new colors
         updateActiveYear(currentYear); // Re-apply year button styles and chart colors
         updateFilterButtonLabels(); // Update filter button labels
-        
+        updateStrategyCardTitles(); // Update strategy card titles
+
         // Update toggle button text/icon
         colorblindToggleBtn.textContent = isColorblindMode ? '🎨' : '🌈'; // Paint palette for active CB mode, rainbow for default
     };
+
+    // Function to update strategy card titles
+    function updateStrategyCardTitles() {
+        const strategyGreenTitle = document.getElementById('strategy-green-title');
+        const strategyRedTitle = document.getElementById('strategy-red-title');
+
+        if (isColorblindMode) {
+            if (strategyGreenTitle) {
+                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">🟢</span> Fechas Púrpuras: Maximizar`;
+            }
+            if (strategyRedTitle) {
+                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">🔴</span> Fechas Naranjas: Mitigar`;
+            }
+        } else {
+            if (strategyGreenTitle) {
+                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar`;
+            }
+            if (strategyRedTitle) {
+                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar`;
+            }
+        }
+    }
 
 
     // Set initial themes on load
@@ -1323,3 +1346,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+�
