@@ -281,7 +281,7 @@
                 <div class="flex justify-center items-center mb-6 space-x-4">
                     <!-- Removed initial color classes from HTML, will be applied via JS -->
                     <button id="year-2025" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">2025</button>
-                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">2026</button>
+                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">2026</button>
                     <button id="print-btn" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">🖨️</button>
                 </div>
                 
@@ -313,10 +313,18 @@
                     </div>
                 </div>
 
-                <div class="mt-12 p-4 dark-mode-surface rounded-2xl dark-mode-shadow"> <!-- Changed p-6 to p-4 here -->
+                <div class="mt-12 px-4 py-2 sm:p-4 dark-mode-surface rounded-2xl dark-mode-shadow"> <!-- Adjusted padding here -->
                     <h2 class="text-2xl font-bold text-center mb-6 dark-mode-text-header">Comparativa de Oportunidades (Viernes y Sábados)</h2>
                      <div class="chart-container">
                         <canvas id="opportunityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- New section for Payday chart -->
+                <div class="mt-12 px-4 py-2 sm:p-4 dark-mode-surface rounded-2xl dark-mode-shadow">
+                    <h2 class="text-2xl font-bold text-center mb-6 dark-mode-text-header">Frecuencia de Días de Pago</h2>
+                    <div class="chart-container">
+                        <canvas id="paydayChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -751,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
         { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
         { month: 'Junio', risk: '🟡', justification: 'Plena temporada lluviosa. Alta probabilidad de lluvias por la tarde/noche. Plan B es esencial.' },
-        { month: 'Julio', risk: '🟡', justification: 'Temporada lluviosa. Posibilidad del "Veranillo de San Juan" pero no es garantizado. Plan B es esencial.' },
+        { month: 'Julio', risk: '�', justification: 'Temporada lluviosa. Posibilidad del "Veranillo de San Juan" pero no es garantizado. Plan B es esencial.' },
         { month: 'Agosto', risk: '🟡', justification: 'Temporada lluviosa. Mes caracterizado por alta precipitación. Plan B es esencial.' },
         { month: 'Septiembre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
         { month: 'Octubre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
@@ -762,6 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentYear = 2025;
     let selectedDayElement = null;
     let opportunityChart = null;
+    let paydayChart = null; // New chart instance for Paydays
     const calendarsContainer = document.getElementById('calendars-container');
     const detailsContentDesktop = document.getElementById('details-content-desktop');
     const detailsContentMobile = document.getElementById('details-content-mobile');
@@ -973,6 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateYearButtonStyles(); // Update button styles
         updateChartColors(); // Call to update chart colors based on current theme
+        createPaydayChart(); // Re-create payday chart as well
     }
     
     document.getElementById('year-2025').addEventListener('click', () => updateActiveYear(2025));
@@ -1030,6 +1040,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return counts;
     }
 
+    // Function to count payday events
+    function countPaydays(year) {
+        let count = 0;
+        for (const dateString in eventData) {
+            if (dateString.startsWith(year) && eventData[dateString].cat === 'blue') {
+                count++;
+            }
+        }
+        return count;
+    }
+
     // Function to update chart colors based on the current theme
     function updateChartColors() {
         if (!opportunityChart) return;
@@ -1043,20 +1064,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const tooltipBorder = isLightMode ? '#CCCCCC' : '#444444';
         const tooltipColor = isLightMode ? '#333333' : '#E0E0E0';
 
-        // Update grid and tick colors
+        // Update grid and tick colors for opportunityChart
         opportunityChart.options.scales.y.grid.color = gridColor;
         opportunityChart.options.scales.y.ticks.color = tickColor;
         opportunityChart.options.scales.y.title.color = labelColor;
         opportunityChart.options.scales.x.ticks.color = tickColor;
 
-        // Update legend and tooltip colors
+        // Update legend and tooltip colors for opportunityChart
         opportunityChart.options.plugins.legend.labels.color = labelColor;
         opportunityChart.options.plugins.tooltip.backgroundColor = tooltipBg;
         opportunityChart.options.plugins.tooltip.borderColor = tooltipBorder;
         opportunityChart.options.plugins.tooltip.titleColor = tooltipColor;
         opportunityChart.options.plugins.tooltip.bodyColor = tooltipColor;
 
-        // Update bar colors based on active year and theme
+        // Update bar colors based on active year and theme for opportunityChart
         const activeColor = isLightMode ? '#6D5D4B' : '#A99D8B'; // Adjusted for light mode
         const inactiveColor = isLightMode ? '#AAAAAA' : '#555555';
         const activeBorder = isLightMode ? '#4A3D30' : '#6D5D4B';
@@ -1069,6 +1090,193 @@ document.addEventListener('DOMContentLoaded', () => {
         opportunityChart.data.datasets[1].borderColor = currentYear === 2026 ? activeBorder : inactiveBorder;
         
         opportunityChart.update();
+
+        // Update colors for paydayChart if it exists
+        if (paydayChart) {
+            paydayChart.options.scales.y.grid.color = gridColor;
+            paydayChart.options.scales.y.ticks.color = tickColor;
+            paydayChart.options.scales.y.title.color = labelColor;
+            paydayChart.options.scales.x.ticks.color = tickColor;
+            paydayChart.options.plugins.legend.labels.color = labelColor;
+            paydayChart.options.plugins.tooltip.backgroundColor = tooltipBg;
+            paydayChart.options.plugins.tooltip.borderColor = tooltipBorder;
+            paydayChart.options.plugins.tooltip.titleColor = tooltipColor;
+            paydayChart.options.plugins.tooltip.bodyColor = tooltipColor;
+
+            // Update bar colors for paydayChart
+            paydayChart.data.datasets[0].backgroundColor = currentYear === 2025 ? currentActiveColorPalette.payday.bg : inactiveColor;
+            paydayChart.data.datasets[0].borderColor = currentYear === 2025 ? currentActiveColorPalette.payday.bg : inactiveBorder;
+            paydayChart.data.datasets[1].backgroundColor = currentYear === 2026 ? currentActiveColorPalette.payday.bg : inactiveColor;
+            paydayChart.data.datasets[1].borderColor = currentYear === 2026 ? currentActiveColorPalette.payday.bg : inactiveBorder;
+            paydayChart.update();
+        }
+    }
+
+    function createChart() {
+        const ctx = document.getElementById('opportunityChart').getContext('2d');
+        const counts2025 = countOpportunities('2025');
+        const counts2026 = countOpportunities('2026');
+        
+        opportunityChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['🟢 Oportunidad Alta', '🟡 Riesgo Medio', '🔴 Riesgo Alto'],
+                datasets: [
+                    {
+                        label: '2025',
+                        data: [counts2025.green, counts2025.yellow, counts2025.red],
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    },
+                    {
+                        label: '2026',
+                        data: [counts2026.green, counts2026.yellow, counts2026.red],
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#444444' // Default dark mode color
+                        },
+                        ticks: {
+                           stepSize: 5,
+                           color: '#E0E0E0' // Default dark mode color
+                        },
+                        title: {
+                            display: true,
+                            text: 'Número de Viernes y Sábados',
+                            font: { size: 14 },
+                            color: '#E0E0E0' // Default dark mode color
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#E0E0E0' // Default dark mode color
+                        }
+                    }
+                },
+                plugins: {
+                     legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#E0E0E0' // Default dark mode color
+                        }
+                     },
+                     tooltip: {
+                        backgroundColor: '#121212', // Default dark mode color
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 14 },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) { label += context.parsed.y + ' días'; }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        // updateChartColors(); // Initial call to set colors based on current theme, now handled by updateActiveYear
+    }
+
+    // New function to create the Payday chart
+    function createPaydayChart() {
+        const ctx = document.getElementById('paydayChart').getContext('2d');
+        const paydays2025 = countPaydays('2025');
+        const paydays2026 = countPaydays('2026');
+
+        if (paydayChart) {
+            paydayChart.destroy(); // Destroy existing chart instance if it exists
+        }
+        
+        paydayChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['🔵 Días de Pago'],
+                datasets: [
+                    {
+                        label: '2025',
+                        data: [paydays2025],
+                        backgroundColor: currentActiveColorPalette.payday.bg, // Use dynamic color
+                        borderColor: currentActiveColorPalette.payday.bg, // Use dynamic color
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    },
+                    {
+                        label: '2026',
+                        data: [paydays2026],
+                        backgroundColor: currentActiveColorPalette.payday.bg, // Use dynamic color
+                        borderColor: currentActiveColorPalette.payday.bg, // Use dynamic color
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#444444'
+                        },
+                        ticks: {
+                           stepSize: 1, // Paydays are typically fewer, so smaller step size
+                           color: '#E0E0E0'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Número de Días de Pago',
+                            font: { size: 14 },
+                            color: '#E0E0E0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#E0E0E0'
+                        }
+                    }
+                },
+                plugins: {
+                     legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#E0E0E0'
+                        }
+                     },
+                     tooltip: {
+                        backgroundColor: '#121212',
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 14 },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) { label += context.parsed.y + ' días'; }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        // updateChartColors(); // Initial call to set colors, handled by updateActiveYear
     }
 
     function createAccordion() {
@@ -1197,10 +1405,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     createAccordion();
     // createClimateTable(); // This is now called by updateColorblindMode
-    // createChart(); // This is now called by updateColorblindMode
-    // updateActiveYear(2025); // This is now called by updateColorblindMode
+    createChart(); // Create the main opportunity chart
+    createPaydayChart(); // Create the new payday chart
+    updateActiveYear(2025); // This will call updateYearButtonStyles() and updateChartColors() for both charts
 });
 </script>
 
 </body>
 </html>
+�
