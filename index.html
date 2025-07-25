@@ -24,17 +24,17 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8; /* Warm off-white */
-            color: #3D3B38; /* Dark brown-gray */
+            background-color: #121212; /* Dark background */
+            color: #E0E0E0; /* Light text */
         }
         .nav-active {
             background-color: #A99D8B; /* Muted accent */
-            color: #ffffff;
+            color: #121212; /* Dark text for contrast */
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
         .nav-inactive {
-            background-color: #EFEAE3; /* Lighter accent */
-            color: #6B6661; /* Muted text */
+            background-color: #2C2C2C; /* Darker inactive background */
+            color: #A0A0A0; /* Lighter muted text */
         }
         .calendar-grid-header {
             display: grid;
@@ -55,14 +55,14 @@
         }
         .day:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Stronger shadow for dark mode */
             z-index: 10;
         }
         .day.selected {
             box-shadow: 0 0 0 3px #A99D8B;
             z-index: 20;
         }
-        .bg-neutral-day { background-color: #EFEAE3; }
+        .bg-neutral-day { background-color: #383838; } /* Darker neutral day */
         .bg-empty-day { background-color: transparent; }
         .chart-container {
             position: relative;
@@ -87,10 +87,10 @@
         .filter-btn-active {
             background-color: #8C7B6C !important;
             color: white !important;
-            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.1);
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.25);
         }
         .day-filtered {
-            opacity: 0.25;
+            opacity: 0.15; /* More aggressive fade for dark mode */
             pointer-events: none;
         }
         .priority-star {
@@ -98,8 +98,25 @@
             top: 2px;
             right: 2px;
             font-size: 10px;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(0, 0, 0, 0.7); /* Dark star for light backgrounds */
         }
+        .bg-green-opportunity .priority-star,
+        .bg-red-opportunity .priority-star,
+        .bg-blue-payday .priority-star {
+             color: rgba(255, 255, 255, 0.8); /* Light star for dark backgrounds */
+        }
+
+        /* Custom dark mode overrides */
+        .dark-mode-bg { background-color: #1E1E1E; }
+        .dark-mode-text { color: #E0E0E0; }
+        .dark-mode-text-muted { color: #A0A0A0; }
+        .dark-mode-text-header { color: #D4C8B8; }
+        .dark-mode-text-accent { color: #BFAE9B; }
+        .dark-mode-surface { background-color: #2C2C2C; }
+        .dark-mode-border { border-color: #444444; }
+        .dark-mode-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4); }
+        .dark-mode-inner-shadow { box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.5); }
+
         @media print {
             body * {
                 visibility: hidden;
@@ -125,14 +142,14 @@
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="dark-mode-text antialiased">
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-screen-2xl">
         <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-5xl font-bold text-[#6D5D4B]">Planificador Estratégico de Eventos</h1>
-            <p class="text-lg text-[#8C7B6C] mt-2">Restaurante Antologías: 2025-2026</p>
+            <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Estratégico de Eventos</h1>
+            <p class="text-lg dark-mode-text-accent mt-2">Restaurante Antologías: 2025-2026</p>
         </header>
 
-        <nav class="flex flex-wrap justify-center mb-8 bg-[#EFEAE3] rounded-full p-1 max-w-xl mx-auto shadow-inner">
+        <nav class="flex flex-wrap justify-center mb-8 dark-mode-surface rounded-full p-1 max-w-xl mx-auto dark-mode-inner-shadow">
             <button id="nav-calendario" class="nav-btn nav-active flex-1 py-2 px-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300">📅 Calendario</button>
             <button id="nav-analisis" class="nav-btn nav-inactive flex-1 py-2 px-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300">🔍 Análisis</button>
             <button id="nav-estrategias" class="nav-btn nav-inactive flex-1 py-2 px-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300">💡 Estrategias</button>
@@ -142,11 +159,11 @@
         <main id="main-content">
             <!-- CALENDAR VIEW -->
             <div id="view-calendario">
-                <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">Esta es tu herramienta principal de planificación. Selecciona un año para ver el calendario de oportunidades. Haz clic en cualquier día para ver el análisis detallado de por qué se clasificó con un color específico, ayudándote a tomar decisiones informadas sobre programación, marketing y asignación de recursos.</p>
+                <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">Esta es tu herramienta principal de planificación. Selecciona un año para ver el calendario de oportunidades. Haz clic en cualquier día para ver el análisis detallado de por qué se clasificó con un color específico, ayudándote a tomar decisiones informadas sobre programación, marketing y asignación de recursos.</p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
                     <button id="year-2025" class="year-btn px-8 py-2.5 text-lg bg-[#C3B8A8] text-white font-semibold rounded-lg shadow-md hover:bg-[#A99D8B] transition-all duration-300 transform hover:scale-105">2025</button>
-                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg bg-[#EFEAE3] text-[#6B6661] font-semibold rounded-lg hover:bg-[#DED6CB] transition-all duration-300 transform hover:scale-105">2026</button>
-                    <button id="print-btn" class="px-4 py-2.5 text-lg bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all duration-300 transform hover:scale-105">🖨️</button>
+                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg dark-mode-surface dark-mode-text font-semibold rounded-lg hover:bg-[#383838] transition-all duration-300 transform hover:scale-105">2026</button>
+                    <button id="print-btn" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">🖨️</button>
                 </div>
                 
                 <div class="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 gap-y-2 mb-4 text-xs sm:text-sm text-gray-700">
@@ -156,12 +173,12 @@
                     <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-payday mr-2 border border-gray-400"></span>Día de Pago</div>
                 </div>
 
-                <div id="filter-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 p-2 bg-[#EFEAE3] rounded-full max-w-2xl mx-auto">
+                <div id="filter-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 p-2 dark-mode-surface rounded-full max-w-2xl mx-auto">
                     <button class="filter-btn filter-btn-active flex-1 py-1 px-3 text-xs sm:text-sm rounded-full" data-filter="all">Todos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="green">🟢 Verdes</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="yellow">🟡 Amarillos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="red">🔴 Rojos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-white" data-filter="blue">🔵 Días de Pago</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="green">🟢 Verdes</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="yellow">🟡 Amarillos</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="red">🔴 Rojos</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="blue">🔵 Días de Pago</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -169,16 +186,16 @@
                         <!-- Calendar Grids will be injected here by JS -->
                     </div>
 
-                    <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 bg-white rounded-2xl shadow-lg self-start sticky top-8">
-                        <h3 class="font-bold text-xl mb-4 text-[#6D5D4B]">Detalles del Día</h3>
-                        <div id="details-content-desktop" class="text-gray-700 space-y-3 min-h-[150px]">
-                            <p class="text-center text-gray-500 pt-8">Selecciona una fecha en el calendario.</p>
+                    <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 dark-mode-surface rounded-2xl dark-mode-shadow self-start sticky top-8">
+                        <h3 class="font-bold text-xl mb-4 dark-mode-text-header">Detalles del Día</h3>
+                        <div id="details-content-desktop" class="dark-mode-text-muted space-y-3 min-h-[150px]">
+                            <p class="text-center dark-mode-text-muted pt-8">Selecciona una fecha en el calendario.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-12 p-6 bg-white rounded-2xl shadow-lg">
-                    <h2 class="text-2xl font-bold text-center mb-6 text-[#6D5D4B]">Comparativa de Oportunidades (Viernes y Sábados)</h2>
+                <div class="mt-12 p-6 dark-mode-surface rounded-2xl dark-mode-shadow">
+                    <h2 class="text-2xl font-bold text-center mb-6 dark-mode-text-header">Comparativa de Oportunidades (Viernes y Sábados)</h2>
                      <div class="chart-container">
                         <canvas id="opportunityChart"></canvas>
                     </div>
@@ -187,9 +204,9 @@
             
             <!-- ANALYSIS VIEW -->
             <div id="view-analisis" class="hidden">
-                 <div class="max-w-4xl mx-auto p-4 md:p-8 bg-white rounded-2xl shadow-lg">
-                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 text-[#6D5D4B]">Factores Clave de Decisión</h2>
-                    <p class="text-center text-gray-600 mb-8">La clasificación de cada fecha responde a la interacción de estas seis fuerzas principales. Comprenderlas es fundamental para interpretar el calendario y anticipar el comportamiento del público. Haz clic en cada factor para expandir la información.</p>
+                 <div class="max-w-4xl mx-auto p-4 md:p-8 dark-mode-surface rounded-2xl dark-mode-shadow">
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Factores Clave de Decisión</h2>
+                    <p class="text-center dark-mode-text-muted mb-8">La clasificación de cada fecha responde a la interacción de estas seis fuerzas principales. Comprenderlas es fundamental para interpretar el calendario y anticipar el comportamiento del público. Haz clic en cada factor para expandir la información.</p>
                     <div class="space-y-4" id="accordion-container">
                         <!-- Accordion items will be injected here -->
                     </div>
@@ -199,10 +216,10 @@
             <!-- STRATEGIES VIEW -->
             <div id="view-estrategias" class="hidden">
                  <div class="max-w-6xl mx-auto">
-                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 text-[#6D5D4B]">Recomendaciones Estratégicas</h2>
-                     <p class="text-center text-gray-600 mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas. La clave no es solo saber *cuándo* actuar, sino *cómo* hacerlo.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Recomendaciones Estratégicas</h2>
+                     <p class="text-center dark-mode-text-muted mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas. La clave no es solo saber *cuándo* actuar, sino *cómo* hacerlo.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <div class="bg-green-50 border-l-4 border-green-600 text-green-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="bg-gray-800 border-l-4 border-green-600 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Invertir en artistas de mayor convocatoria y costo.</li>
@@ -211,7 +228,7 @@
                                  <li>Considerar precios de entrada diferenciados o paquetes premium.</li>
                             </ul>
                         </div>
-                        <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="bg-gray-800 border-l-4 border-yellow-500 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Fechas Amarillas: Navegar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Aplicar contraprogramación: si hay un concierto masivo de pop, ofrecer una noche de jazz o trova.</li>
@@ -220,7 +237,7 @@
                                 <li>Usar promociones tácticas (ej. 2x1 en cócteles) para incentivar la visita.</li>
                             </ul>
                         </div>
-                         <div class="bg-red-50 border-l-4 border-red-600 text-red-900 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                         <div class="bg-gray-800 border-l-4 border-red-600 text-gray-200 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                             <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar</h3>
                              <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li>Considerar no programar eventos abiertos. Promover el local para eventos privados.</li>
@@ -230,23 +247,23 @@
                             </ul>
                         </div>
                     </div>
-                     <div class="mt-10 bg-white p-8 rounded-2xl shadow-lg">
-                        <h3 class="font-bold text-xl mb-6 text-[#6D5D4B] text-center">💡 Oportunidades Tácticas Adicionales</h3>
+                     <div class="mt-10 dark-mode-surface p-8 rounded-2xl dark-mode-shadow">
+                        <h3 class="font-bold text-xl mb-6 dark-mode-text-header text-center">💡 Oportunidades Tácticas Adicionales</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-                            <div class="p-4 rounded-lg bg-gray-50">
-                                <h4 class="font-semibold text-lg text-[#8C7B6C]">Jueves de Escape</h4>
+                            <div class="p-4 rounded-lg bg-gray-800">
+                                <h4 class="font-semibold text-lg dark-mode-text-accent">Jueves de Escape</h4>
                                 <p class="text-sm mt-1">Programar eventos los jueves previos a un fin de semana largo para capturar al público antes de que viaje.</p>
                             </div>
-                            <div class="p-4 rounded-lg bg-gray-50">
-                                <h4 class="font-semibold text-lg text-[#8C7B6C]">Vísperas de Feriado</h4>
+                            <div class="p-4 rounded-lg bg-gray-800">
+                                <h4 class="font-semibold text-lg dark-mode-text-accent">Vísperas de Feriado</h4>
                                 <p class="text-sm mt-1">La noche previa a un feriado entre semana (ej. un lunes o martes) es una oportunidad de alta convocatoria.</p>
                             </div>
-                            <div class="p-4 rounded-lg bg-gray-50">
-                                <h4 class="font-semibold text-lg text-[#8C7B6C]">Festival Anti-Éxodo</h4>
+                            <div class="p-4 rounded-lg bg-gray-800">
+                                <h4 class="font-semibold text-lg dark-mode-text-accent">Festival Anti-Éxodo</h4>
                                 <p class="text-sm mt-1">Crear un evento temático para los que se quedan en la ciudad durante las vacaciones de medio año.</p>
                             </div>
-                            <div class="p-4 rounded-lg bg-gray-50">
-                                <h4 class="font-semibold text-lg text-[#8C7B6C]">Celebración Cultural</h4>
+                            <div class="p-4 rounded-lg bg-gray-800">
+                                <h4 class="font-semibold text-lg dark-mode-text-accent">Celebración Cultural</h4>
                                 <p class="text-sm mt-1">Desarrollar eventos temáticos únicos como "Fin de la Cosecha Cafetalera" para diferenciar la oferta.</p>
                             </div>
                         </div>
@@ -256,12 +273,12 @@
             
             <!-- CLIMATE VIEW -->
             <div id="view-clima" class="hidden">
-                <div class="max-w-4xl mx-auto p-4 md:p-8 bg-white rounded-2xl shadow-lg">
-                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 text-[#6D5D4B]">Análisis de Riesgo Climático</h2>
-                    <p class="text-center text-gray-600 mb-8">Esta sección evalúa el riesgo de lluvia para la exhibición de vehículos históricos (primer martes de cada mes, 6 PM - 10 PM), basado en patrones históricos del Valle Central. No es un pronóstico, sino una guía para la planificación logística (ej. necesidad de carpas) y la comunicación con el público.</p>
+                <div class="max-w-4xl mx-auto p-4 md:p-8 dark-mode-surface rounded-2xl dark-mode-shadow">
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Análisis de Riesgo Climático</h2>
+                    <p class="text-center dark-mode-text-muted mb-8">Esta sección evalúa el riesgo de lluvia para la exhibición de vehículos históricos (primer martes de cada mes, 6 PM - 10 PM), basado en patrones históricos del Valle Central. No es un pronóstico, sino una guía para la planificación logística (ej. necesidad de carpas) y la comunicación con el público.</p>
                     <div class="overflow-x-auto">
-                        <table id="climate-table" class="w-full text-sm text-left text-gray-600">
-                           <thead class="text-xs text-[#6D5D4B] uppercase bg-[#EFEAE3]">
+                        <table id="climate-table" class="w-full text-sm text-left dark-mode-text-muted">
+                           <thead class="text-xs dark-mode-text-header uppercase bg-gray-700">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 rounded-l-lg">Mes</th>
                                     <th scope="col" class="px-6 py-3">Riesgo de Lluvia</th>
@@ -279,13 +296,13 @@
     </div>
 
     <!-- Mobile Modal -->
-    <div id="details-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300">
+    <div id="details-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 hidden opacity-0">
+        <div class="dark-mode-surface rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-xl text-[#6D5D4B]">Detalles del Día</h3>
-                <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+                <h3 class="font-bold text-xl dark-mode-text-header">Detalles del Día</h3>
+                <button id="modal-close-btn" class="text-gray-400 hover:text-white text-3xl">&times;</button>
             </div>
-            <div id="details-content-mobile" class="text-gray-700 space-y-3">
+            <div id="details-content-mobile" class="dark-mode-text-muted space-y-3">
                 <!-- Mobile details will be injected here -->
             </div>
         </div>
@@ -354,8 +371,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "short_name": "Antologías",
             "start_url": ".",
             "display": "standalone",
-            "background_color": "#FDFBF8",
-            "theme_color": "#A99D8B",
+            "background_color": "#121212",
+            "theme_color": "#1E1E1E",
             "icons": [
                 {
                     "src": iconUrl,
@@ -568,16 +585,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const analysisContent = [
         { title: 'El Restaurante como Destino: Celebraciones Familiares', content: 'Este es un factor clave que puede anular otros riesgos. Fechas como el Día de la Madre y el Día del Padre son oportunidades de primer nivel (Verde), ya que las familias buscan activamente un lugar especial para celebrar. En estos días, la competencia externa tiene un impacto menor porque Antologías no es solo una opción de ocio, sino el destino principal de la celebración.' },
-        { title: 'El Pulso Económico: Quincenas y Aguinaldo', content: 'El factor más influyente. Los fines de semana que caen en día de pago o inmediatamente después son los mejores. El poder de compra disminuye para el fin de semana siguiente. La "Ventana Dorada" (finales de noviembre a la tercera semana de diciembre) es el pico de gasto anual gracias al aguinaldo.' },
+        { title: 'El Pulso Económico: Quincenas y Aguinaldo', content: 'El factor más influyente. Los fines de semana que caen en día de pago o inmediatamente después son los mejores. El poder de compra disminuisce para el fin de semana siguiente. La "Ventana Dorada" (finales de noviembre a la tercera semana de diciembre) es el pico de gasto anual gracias al aguinaldo.' },
         { title: 'El Éxodo Urbano: Vacaciones y Fines de Semana Largos', content: 'Los feriados que crean fines de semana de 3 días y las vacaciones escolares (julio y diciembre-febrero) provocan una salida masiva de la población de la GAM hacia zonas turísticas, reduciendo drásticamente la audiencia potencial.' },
         { title: 'Las Grandes Fiestas Populares: Competencia Masiva', content: 'Eventos como las Fiestas de Zapote y Palmares son una competencia directa y abrumadora. La Romería (1-2 de agosto) paraliza la actividad social. Estas fechas son de altísimo riesgo, aunque abren la puerta a la contraprogramación.' },
         { title: 'El Fenómeno "Sillón-Ball": Eventos Deportivos', content: 'Partidos clave de "La Sele", finales del torneo local y eventos como la final de la Champions League o el Super Bowl mantienen a la audiencia en casa. Dado que sus eventos inician post 8:00 PM, los partidos vespertinos representan un riesgo menor (Amarillo), pues el público puede salir después. Sin embargo, los partidos en horario estelar (post 7:00 PM) siguen siendo un riesgo alto (Rojo) por el conflicto directo.' },
         { title: 'El Escenario Competitivo: La Batalla por la Atención', content: 'Mega-conciertos en recintos como el Estadio Nacional o Parque Viva consumen el presupuesto de ocio y la atención del mercado para ese fin de semana. Es crucial monitorear los anuncios de nuevos eventos y analizar el solapamiento de audiencias.' },
         { title: 'El Factor Político: Elecciones Nacionales 2026', content: 'Las elecciones generales (1 de febrero y posible segunda ronda el 5 de abril de 2026) dominarán la atención pública. Los fines de semana de las elecciones son de nula actividad comercial y deben marcarse como de riesgo máximo.' },
         { title: 'Análisis del Público: Actual vs. Potencial', content: 'Tus datos demográficos revelan dos perfiles: 1) **Público Actual (Seguidores):** Un núcleo leal, mayoritariamente femenino (64-71%), con edades entre 35-54 años y concentrado en la GAM. Este perfil valida la estrategia de enfocar esfuerzos en fechas de celebración familiar (Día de la Madre/Padre) y quincenas. 2) **Público Potencial (Alcance):** Un mercado mucho más amplio y joven (25-44 años), con una distribución de género equitativa y presencia nacional. Para atraer a este grupo, se podrían considerar eventos con artistas de géneros más actuales o promociones específicas para un público más joven en fechas de riesgo medio (amarillas).' },
-        { 
-            title: 'Análisis de Público y Competencia', 
-            content: 'La investigación confirma la percepción inicial: Fiestas como las de Palmares atraen un público significativamente más joven (18-35 años) con afinidad por géneros urbanos y artistas internacionales, representando un mercado distinto al núcleo del restaurante. En contraste, las fiestas de Zapote se orientan a un público más familiar con talento nacional, y las de Santa Cruz a un perfil cultural-folclórico. Musicalmente, la competencia directa y fuerte para el público objetivo (35-54 años) son los conciertos de baladistas y artistas clásicos en español (ej. Chayanne, Joaquín Sabina, Pandora & Flans en 2025). A esto se suman giras de artistas de pop-rock internacionales consolidados (ej. Eros Ramazzotti en nov. 2026) y leyendas del rock (Guns N\' Roses en oct. 2025), que compiten directamente por el mismo segmento demográfico. Géneros como Reggaetón o Rock Alternativo (ej. Foster the People en nov. 2025), aunque populares, son una competencia indirecta al atraer a un segmento de edad diferente. Finalmente, el análisis político indica una alta probabilidad de una segunda ronda electoral en abril de 2026 debido a la fragmentación partidaria histórica, un factor estratégico clave a considerar para la planificación de ese trimestre.' 
+        {
+            title: 'Análisis de Público y Competencia',
+            content: 'La investigación confirma la percepción inicial: Fiestas como las de Palmares atraen un público significativamente más joven (18-35 años) con afinidad por géneros urbanos y artistas internacionales, representando un mercado distinto al núcleo del restaurante. En contraste, las fiestas de Zapote se orientan a un público más familiar con talento nacional, y las de Santa Cruz a un perfil cultural-folclórico. Musicalmente, la competencia directa y fuerte para el público objetivo (35-54 años) son los conciertos de baladistas y artistas clásicos en español (ej. Chayanne, Joaquín Sabina, Pandora & Flans en 2025). A esto se suman giras de artistas de pop-rock internacionales consolidados (ej. Eros Ramazzotti en nov. 2026) y leyendas del rock (Guns N\' Roses en oct. 2025), que compiten directamente por el mismo segmento demográfico. Géneros como Reggaetón o Rock Alternativo (ej. Foster the People en nov. 2025), aunque populares, son una competencia indirecta al atraer a un segmento de edad diferente. Finalmente, el análisis político indica una alta probabilidad de una segunda ronda electoral en abril de 2026 debido a la fragmentación partidaria histórica, un factor estratégico clave a considerar para la planificación de ese trimestre.'
         }
     ];
 
@@ -593,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { month: 'Septiembre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
         { month: 'Octubre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
         { month: 'Noviembre', risk: '🟡', justification: 'Mes de transición hacia la temporada seca, pero aún con alta probabilidad de lluvia. Plan B es esencial.' },
-        { month: 'Diciembre', risk: '🟢', justification: 'Inicio de la temporada seca. La probabilidad de lluvia disminuye drásticamente. Planificar con confianza.' },
+        { month: 'Diciembre', risk: '🟢', justification: 'Inicio de la temporada seca. La probabilidad de lluvia disminuisce drásticamente. Planificar con confianza.' },
     ];
 
     let currentYear = 2025;
@@ -652,11 +669,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const startMonth = (year === 2025) ? 6 : 0;
 
         for (let month = startMonth; month < 12; month++) {
-            calendarHTML += `<div class="p-4 bg-white rounded-xl shadow-sm">
-                <h3 class="font-bold text-center mb-3 text-lg text-[#6D5D4B]">${monthNames[month]} ${year}</h3>
+            calendarHTML += `<div class="p-4 dark-mode-surface rounded-xl shadow-sm">
+                <h3 class="font-bold text-center mb-3 text-lg dark-mode-text-header">${monthNames[month]} ${year}</h3>
                 <div class="calendar-grid-header text-xs">`;
             dayNames.forEach(day => {
-                calendarHTML += `<div class="font-semibold text-center text-[#8C7B6C]">${day}</div>`;
+                calendarHTML += `<div class="font-semibold text-center dark-mode-text-accent">${day}</div>`;
             });
             calendarHTML += `</div><div class="calendar-grid text-sm">`;
 
@@ -674,7 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 let additionalClasses = "day flex items-center justify-center font-semibold rounded-full cursor-pointer";
                 if (dayClass === 'bg-neutral-day') {
-                    additionalClasses += " text-gray-500";
+                    additionalClasses += " text-gray-400";
                 }
                 
                 calendarHTML += `<div class="${dayClass} ${additionalClasses}" data-date="${dateString}">${day}${eventData[dateString]?.cat === 'green' ? '<span class="priority-star">⭐</span>' : ''}</div>`;
@@ -691,26 +708,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString('es-ES', options);
 
-        let html = `<h4 class="font-bold text-lg text-gray-800 capitalize">${formattedDate}</h4>`;
+        let html = `<h4 class="font-bold text-lg text-gray-100 capitalize">${formattedDate}</h4>`;
         
         if (data) {
             let emoji, colorClass, statusText;
             if(data.cat === 'green') {
-                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-700';
+                emoji = '🟢'; statusText = 'Oportunidad Alta'; colorClass = 'text-green-400';
             } else if (data.cat === 'yellow') {
-                emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-600';
+                emoji = '🟡'; statusText = 'Riesgo Medio'; colorClass = 'text-yellow-400';
             } else if (data.cat === 'red') {
-                emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = 'text-red-700';
+                emoji = '🔴'; statusText = 'Riesgo Alto'; colorClass = 'text-red-400';
             } else if (data.cat === 'blue') {
-                emoji = '🔵'; statusText = 'Día de Pago'; colorClass = 'text-blue-700';
+                emoji = '🔵'; statusText = 'Día de Pago'; colorClass = 'text-blue-400';
             }
             html += `<p class="font-semibold ${colorClass}">${emoji} ${statusText}</p>`;
-            html += `<p class="text-sm text-gray-600 mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
+            html += `<p class="text-sm text-gray-300 mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
         } else {
             const dayOfWeek = date.getDay();
             if (dayOfWeek === 5 || dayOfWeek === 6) {
-                 html += `<p class="font-semibold text-gray-700">⚪ Oportunidad Neutra</p>`;
-                 html += `<p class="text-sm text-gray-600 mt-2"><span class="font-semibold">Justificación:</span> Fin de semana regular sin factores negativos o positivos mayores identificados. Se considera una buena oportunidad base. </p>`;
+                 html += `<p class="font-semibold text-gray-300">⚪ Oportunidad Neutra</p>`;
+                 html += `<p class="text-sm text-gray-400 mt-2"><span class="font-semibold">Justificación:</span> Fin de semana regular sin factores negativos o positivos mayores identificados. Se considera una buena oportunidad base. </p>`;
             } else {
                  html += `<p class="font-semibold text-gray-500">Día entre semana</p>`;
                  html += `<p class="text-sm text-gray-500 mt-2">No se han analizado factores estratégicos específicos para esta fecha.</p>`;
@@ -762,20 +779,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const year2025Btn = document.getElementById('year-2025');
         const year2026Btn = document.getElementById('year-2026');
 
-        year2025Btn.classList.toggle('bg-[#A99D8B]', year === 2025);
-        year2025Btn.classList.toggle('text-white', year === 2025);
-        year2025Btn.classList.toggle('bg-[#EFEAE3]', year !== 2025);
-        year2025Btn.classList.toggle('text-[#6B6661]', year !== 2025);
+        const activeClasses = ['bg-[#A99D8B]', 'text-black'];
+        const inactiveClasses = ['dark-mode-surface', 'dark-mode-text'];
+
+        year2025Btn.classList.toggle(activeClasses[0], year === 2025);
+        year2025Btn.classList.toggle(activeClasses[1], year === 2025);
+        year2025Btn.classList.toggle(inactiveClasses[0], year !== 2025);
+        year2025Btn.classList.toggle(inactiveClasses[1], year !== 2025);
         
-        year2026Btn.classList.toggle('bg-[#A99D8B]', year === 2026);
-        year2026Btn.classList.toggle('text-white', year === 2026);
-        year2026Btn.classList.toggle('bg-[#EFEAE3]', year !== 2026);
-        year2026Btn.classList.toggle('text-[#6B6661]', year !== 2026);
+        year2026Btn.classList.toggle(activeClasses[0], year === 2026);
+        year2026Btn.classList.toggle(activeClasses[1], year === 2026);
+        year2026Btn.classList.toggle(inactiveClasses[0], year !== 2026);
+        year2026Btn.classList.toggle(inactiveClasses[1], year !== 2026);
 
         document.getElementById('calendar-grid-2025').classList.toggle('hidden', year !== 2025);
         document.getElementById('calendar-grid-2026').classList.toggle('hidden', year !== 2026);
         
-        detailsContentDesktop.innerHTML = '<p class="text-center text-gray-500 pt-8">Selecciona una fecha en el calendario.</p>';
+        detailsContentDesktop.innerHTML = '<p class="text-center dark-mode-text-muted pt-8">Selecciona una fecha en el calendario.</p>';
         if(selectedDayElement) {
             selectedDayElement.classList.remove('selected');
             selectedDayElement = null;
@@ -791,7 +811,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
-            filterButtons.forEach(btn => btn.classList.remove('filter-btn-active'));
+            filterButtons.forEach(btn => {
+                btn.classList.remove('filter-btn-active');
+                btn.classList.remove('bg-[#383838]');
+                btn.classList.add('bg-[#383838]');
+            });
             button.classList.add('filter-btn-active');
             filterCalendar(button.dataset.filter);
         });
@@ -835,9 +859,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!opportunityChart) return;
 
         const activeColor = '#8C7B6C';
-        const inactiveColor = '#D1C7B8';
+        const inactiveColor = '#555555';
         const activeBorder = '#6D5D4B';
-        const inactiveBorder = '#A99D8B';
+        const inactiveBorder = '#888888';
 
         opportunityChart.data.datasets[0].backgroundColor = currentYear === 2025 ? activeColor : inactiveColor;
         opportunityChart.data.datasets[0].borderColor = currentYear === 2025 ? activeBorder : inactiveBorder;
@@ -879,29 +903,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: '#EFEAE3'
+                            color: '#444444'
                         },
                         ticks: {
-                           stepSize: 5
+                           stepSize: 5,
+                           color: '#E0E0E0'
                         },
                         title: {
                             display: true,
                             text: 'Número de Viernes y Sábados',
-                            font: { size: 14 }
+                            font: { size: 14 },
+                            color: '#E0E0E0'
                         }
                     },
                     x: {
                         grid: {
                             display: false
+                        },
+                        ticks: {
+                            color: '#E0E0E0'
                         }
                     }
                 },
                 plugins: {
                      legend: {
                         position: 'top',
+                        labels: {
+                            color: '#E0E0E0'
+                        }
                      },
                      tooltip: {
-                        backgroundColor: '#3D3B38',
+                        backgroundColor: '#121212',
                         titleFont: { size: 16 },
                         bodyFont: { size: 14 },
                         callbacks: {
@@ -923,13 +955,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         analysisContent.forEach((item) => {
             html += `
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="accordion-button w-full flex justify-between items-center text-left p-4 bg-[#F7F5F2] hover:bg-[#EFEAE3] rounded-lg transition-colors duration-300">
-                        <span class="font-semibold text-lg text-[#6D5D4B]">${item.title}</span>
+                <div class="border dark-mode-border rounded-lg">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-4 bg-[#383838] hover:bg-[#444444] rounded-lg transition-colors duration-300">
+                        <span class="font-semibold text-lg dark-mode-text-header">${item.title}</span>
                         <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
-                    <div class="accordion-content bg-white rounded-b-lg px-4">
-                        <p class="text-gray-600 py-4">${item.content}</p>
+                    <div class="accordion-content dark-mode-surface rounded-b-lg px-4">
+                        <p class="dark-mode-text-muted py-4">${item.content}</p>
                     </div>
                 </div>`;
         });
@@ -958,13 +990,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         climateData.forEach(item => {
             let riskClass = '';
-            if (item.risk === '🟢') riskClass = 'text-green-700 bg-green-50';
-            if (item.risk === '🟡') riskClass = 'text-yellow-700 bg-yellow-50';
-            if (item.risk === '🔴') riskClass = 'text-red-700 bg-red-50';
+            if (item.risk === '🟢') riskClass = 'text-green-300 bg-green-900';
+            if (item.risk === '🟡') riskClass = 'text-yellow-300 bg-yellow-900';
+            if (item.risk === '🔴') riskClass = 'text-red-300 bg-red-900';
 
             html += `
-                <tr class="border-b border-gray-200">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${item.month}</th>
+                <tr class="border-b dark-mode-border">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-100 whitespace-nowrap">${item.month}</th>
                     <td class="px-6 py-4"><span class="font-bold px-2 py-1 rounded-full ${riskClass}">${item.risk}</span></td>
                     <td class="px-6 py-4">${item.justification}</td>
                 </tr>
