@@ -187,13 +187,6 @@
         body.light-mode #climate-table tbody tr {
             border-color: #E5E5E5;
         }
-        /* These specific color classes will be replaced by dynamic CSS variables for strategy cards */
-        /* body.light-mode .text-green-300 { color: #1E88E5; } */
-        /* body.light-mode .bg-green-900 { background-color: #E8F5E9; } */
-        /* body.light-mode .text-yellow-300 { color: #FFA000; } */
-        /* body.light-mode .bg-yellow-900 { background-color: #FFFDE7; } */
-        /* body.light-mode .text-red-300 { color: #D32F2F; } */
-        /* body.light-mode .bg-red-900 { background-color: #FFEBEE; } */
 
         /* Specific styles for year buttons to ensure proper theme application */
         .year-btn-active-dark {
@@ -616,11 +609,12 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
         '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
         '2025-09-30': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
-        '2025-10-03': { cat: 'yellow', day: 'Viernes', reason: 'Competencia indirecta (público joven) pero de alto impacto en el mercado general.' },
-        '2025-10-04': { cat: 'yellow', day: 'Sábado', reason: 'Competencia indirecta (público joven) pero de alto impacto en el mercado general.' },
+        '2025-10-01': { cat: 'red', day: 'Miércoles', reason: 'Competencia masiva: Concierto de Guns N\' Roses en el Estadio Nacional.' },
+        '2025-10-03': { cat: 'red', day: 'Viernes', reason: 'Fin de semana post-concierto masivo (Guns N\' Roses), alto riesgo por presupuesto de ocio gastado.' },
+        '2025-10-04': { cat: 'red', day: 'Sábado', reason: 'Fin de semana post-concierto masivo (Guns N\' Roses), alto riesgo por presupuesto de ocio gastado.' },
         '2025-10-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto) y posicionado entre fines de semana de conciertos masivos.' },
         '2025-10-10': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-10-11': { cat: 'yellow', day: 'Sábado', reason: 'Competencia indirecta (público joven) pero de alto impacto en el mercado general.' },
+        '2025-10-11': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
         '2025-10-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2025-10-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
         '2025-10-18': { cat: 'yellow', day: 'Sábado', reason: 'Competencia media (Debi Nova en Parque Viva).' },
