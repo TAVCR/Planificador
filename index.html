@@ -629,9 +629,9 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-11-15': { cat: 'red', day: 'Sábado', reason: 'Competencia Fuerte: Ana Gabriel en Parque Viva. Víspera de Clásico Nacional de fútbol. Alto riesgo por solapamiento de público y atención.' },
         '2025-11-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
         '2025-11-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-11-28': { cat: 'green', day: 'Viernes', reason: 'Inicio de "Ventana Dorada" (post-Viernes Negro, pre-aguinaldo).' },
-        '2025-11-29': { cat: 'green', day: 'Sábado', reason: 'Inicio de "Ventana Dorada". Oportunidad muy alta.' },
-        '2025-12-02': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático (temporada seca) y en plena "Ventana Dorada" con alto poder adquisitivo (aguinaldo).' },
+        '2025-11-28': { cat: 'yellow', day: 'Viernes', reason: 'Previo a concierto Limp Bizkit. Riesgo medio por consumo de presupuesto de ocio.' },
+        '2025-11-29': { cat: 'yellow', day: 'Sábado', reason: 'Previo a concierto Limp Bizkit. Riesgo medio por consumo de presupuesto de ocio.' },
+        '2025-12-02': { cat: 'yellow', day: 'Martes', reason: 'Día de concierto Limp Bizkit y Exhibición de Vehículos. Riesgo medio por competencia y consumo de presupuesto de ocio.' },
         '2025-12-05': { cat: 'red', day: 'Viernes', reason: 'Competencia masiva: Bad Bunny en Estadio Nacional.' },
         '2025-12-06': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Bad Bunny en Estadio Nacional.' },
         '2025-12-12': { cat: 'green', day: 'Viernes', reason: 'Plena "Ventana Dorada" (aguinaldo). Fin de curso lectivo.' },
@@ -682,11 +682,11 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-04-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
         '2026-04-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
         '2026-04-18': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana de quincena, pero con la atención dividida por el Clásico Nacional de fútbol (Domingo).' },
-        '2026-04-24': { cat: 'yellow', day: 'Viernes', reason: 'Inicio del Festival Internacional de las Artes (FIA). Competencia por la atención del público cultural, pero también oportunidad para atraer público que asiste a eventos cercanos.' },
-        '2026-04-25': { cat: 'yellow', day: 'Sábado', reason: 'Pleno Festival Internacional de las Artes (FIA). Competencia cultural alta en toda la ciudad.' },
+        '2026-04-24': { cat: 'red', day: 'Viernes', reason: 'Fin de semana previo a concierto de Laura Pausini. Alto riesgo por consumo de presupuesto de ocio en público meta.' },
+        '2026-04-25': { cat: 'red', day: 'Sábado', reason: 'Fin de semana previo a concierto de Laura Pausini. Alto riesgo por consumo de presupuesto de ocio en público meta.' },
         '2026-04-30': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
-        '2026-05-01': { cat: 'green', day: 'Viernes', reason: 'Feriado (Día del Trabajo), quincena, fin de semana largo. Oportunidad alta.' },
-        '2026-05-02': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena y feriado. Oportunidad alta.' },
+        '2026-05-01': { cat: 'red', day: 'Viernes', reason: 'Fin de semana post-concierto de Laura Pausini. Alto riesgo por presupuesto de ocio gastado. Anula el efecto positivo del feriado.' },
+        '2026-05-02': { cat: 'red', day: 'Sábado', reason: 'Fin de semana post-concierto de Laura Pausini. Alto riesgo por presupuesto de ocio gastado.' },
         '2026-05-05': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (inicio de temporada lluviosa). Lejos de quincena.' },
         '2026-05-08': { cat: 'red', day: 'Viernes', reason: 'Competencia masiva: Concierto de Shakira en el Estadio Nacional (Fecha 1). Alto impacto en el mercado general.' },
         '2026-05-09': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Concierto de Shakira en el Estadio Nacional (Fecha 2). Alto impacto en el mercado general.' },
@@ -972,6 +972,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             html += `<p class="font-semibold" style="color: ${detailColor};">${emoji} ${statusText}</p>`;
             html += `<p class="text-sm ${mutedTextColorClass} mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
+
+            // Add suggestion for counter-programming on days affected by concerts
+            const reasonLower = data.reason.toLowerCase();
+            const concertKeywords = ['concierto', 'competencia masiva', 'competencia:', 'competencia directa', 'competencia fuerte', 'festival picnic', 'ana gabriel', 'gandhi sinfónico'];
+            if (concertKeywords.some(keyword => reasonLower.includes(keyword))) {
+                 html += `<p class="text-xs italic ${body.classList.contains('light-mode') ? 'text-amber-600' : 'text-amber-400'} mt-3 border-l-2 border-amber-500 pl-2"><span class="font-semibold">Sugerencia:</span> Programar un evento de género antagónico (ej. jazz, trova) para atraer al público que no asiste al evento masivo.</p>`;
+            }
+
         } else {
             const dayOfWeek = date.getDay();
             if (dayOfWeek === 5 || dayOfWeek === 6) {
