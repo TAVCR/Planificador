@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planificador Antologías</title>
+    <title>Planificador Antologías 2026 (Datos Confirmados)</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -26,26 +26,20 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212; /* Dark background default */
-            color: #E0E0E0; /* Light text default */
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
+            background-color: #121212;
+            color: #E0E0E0;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .nav-active {
-            background-color: #A99D8B; /* Muted accent */
-            color: #121212; /* Dark text for contrast */
+            background-color: #A99D8B;
+            color: #121212;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
         .nav-inactive {
-            background-color: #2C2C2C; /* Darker inactive background */
-            color: #A0A0A0; /* Lighter muted text */
+            background-color: #2C2C2C;
+            color: #A0A0A0;
         }
-        .calendar-grid-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            padding: 0 0.5rem;
-        }
-        .calendar-grid {
+        .calendar-grid-header, .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 4px;
@@ -53,19 +47,19 @@
         }
         .day {
             aspect-ratio: 1 / 1;
-            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background-color 0.3s, color 0.3s; /* Add color transitions */
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background-color 0.3s, color 0.3s;
             position: relative;
         }
         .day:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Stronger shadow for dark mode */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 10;
         }
         .day.selected {
             box-shadow: 0 0 0 3px #A99D8B;
             z-index: 20;
         }
-        .bg-neutral-day { background-color: #383838; } /* Darker neutral day */
+        .bg-neutral-day { background-color: #383838; }
         .bg-empty-day { background-color: transparent; }
         .chart-container {
             position: relative;
@@ -93,7 +87,7 @@
             box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.25);
         }
         .day-filtered {
-            opacity: 0.15; /* More aggressive fade for dark mode */
+            opacity: 0.15;
             pointer-events: none;
         }
         .priority-star {
@@ -101,212 +95,76 @@
             top: 2px;
             right: 2px;
             font-size: 10px;
-            color: rgba(0, 0, 0, 0.7); /* Dark star for light backgrounds */
+            color: rgba(255, 255, 255, 0.8);
         }
-        .bg-green-opportunity .priority-star,
-        .bg-red-opportunity .priority-star,
-        .bg-blue-payday .priority-star {
-             color: rgba(255, 255, 255, 0.8); /* Light star for dark backgrounds */
-        }
-
-        /* Custom dark mode overrides (default) */
+        /* Light/Dark Mode Styles */
         .dark-mode-bg { background-color: #1E1E1E; }
         .dark-mode-text { color: #E0E0E0; }
-        .dark-mode-text-muted { color: #A0A0A0; }
         .dark-mode-text-header { color: #D4C8B8; }
         .dark-mode-text-accent { color: #BFAE9B; }
         .dark-mode-surface { background-color: #2C2C2C; }
         .dark-mode-border { border-color: #444444; }
-        .dark-mode-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4); }
-        .dark-mode-inner-shadow { box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.5); }
-
-        /* =================================================================================
-           LIGHT MODE STYLES
-           These styles will be applied when the 'light-mode' class is added to the body.
-           They override the dark mode styles.
-           ================================================================================= */
+        .dark-mode-text-muted { color: #A0A0A0; }
+        
         body.light-mode {
-            background-color: #F0F0F0; /* Light background */
-            color: #333333; /* Dark text */
+            background-color: #F0F0F0;
+            color: #333333;
         }
-        body.light-mode .dark-mode-bg { background-color: #FFFFFF; }
-        body.light-mode .dark-mode-text { color: #333333; }
-        body.light-mode .dark-mode-text-muted { color: #666666; }
-        body.light-mode .dark-mode-text-header { color: #1A1A1A; }
-        body.light-mode .dark-mode-text-accent { color: #6D5D4B; }
         body.light-mode .dark-mode-surface { background-color: #FFFFFF; }
-        body.light-mode .dark-mode-border { border-color: #CCCCCC; }
-        body.light-mode .dark-mode-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); }
-        body.light-mode .dark-mode-inner-shadow { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05); }
-
-        body.light-mode .nav-inactive {
-            background-color: #E0E0E0; /* Lighter inactive background */
-            color: #555555; /* Darker muted text */
-        }
-        body.light-mode .filter-btn {
-            background-color: #E0E0E0; /* Lighter filter button background */
-            color: #555555;
-        }
-        body.light-mode .filter-btn-active {
-            background-color: #A99D8B !important; /* Active filter button */
-            color: white !important;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-        }
-        body.light-mode .bg-neutral-day { 
-            background-color: #F5F5F5; /* Lighter neutral day */
-            color: #555555;
-        }
-        body.light-mode .day:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Lighter shadow for light mode */
-        }
-        body.light-mode .day.selected {
-            box-shadow: 0 0 0 3px #A99D8B;
-        }
-        body.light-mode .priority-star {
-            color: rgba(0, 0, 0, 0.7); /* Dark star for light backgrounds */
-        }
-        body.light-mode .bg-green-opportunity .priority-star,
-        body.light-mode .bg-red-opportunity .priority-star,
-        body.light-mode .bg-blue-payday .priority-star {
-             color: rgba(0, 0, 0, 0.7); /* Dark star for colored backgrounds in light mode */
-        }
-        body.light-mode .accordion-button {
-            background-color: #E0E0E0;
-        }
-        body.light-mode .accordion-button:hover {
-            background-color: #D5D5D5;
-        }
-        body.light-mode .bg-gray-800 { /* For strategy cards - this will be removed and replaced by dynamic styles */
-            background-color: #E0E0E0;
-            color: #333333;
-        }
-        body.light-mode #climate-table thead {
-            background-color: #E0E0E0;
-            color: #333333;
-        }
-        body.light-mode #climate-table tbody tr {
-            border-color: #E5E5E5;
-        }
-
-        /* Specific styles for year buttons to ensure proper theme application */
-        .year-btn-active-dark {
-            background-color: #A99D8B !important; /* Dark mode active color */
-            color: #121212 !important; /* Dark mode active text */
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .year-btn-active-dark:hover {
-            background-color: #8C7B6C !important; /* Slightly darker on hover */
-        }
-
-        .year-btn-inactive-dark {
-            background-color: #2C2C2C !important; /* Darker inactive background */
-            color: #A0A0A0 !important; /* Lighter muted text */
-        }
-        .year-btn-inactive-dark:hover {
-            background-color: #383838 !important; /* Slightly lighter on hover */
-        }
-
-        .year-btn-active-light {
-            background-color: #C3B8A8 !important; /* Light mode active color (lighter accent) */
-            color: #FFFFFF !important; /* White text for contrast */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-        }
-        .year-btn-active-light:hover {
-            background-color: #A99D8B !important; /* Slightly darker on hover */
-        }
-
-        .year-btn-inactive-light {
-            background-color: #E0E0E0 !important; /* Lighter inactive background */
-            color: #555555 !important; /* Darker muted text */
-        }
-        .year-btn-inactive-light:hover {
-            background-color: #D5D5D5 !important; /* Slightly darker on hover */
-        }
-
-        /* CSS Variables for Strategy Cards - Default (Dark Mode) */
+        body.light-mode .dark-mode-text-header { color: #1A1A1A; }
+        body.light-mode .dark-mode-text-muted { color: #666666; }
+        body.light-mode .nav-inactive { background-color: #E0E0E0; color: #555555; }
+        body.light-mode .bg-neutral-day { background-color: #F5F5F5; color: #555555; }
+        body.light-mode .priority-star { color: rgba(0,0,0,0.6); }
+        
+        /* Buttons */
+        .year-btn-active-dark { background-color: #A99D8B !important; color: #121212 !important; }
+        .year-btn-inactive-dark { background-color: #2C2C2C !important; color: #A0A0A0 !important; }
+        .year-btn-active-light { background-color: #C3B8A8 !important; color: #FFFFFF !important; }
+        .year-btn-inactive-light { background-color: #E0E0E0 !important; color: #555555 !important; }
+        
+        /* Strategies */
         :root {
-            --strategy-green-bg: rgba(46, 125, 50, 0.2); /* Green with opacity */
-            --strategy-green-border: #2E7D32; /* Solid green border */
-            --strategy-green-text: #A7D9A9; /* Lighter green for dark background */
-
+            --strategy-green-bg: rgba(46, 125, 50, 0.2);
+            --strategy-green-border: #2E7D32;
+            --strategy-green-text: #A7D9A9;
             --strategy-yellow-bg: rgba(255, 193, 7, 0.2);
             --strategy-yellow-border: #FFC107;
             --strategy-yellow-text: #FFECB3;
-
-            --strategy-red-bg: rgba(198, 40, 40, 0.2); /* Red with opacity */
+            --strategy-red-bg: rgba(198, 40, 40, 0.2);
             --strategy-red-border: #C62828;
-            --strategy-red-text: #FFCDD2; /* Lighter red for dark background */
+            --strategy-red-text: #FFCDD2;
         }
-
-        /* Light Mode Overrides for Strategy Card Colors */
         body.light-mode {
             --strategy-green-bg: #E8F5E9;
-            --strategy-green-border: #2E7D32;
-            --strategy-green-text: #1B5E20; /* Darker green for light background */
-
+            --strategy-green-text: #1B5E20;
             --strategy-yellow-bg: #FFFDE7;
-            --strategy-yellow-border: #FFC107;
             --strategy-yellow-text: #FF6F00;
-
             --strategy-red-bg: #FFEBEE;
-            --strategy-red-border: #C62828;
-            --strategy-red-text: #D32F2F; /* Darker red for light background */
+            --strategy-red-text: #D32F2F;
         }
-
-        /* Apply CSS variables to strategy cards */
-        .strategy-card[data-category="green"] {
-            background-color: var(--strategy-green-bg);
-            border-left: 4px solid var(--strategy-green-border);
-            color: var(--strategy-green-text);
-        }
-        .strategy-card[data-category="yellow"] {
-            background-color: var(--strategy-yellow-bg);
-            border-left: 4px solid var(--strategy-yellow-border);
-            color: var(--strategy-yellow-text);
-        }
-        .strategy-card[data-category="red"] {
-            background-color: var(--strategy-red-bg);
-            border-left: 4px solid var(--strategy-red-border);
-            color: var(--strategy-red-text);
-        }
+        .strategy-card[data-category="green"] { background-color: var(--strategy-green-bg); border-left: 4px solid var(--strategy-green-border); color: var(--strategy-green-text); }
+        .strategy-card[data-category="yellow"] { background-color: var(--strategy-yellow-bg); border-left: 4px solid var(--strategy-yellow-border); color: var(--strategy-yellow-text); }
+        .strategy-card[data-category="red"] { background-color: var(--strategy-red-bg); border-left: 4px solid var(--strategy-red-border); color: var(--strategy-red-text); }
 
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #calendars-container, #calendars-container * {
-                visibility: visible;
-            }
-            #calendars-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
-            .lg\:col-span-8 {
-                width: 100% !important;
-            }
-            .sm\:grid-cols-2 {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-             .xl\:grid-cols-3 {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
+            body * { visibility: hidden; }
+            #calendars-container, #calendars-container * { visibility: visible; }
+            #calendars-container { position: absolute; left: 0; top: 0; width: 100%; }
+            .lg\:col-span-8 { width: 100% !important; }
         }
     </style>
 </head>
 <body class="dark-mode-text antialiased">
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-screen-2xl">
         <header class="text-center mb-8 flex flex-col sm:flex-row justify-between items-center">
-            <!-- Wrapped title and subtitle for better stacking on small screens -->
             <div class="flex flex-col items-center sm:items-start flex-grow">
-                <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Estratégico de Eventos</h1>
-                <p class="text-lg dark-mode-text-accent mt-2">Restaurante Antologías: 2025-2026</p>
+                <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Oficial 2025-2026</h1>
+                <p class="text-lg dark-mode-text-accent mt-2">Antologías CR | Datos Verificados</p>
             </div>
-            <!-- Theme Toggle Buttons -->
             <div class="flex space-x-2 mt-4 sm:mt-0 sm:ml-4">
-                <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">☀️</button>
-                <button id="colorblind-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">🌈</button>
+                <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300">☀️</button>
+                <button id="colorblind-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300">🌈</button>
             </div>
         </header>
 
@@ -320,12 +178,11 @@
         <main id="main-content">
             <!-- CALENDAR VIEW -->
             <div id="view-calendario">
-                <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">Esta es tu herramienta principal de planificación. Selecciona un año para ver el calendario de oportunidades. Haz clic en cualquier día para ver el análisis detallado de por qué se clasificó con un color específico, ayudándote a tomar decisiones informadas sobre programación, marketing y asignación de recursos.</p>
+                <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">Incluye fechas confirmadas: Bad Bunny (Dic 2025), Ed Sheeran (May 2026), The Killers (Mar 2026) y eventos cíclicos locales.</p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
-                    <!-- Removed initial color classes from HTML, will be applied via JS -->
-                    <button id="year-2025" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">2025</button>
-                    <button id="year-2026" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">2026</button>
-                    <button id="print-btn" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">🖨️</button>
+                    <button id="year-2025-btn" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">Cierre 2025</button>
+                    <button id="year-2026-btn" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">Año 2026</button>
+                    <button id="print-btn" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600">🖨️</button>
                 </div>
                 
                 <div class="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 gap-y-2 mb-4 text-xs sm:text-sm text-gray-700">
@@ -340,34 +197,19 @@
                     <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="green">🟢 Verdes</button>
                     <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="yellow">🟡 Amarillos</button>
                     <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="red">🔴 Rojos</button>
-                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="blue">🔵 Días de Pago</button>
+                    <button class="filter-btn flex-1 py-1 px-3 text-xs sm:text-sm rounded-full bg-[#383838]" data-filter="blue">🔵 Pagos</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div id="calendars-container" class="lg:col-span-8">
-                        <!-- Calendar Grids will be injected here by JS -->
+                        <!-- Calendar Grids injected via JS -->
                     </div>
 
                     <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 dark-mode-surface rounded-2xl dark-mode-shadow self-start sticky top-8">
-                        <h3 class="font-bold text-xl mb-4 dark-mode-text-header">Detalles del Día</h3>
+                        <h3 class="font-bold text-xl mb-4 dark-mode-text-header">Detalles del Evento</h3>
                         <div id="details-content-desktop" class="dark-mode-text-muted space-y-3 min-h-[150px]">
-                            <p class="text-center dark-mode-text-muted pt-8">Selecciona una fecha en el calendario.</p>
+                            <p class="text-center dark-mode-text-muted pt-8">Selecciona una fecha para ver detalles.</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="mt-12 px-2 py-1 sm:p-4 dark-mode-surface rounded-2xl dark-mode-shadow"> <!-- Adjusted padding here -->
-                    <h2 class="text-2xl font-bold text-center mb-4 dark-mode-text-header">Comparativa de Oportunidades (Viernes y Sábados)</h2>
-                     <div class="chart-container">
-                         <canvas id="opportunityChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- New section for Payday chart -->
-                <div class="mt-12 px-2 py-1 sm:p-4 dark-mode-surface rounded-2xl dark-mode-shadow">
-                    <h2 class="text-2xl font-bold text-center mb-4 dark-mode-text-header">Frecuencia de Días de Pago</h2>
-                    <div class="chart-container">
-                        <canvas id="paydayChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -375,10 +217,9 @@
             <!-- ANALYSIS VIEW -->
             <div id="view-analisis" class="hidden">
                  <div class="max-w-4xl mx-auto p-4 md:p-8 dark-mode-surface rounded-2xl dark-mode-shadow">
-                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Factores Clave de Decisión</h2>
-                    <p class="text-center dark-mode-text-muted mb-8">La clasificación de cada fecha responde a la interacción de estas seis fuerzas principales. Comprenderlas es fundamental para interpretar el calendario y anticipar el comportamiento del público. Haz clic en cada factor para expandir la información.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Análisis de Entorno 2026</h2>
                     <div class="space-y-4" id="accordion-container">
-                        <!-- Accordion items will be injected here -->
+                        <!-- Accordion items injected -->
                     </div>
                 </div>
             </div>
@@ -386,56 +227,29 @@
             <!-- STRATEGIES VIEW -->
             <div id="view-estrategias" class="hidden">
                  <div class="max-w-6xl mx-auto">
-                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Recomendaciones Estratégicas</h2>
-                     <p class="text-center dark-mode-text-muted mb-8">Aplica estas tácticas para maximizar resultados en fechas de alta oportunidad y mitigar riesgos en las más complejas. La clave no es solo saber *cuándo* actuar, sino *cómo* hacerlo.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Estrategias por Categoría</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <div id="strategy-card-green" class="strategy-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300" data-category="green">
-                            <h3 id="strategy-green-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar</h3>
+                        <div id="strategy-card-green" class="strategy-card p-6 rounded-lg shadow-md" data-category="green">
+                            <h3 id="strategy-green-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Maximizar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Invertir en artistas de mayor convocatoria y costo.</li>
-                                <li>Lanzar campañas de marketing agresivas y con antelación.</li>
-                                <li>Crear "eventos de firma" recurrentes para generar expectativa (ej. "Viernes de Quincena").</li>
-                                 <li>Considerar precios de entrada diferenciados o paquetes premium.</li>
+                                <li>Días de Pago (15/30): Promociones de cócteles.</li>
+                                <li>Ventana Dorada (Dic): Reservas grupos grandes.</li>
+                                <li>Día de la Madre/Padre: Menú especial precio fijo.</li>
                             </ul>
                         </div>
-                        <div id="strategy-card-yellow" class="strategy-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300" data-category="yellow">
-                            <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Fechas Amarillas: Navegar</h3>
+                        <div id="strategy-card-yellow" class="strategy-card p-6 rounded-lg shadow-md" data-category="yellow">
+                            <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Navegar</h3>
                             <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Aplicar contraprogramación: si hay un concierto masivo de pop, ofrecer una noche de jazz o trova.</li>
-                                <li>Ofrecer paquetes de complemento: "Cena + Música Acústica + Ver el Partido" en noches de fútbol.</li>
-                                <li>Apuntar a nichos de mercado que buscan activamente una alternativa al evento principal.</li>
-                                <li>Usar promociones tácticas (ej. 2x1 en cócteles) para incentivar la visita.</li>
+                                <li>Conciertos en Parque Viva (The Killers/Tyler): Ofrecer "After-Party" si el target coincide.</li>
+                                <li>Lluvias (May-Nov): Garantizar confort en terraza.</li>
                             </ul>
                         </div>
-                         <div id="strategy-card-red" class="strategy-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300" data-category="red">
-                            <h3 id="strategy-red-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar</h3>
+                         <div id="strategy-card-red" class="strategy-card p-6 rounded-lg shadow-md" data-category="red">
+                            <h3 id="strategy-red-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Mitigar</h3>
                              <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Considerar no programar eventos abiertos. Promover el local para eventos privados.</li>
-                                <li>Optar por programación de muy bajo costo (músicos de la casa, talento emergente).</li>
-                                <li>Planificar cierres estratégicos para mantenimiento o descanso del personal.</li>
-                                <li>Enfocar la comunicación en el servicio de restaurante, no en el evento musical.</li>
+                                <li>Bad Bunny/Ed Sheeran: Competencia total. Considerar música en vivo género opuesto (Trova/Rock Clásico).</li>
+                                <li>Elecciones/Semana Santa: Reducir costos operativos.</li>
                             </ul>
-                        </div>
-                    </div>
-                     <div class="mt-10 dark-mode-surface p-8 rounded-2xl dark-mode-shadow">
-                        <h3 class="font-bold text-xl mb-6 dark-mode-text-header text-center">💡 Oportunidades Tácticas Adicionales</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-                            <div class="p-4 rounded-lg bg-gray-800">
-                                <h4 class="font-semibold text-lg dark-mode-text-accent">Jueves de Escape</h4>
-                                <p class="text-sm mt-1">Programar eventos los jueves previos a un fin de semana largo para capturar al público antes de que viaje.</p>
-                            </div>
-                            <div class="p-4 rounded-lg bg-gray-800">
-                                <h4 class="font-semibold text-lg dark-mode-text-accent">Vísperas de Feriado</h4>
-                                <p class="text-sm mt-1">La noche previa a un feriado entre semana (ej. un lunes o martes) es una oportunidad de alta convocatoria.</p>
-                            </div>
-                            <div class="p-4 rounded-lg bg-gray-800">
-                                <h4 class="font-semibold text-lg dark-mode-text-accent">Festival Anti-Éxodo</h4>
-                                <p class="text-sm mt-1">Crear un evento temático para los que se quedan en la ciudad durante las vacaciones de medio año.</p>
-                            </div>
-                            <div class="p-4 rounded-lg bg-gray-800">
-                                <h4 class="font-semibold text-lg dark-mode-text-accent">Celebración Cultural</h4>
-                                <p class="text-sm mt-1">Desarrollar eventos temáticos únicos como "Fin de la Cosecha Cafetalera" para diferenciar la oferta.</p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -443,21 +257,19 @@
             
             <!-- CLIMATE VIEW -->
             <div id="view-clima" class="hidden">
-                <!-- Added pt-6 for mobile spacing, md:pt-8 for desktop -->
                 <div class="max-w-4xl mx-auto p-4 md:p-8 dark-mode-surface rounded-2xl dark-mode-shadow pt-6 md:pt-8">
-                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Análisis de Riesgo Climático</h2>
-                    <p class="text-center dark-mode-text-muted mb-8">Esta sección evalúa el riesgo de lluvia para la exhibición de vehículos históricos (primer martes de cada mes, 6 PM - 10 PM), basado en patrones históricos del Valle Central. No es un pronóstico, sino una guía para la planificación logística (ej. necesidad de carpas) y la comunicación con el público.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Riesgo Climático Valle Central</h2>
                     <div class="overflow-x-auto">
                         <table id="climate-table" class="w-full text-sm text-left dark-mode-text-muted">
                            <thead class="text-xs dark-mode-text-header uppercase bg-gray-700">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 rounded-l-lg">Mes</th>
-                                    <th scope="col" class="px-6 py-3">Riesgo de Lluvia</th>
-                                    <th scope="col" class="px-6 py-3 rounded-r-lg">Justificación y Recomendación</th>
+                                    <th scope="col" class="px-6 py-3">Riesgo</th>
+                                    <th scope="col" class="px-6 py-3 rounded-r-lg">Detalle</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Climate data injected by JS -->
+                                <!-- Climate data injected -->
                             </tbody>
                         </table>
                     </div>
@@ -470,71 +282,36 @@
     <div id="details-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 hidden opacity-0">
         <div class="dark-mode-surface rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-xl dark-mode-text-header">Detalles del Día</h3>
+                <h3 class="font-bold text-xl dark-mode-text-header">Detalles</h3>
                 <button id="modal-close-btn" class="text-gray-400 hover:text-white text-3xl">&times;</button>
             </div>
-            <div id="details-content-mobile" class="dark-mode-text-muted space-y-3">
-                <!-- Mobile details will be injected here -->
-            </div>
+            <div id="details-content-mobile" class="dark-mode-text-muted space-y-3"></div>
         </div>
     </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // =================================================================================
-    // CONFIGURACIÓN CENTRAL DE COLORES
-    // Modifique estos valores para cambiar la paleta de colores de toda la aplicación.
-    // =================================================================================
     const defaultColorPalette = {
-        opportunityHigh: {
-            bg: '#2E7D32', // Verde
-            text: '#FFFFFF'
-        },
-        opportunityMedium: {
-            bg: '#FFC107', // Amarillo
-            text: '#3D3B38'
-        },
-        opportunityLow: {
-            bg: '#C62828', // Rojo
-            text: '#FFFFFF'
-        },
-        payday: {
-            bg: '#1565C0', // Azul
-            text: '#FFFFFF'
-        }
+        opportunityHigh: { bg: '#2E7D32', text: '#FFFFFF' },
+        opportunityMedium: { bg: '#FFC107', text: '#3D3B38' },
+        opportunityLow: { bg: '#C62828', text: '#FFFFFF' },
+        payday: { bg: '#1565C0', text: '#FFFFFF' }
     };
 
-    // Paleta de colores amigable para daltónicos (Púrpura para Verde, Naranja para Rojo)
     const colorblindColorPalette = {
-        opportunityHigh: {
-            bg: '#9933CC', // Púrpura distinto para Oportunidad Alta
-            text: '#FFFFFF'
-        },
-        opportunityMedium: {
-            bg: '#FFC107', // Amarillo (igual que el predeterminado) para Riesgo Medio
-            text: '#3D3B38'
-        },
-        opportunityLow: {
-            bg: '#FF6600', // Naranja brillante para Riesgo Alto
-            text: '#FFFFFF'
-        },
-        payday: {
-            bg: '#1565C0', // Azul (igual que el predeterminado) para Día de Pago
-            text: '#FFFFFF'
-        }
+        opportunityHigh: { bg: '#9933CC', text: '#FFFFFF' },
+        opportunityMedium: { bg: '#FFC107', text: '#3D3B38' },
+        opportunityLow: { bg: '#FF6600', text: '#FFFFFF' },
+        payday: { bg: '#1565C0', text: '#FFFFFF' }
     };
 
-    let currentActiveColorPalette; // Se establecerá en función de isColorblindMode
-
-    // Variables de estado
-    let currentYear = 2025;
+    let currentActiveColorPalette = defaultColorPalette;
+    let currentViewYear = '2025-end'; // Default to end of 2025
     let selectedDayElement = null;
-    let opportunityChart = null;
-    let paydayChart = null; 
     let isLightMode = localStorage.getItem('theme') === 'light';
     let isColorblindMode = localStorage.getItem('colorblind') === 'true';
 
-    // Referencias a elementos del DOM
+    // DOM Elements
     const calendarsContainer = document.getElementById('calendars-container');
     const detailsContentDesktop = document.getElementById('details-content-desktop');
     const detailsContentMobile = document.getElementById('details-content-mobile');
@@ -543,268 +320,137 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggleBtn = document.getElementById('theme-toggle');
     const colorblindToggleBtn = document.getElementById('colorblind-toggle');
     const body = document.body;
-
     const views = {
         calendario: document.getElementById('view-calendario'),
         analisis: document.getElementById('view-analisis'),
         estrategias: document.getElementById('view-estrategias'),
         clima: document.getElementById('view-clima'),
     };
-
     const navButtons = {
         calendario: document.getElementById('nav-calendario'),
         analisis: document.getElementById('nav-analisis'),
         estrategias: document.getElementById('nav-estrategias'),
         clima: document.getElementById('nav-clima'),
     };
-
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const filterButtonLabels = { 
-        'all': 'Todos',
-        'green': 'Verdes', 
-        'yellow': 'Amarillos',
-        'red': 'Rojos', 
-        'blue': 'Días de Pago'
-    };
-    const colorblindFilterButtonLabels = { 
-        'all': 'Todos',
-        'green': 'Púrpuras', 
-        'yellow': 'Amarillos',
-        'red': 'Naranjas', 
-        'blue': 'Días de Pago'
-    };
 
-    // --- INICIO DE DATOS ACTUALIZADOS ---
+    // ============================================================================
+    // DATOS VERIFICADOS (ETICKET, TELETICA, BACKSTAGE MAGAZINE)
+    // ============================================================================
     const eventData = {
-        '2025-07-01': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (temporada lluviosa) y post-quincena. Requiere plan B para lluvia.' },
-        '2025-07-04': { cat: 'red', day: 'Viernes', reason: 'Inicio de vacaciones escolares MEP, alto éxodo de la GAM.' },
-        '2025-07-05': { cat: 'red', day: 'Sábado', reason: 'Inicio de vacaciones escolares MEP, alto éxodo de la GAM.' },
-        '2025-07-11': { cat: 'red', day: 'Viernes', reason: 'Plenas vacaciones escolares MEP, alto éxodo de la GAM.' },
-        '2025-07-12': { cat: 'red', day: 'Sábado', reason: 'Plenas vacaciones escolares MEP, alto éxodo de la GAM.' },
-        '2025-07-15': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
-        '2025-07-18': { cat: 'yellow', day: 'Viernes', reason: 'Fin de vacaciones escolares, posible regreso a la GAM. Cerca de quincena.' },
-        '2025-07-19': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana post-vacaciones. Competencia de nicho (Stryper).' },
-        '2025-07-25': { cat: 'red', day: 'Viernes', reason: 'Feriado (Anexión de Nicoya), fin de semana largo, alto éxodo. Competencia: Gandhi Sinfónico.' },
-        '2025-07-26': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana largo post-quincena. Competencia: Gandhi Sinfónico.' },
-        '2025-07-31': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
-        '2025-08-01': { cat: 'red', day: 'Viernes', reason: 'Víspera de la Romería, paralización social y éxodo hacia Cartago.' },
-        '2025-08-02': { cat: 'red', day: 'Sábado', reason: 'Día de la Virgen de los Ángeles, Romería.' },
-        '2025-08-05': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio/alto (temporada lluviosa) y posicionado tras el fin de semana de la Romería, afectando el interés del público.' },
-        '2025-08-08': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular, alejado de quincena.' },
-        '2025-08-09': { cat: 'yellow', day: 'Sábado', reason: 'Competencia indirecta (público joven) en Parque Viva.' },
-        '2025-08-15': { cat: 'green', day: 'Viernes', reason: 'Día de la Madre y día de pago. Alta demanda de celebraciones familiares, superando el riesgo de competencia externa.' },
-        '2025-08-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día de la Madre. Alta demanda de celebraciones familiares.' },
-        '2025-08-22': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena. Poder de compra moderado.' },
-        '2025-08-23': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena. Poder de compra moderado.' },
-        '2025-08-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
-        '2025-08-30': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Competencia media (Paulo Londra).' },
-        '2025-09-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
-        '2025-09-05': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-09-06': { cat: 'red', day: 'Sábado', reason: 'Competencia de nicho rock/metal (Cradle of Filth).' },
-        '2025-09-12': { 'cat': 'green', 'day': 'Viernes', 'reason': 'Fin de semana de quincena. Oportunidad alta.' },
-        '2025-09-13': { 'cat': 'green', 'day': 'Sábado', 'reason': 'Fin de semana de quincena. Oportunidad alta.' },
-        '2025-09-15': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena y feriado (Día de la Independencia).' },
-        '2025-09-19': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-09-20': { cat: 'yellow', day: 'Sábado', reason: 'Víspera de Clásico Nacional de fútbol (Domingo). Reduce la asistencia del Sábado.' },
-        '2025-09-26': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
-        '2025-09-27': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
-        '2025-09-30': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
-        '2025-10-01': { cat: 'red', day: 'Miércoles', reason: 'Competencia masiva: Concierto de Guns N\' Roses en el Estadio Nacional.' },
-        '2025-10-03': { cat: 'red', day: 'Viernes', reason: 'Fin de semana post-concierto masivo (Guns N\' Roses), alto riesgo por presupuesto de ocio gastado.' },
-        '2025-10-04': { cat: 'red', day: 'Sábado', reason: 'Fin de semana post-concierto masivo (Guns N\' Roses), alto riesgo por presupuesto de ocio gastado.' },
-        '2025-10-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto) y posicionado entre fines de semana de conciertos masivos.' },
-        '2025-10-10': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2025-10-11': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-10-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
-        '2025-10-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad alta.' },
-        '2025-10-18': { cat: 'yellow', day: 'Sábado', reason: 'Competencia media (Debi Nova en Parque Viva).' },
-        '2025-10-24': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-10-25': { cat: 'red', day: 'Sábado', reason: 'Competencia directa y masiva: Concierto de Marc Anthony en el Estadio Nacional.' },
-        '2025-10-31': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
-        '2025-11-01': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Oportunidad alta.' },
-        '2025-11-04': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (transición a temporada seca). Competencia masiva (Carin Leon) el mismo fin de semana.' },
-        '2025-11-07': { cat: 'red', day: 'Viernes', reason: 'Competencia masiva: Carin Leon en Estadio Nacional.' },
-        '2025-11-08': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Carin Leon en Estadio Nacional.' },
-        '2025-11-14': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Oportunidad muy alta.' },
-        '2025-11-15': { cat: 'red', day: 'Sábado', reason: 'Competencia Fuerte: Ana Gabriel en Parque Viva. Víspera de Clásico Nacional de fútbol. Alto riesgo por solapamiento de público y atención.' },
-        '2025-11-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-11-22': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
-        '2025-11-28': { cat: 'yellow', day: 'Viernes', reason: 'Previo a concierto Limp Bizkit. Riesgo medio por consumo de presupuesto de ocio.' },
-        '2025-11-29': { cat: 'yellow', day: 'Sábado', reason: 'Previo a concierto Limp Bizkit. Riesgo medio por consumo de presupuesto de ocio.' },
-        '2025-12-02': { cat: 'yellow', day: 'Martes', reason: 'Día de concierto Limp Bizkit y Exhibición de Vehículos. Riesgo medio por competencia y consumo de presupuesto de ocio.' },
-        '2025-12-05': { cat: 'red', day: 'Viernes', reason: 'Competencia masiva: Bad Bunny en Estadio Nacional.' },
-        '2025-12-06': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Bad Bunny en Estadio Nacional.' },
-        '2025-12-12': { cat: 'green', day: 'Viernes', reason: 'Plena "Ventana Dorada" (aguinaldo). Fin de curso lectivo.' },
-        '2025-12-13': { cat: 'green', day: 'Sábado', reason: 'Plena "Ventana Dorada" (aguinaldo). Oportunidad máxima.' },
-        '2025-12-15': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
-        '2025-12-19': { cat: 'yellow', day: 'Viernes', reason: 'Víspera de la final del Campeonato Nacional. Pleno apogeo de la "Ventana Dorada" pero con la atención del público dividida.' },
-        '2025-12-20': { cat: 'red', day: 'Sábado', reason: 'Potencial final del Campeonato Nacional (Apertura). Evento de visualización masiva que compite directamente por la atención del público.' },
-        '2025-12-26': { cat: 'red', day: 'Viernes', reason: 'Fiestas de Zapote en pleno apogeo. Éxodo de fin de año.' },
-        '2025-12-27': { cat: 'red', day: 'Sábado', reason: 'Fiestas de Zapote en pleno apogeo. Éxodo de fin de año.' },
-        '2025-12-31': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
+        // --- DICIEMBRE 2025 ---
+        '2025-12-01': { cat: 'green', day: 'Lunes', reason: 'Inicio Ventana Dorada (Aguinaldos).' },
+        '2025-12-02': { cat: 'yellow', day: 'Martes', reason: 'Concierto Limp Bizkit (Parque Viva). Competencia nicho Rock.' },
+        '2025-12-05': { cat: 'red', day: 'Viernes', reason: 'BAD BUNNY (Estadio Nacional). Competencia Masiva. Tráfico colapsado en Sabana.' },
+        '2025-12-06': { cat: 'red', day: 'Sábado', reason: 'BAD BUNNY (Estadio Nacional). Competencia Masiva. 2da fecha.' },
+        '2025-12-12': { cat: 'green', day: 'Viernes', reason: 'Pico Ventana Dorada. Cenas navideñas.' },
+        '2025-12-13': { cat: 'green', day: 'Sábado', reason: 'Pico Ventana Dorada.' },
+        '2025-12-15': { cat: 'blue', day: 'Lunes', reason: 'Quincena.' },
+        '2025-12-19': { cat: 'green', day: 'Viernes', reason: 'Viernes pre-Navidad. Demanda muy alta.' },
+        '2025-12-25': { cat: 'red', day: 'Jueves', reason: 'Navidad. Inicio Fiestas Zapote.' },
+        '2025-12-26': { cat: 'red', day: 'Viernes', reason: 'Tope Nacional (Zapote). Tráfico difícil.' },
+        '2025-12-30': { cat: 'blue', day: 'Martes', reason: 'Pago Fin de Mes.' },
+        '2025-12-31': { cat: 'yellow', day: 'Miércoles', reason: 'Fin de Año. Solo reservas.' },
 
-        '2026-01-02': { cat: 'red', day: 'Viernes', reason: 'Feriado (jueves 1), "cuesta de enero", Fiestas de Zapote.' },
-        '2026-01-03': { cat: 'red', day: 'Sábado', reason: '"Cuesta de enero", Fiestas de Zapote.' },
-        '2026-01-06': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático, pero en plena "cuesta de enero" y compitiendo con las Fiestas de Palmares.' },
-        '2026-01-09': { cat: 'red', day: 'Viernes', reason: 'Inicio Fiestas de Palmares, éxodo masivo, "cuesta de enero".' },
-        '2026-01-10': { cat: 'red', day: 'Sábado', reason: 'Plenas Fiestas de Palmares, "cuesta de enero".' },
-        '2026-01-15': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
-        '2026-01-16': { cat: 'red', day: 'Viernes', reason: 'Plenas Fiestas de Palmares. Post-quincena pero con éxodo.' },
-        '2026-01-17': { cat: 'red', day: 'Sábado', reason: 'Plenas Fiestas de Palmares.' },
-        '2026-01-23': { cat: 'red', day: 'Viernes', reason: 'Último fin de semana de Fiestas de Palmares.' },
-        '2026-01-24': { cat: 'red', day: 'Sábado', reason: 'Último fin de semana de Fiestas de Palmares.' },
-        '2026-01-30': { cat: 'red', day: 'Viernes', reason: 'Víspera de Elecciones Nacionales. Alta tensión política, posible Ley Seca.' },
-        '2026-01-31': { cat: 'red', day: 'Sábado', reason: 'Víspera de Elecciones Nacionales. Alta tensión política, posible Ley Seca.' },
-        '2026-02-03': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático, pero en un período de bajo consumo (post-elecciones, lejos de quincena).' },
-        '2026-02-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana post-elecciones. Ambiente de normalización.' },
-        '2026-02-07': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva por Festival Picnic. Alto consumo de presupuesto de ocio del público joven/adulto.' },
-        '2026-02-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Víspera de San Valentín.' },
-        '2026-02-14': { cat: 'yellow', day: 'Sábado', reason: 'Día de San Valentín y quincena, pero con competencia masiva del Festival Picnic. Oportunidad para nicho de parejas, pero riesgo en público general.' },
-        '2026-02-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-02-21': { cat: 'yellow', day: 'Sábado', reason: 'Víspera de Clásico Nacional de fútbol (Domingo).' },
-        '2026-02-27': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-02-28': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-03-03': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático y en una semana tranquila sin grandes eventos competidores.' },
-        '2026-03-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-03-07': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
-        '2026-03-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-03-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-03-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-03-21': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Concierto de Metallica en el Estadio Nacional. Alto impacto en público con poder adquisitivo.' },
-        '2026-03-27': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-03-28': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-03-31': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
-        '2026-04-03': { cat: 'red', day: 'Viernes', reason: 'Semana Santa (Viernes Santo), feriado, éxodo masivo.' },
-        '2026-04-04': { cat: 'red', day: 'Sábado', reason: 'Semana Santa (Sábado Santo), fin de semana largo, éxodo masivo.' },
-        '2026-04-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Posiblemente en semana de segunda ronda electoral y post Semana Santa. Riesgo muy alto.' },
-        '2026-04-10': { cat: 'red', day: 'Viernes', reason: 'Posible 2da Ronda Electoral (domingo 5). Fin de semana post-Semana Santa, bajo consumo.' },
-        '2026-04-11': { cat: 'red', day: 'Sábado', reason: 'Posible 2da Ronda Electoral (domingo 5). Fin de semana post-Semana Santa, bajo consumo.' },
-        '2026-04-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
-        '2026-04-17': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-04-18': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana de quincena, pero con la atención dividida por el Clásico Nacional de fútbol (Domingo).' },
-        '2026-04-24': { cat: 'red', day: 'Viernes', reason: 'Fin de semana previo a concierto de Laura Pausini. Alto riesgo por consumo de presupuesto de ocio en público meta.' },
-        '2026-04-25': { cat: 'red', day: 'Sábado', reason: 'Fin de semana previo a concierto de Laura Pausini. Alto riesgo por consumo de presupuesto de ocio en público meta.' },
-        '2026-04-30': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
-        '2026-05-01': { cat: 'red', day: 'Viernes', reason: 'Fin de semana post-concierto de Laura Pausini. Alto riesgo por presupuesto de ocio gastado. Anula el efecto positivo del feriado.' },
-        '2026-05-02': { cat: 'red', day: 'Sábado', reason: 'Fin de semana post-concierto de Laura Pausini. Alto riesgo por presupuesto de ocio gastado.' },
-        '2026-05-05': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (inicio de temporada lluviosa). Lejos de quincena.' },
-        '2026-05-08': { cat: 'red', day: 'Viernes', reason: 'Competencia masiva: Concierto de Shakira en el Estadio Nacional (Fecha 1). Alto impacto en el mercado general.' },
-        '2026-05-09': { cat: 'red', day: 'Sábado', reason: 'Competencia masiva: Concierto de Shakira en el Estadio Nacional (Fecha 2). Alto impacto en el mercado general.' },
-        '2026-05-15': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-05-16': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-05-22': { cat: 'yellow', day: 'Viernes', reason: 'Víspera de la final del Campeonato Nacional. Interés deportivo alto.' },
-        '2026-05-23': { cat: 'red', day: 'Sábado', reason: 'Potencial final del Campeonato Nacional (Clausura). Evento de visualización masiva.' },
-        '2026-05-29': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-05-30': { cat: 'red', day: 'Sábado', reason: 'Final de la UEFA Champions League. Evento de visualización masiva.' },
-        '2026-06-02': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio y en pleno mes del Mundial de Fútbol. Atención y presupuesto del público están en otro lado.' },
-        '2026-06-05': { cat: 'red', day: 'Viernes', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
-        '2026-06-06': { cat: 'red', day: 'Sábado', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
-        '2026-06-12': { cat: 'red', day: 'Viernes', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
-        '2026-06-13': { cat: 'red', day: 'Sábado', reason: 'Mes del Mundial de Fútbol. La atención y el presupuesto del público están enfocados en los partidos, representando un riesgo muy alto para eventos alternativos.' },
-        '2026-06-19': { cat: 'green', day: 'Viernes', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
-        '2026-06-20': { cat: 'green', day: 'Sábado', reason: 'Fin de semana del Día del Padre. Alta demanda de celebraciones familiares.' },
-        '2026-06-26': { cat: 'red', day: 'Viernes', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
-        '2026-06-27': { cat: 'red', day: 'Sábado', reason: 'Fase de eliminación del Mundial. Partidos de alta importancia, posible conflicto de horario.' },
-        '2026-07-03': { cat: 'red', day: 'Viernes', reason: 'Cuartos de final del Mundial y vacaciones escolares. Riesgo muy alto.' },
-        '2026-07-04': { cat: 'red', day: 'Sábado', reason: 'Cuartos de final del Mundial y vacaciones escolares. Riesgo muy alto.' },
-        '2026-07-07': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio, pero en plenas vacaciones escolares y en la semana de semifinales del Mundial.' },
-        '2026-07-10': { cat: 'red', day: 'Viernes', reason: 'Semifinales del Mundial y plenas vacaciones escolares. Riesgo máximo.' },
-        '2026-07-11': { cat: 'red', day: 'Sábado', reason: 'Semifinales del Mundial y plenas vacaciones escolares. Riesgo máximo.' },
-        '2026-07-15': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
-        '2026-07-17': { cat: 'yellow', day: 'Viernes', reason: 'Fin de vacaciones escolares. Fin de semana post-Mundial, posible fatiga de gasto.' },
-        '2026-07-18': { cat: 'yellow', day: 'Sábado', reason: 'Fin de vacaciones escolares. Fin de semana post-Mundial, posible fatiga de gasto.' },
-        '2026-07-24': { cat: 'red', day: 'Viernes', reason: 'Fin de semana feriado (Anexión). Riesgo por fin de semana largo y éxodo.' },
-        '2026-07-25': { cat: 'red', day: 'Sábado', reason: 'Fin de semana feriado (Anexión). Riesgo por fin de semana largo y éxodo.' },
-        '2026-07-31': { cat: 'red', day: 'Viernes', reason: 'Víspera de la Romería.' },
-        '2026-08-01': { cat: 'red', day: 'Sábado', reason: 'Día de la Romería.' },
-        '2026-08-04': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio/alto (temporada lluviosa) y posicionado tras el fin de semana de la Romería.' },
-        '2026-08-07': { cat: 'yellow', day: 'Viernes', reason: 'Post-vacaciones, fin de semana regular.' },
-        '2026-08-08': { cat: 'yellow', day: 'Sábado', reason: 'Post-vacaciones, fin de semana regular.' },
-        '2026-08-14': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-08-15': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-08-21': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-08-22': { cat: 'yellow', day: 'Sábado', reason: 'Víspera de Clásico Nacional de fútbol (Domingo).' },
-        '2026-08-28': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-08-29': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-08-31': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
-        '2026-09-01': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
-        '2026-09-04': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-09-05': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
-        '2026-09-11': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
-        '2026-09-12': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana PREVIO a quincena. Oportunidad media.' },
-        '2026-09-15': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena y feriado (Día de la Independencia).' },
-        '2026-09-18': { 'cat': 'green', 'day': 'Viernes', 'reason': 'Fin de semana inmediato a la quincena. Oportunidad alta.' },
-        '2026-09-19': { 'cat': 'green', 'day': 'Sábado', 'reason': 'Fin de semana inmediato a la quincena. Oportunidad alta.' },
-        '2026-09-25': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-09-26': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-09-30': { cat: 'blue', day: 'Miércoles', reason: 'Día de pago de quincena.' },
-        '2026-10-02': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-10-03': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-10-06': { cat: 'red', day: 'Martes', reason: 'Exhibición de Vehículos. Pico de temporada lluviosa (riesgo climático muy alto). Plan de contingencia es obligatorio.' },
-        '2026-10-09': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-10-10': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
-        '2026-10-15': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' },
-        '2026-10-16': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-10-17': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-10-23': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-10-24': { cat: 'yellow', day: 'Sábado', reason: 'Víspera de Clásico Nacional de fútbol (Domingo).' },
-        '2026-10-30': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
-        '2026-10-31': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena. Celebración de Halloween.' },
-        '2026-11-03': { cat: 'yellow', day: 'Martes', reason: 'Exhibición de Vehículos. Riesgo climático medio (transición a temporada seca). Semana tranquila, oportunidad aceptable.' },
-        '2026-11-06': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana regular.' },
-        '2026-11-07': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana regular.' },
-        '2026-11-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana de quincena.' },
-        '2026-11-14': { cat: 'green', day: 'Sábado', reason: 'Fin de semana de quincena.' },
-        '2026-11-20': { cat: 'yellow', day: 'Viernes', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-11-21': { cat: 'yellow', day: 'Sábado', reason: 'Fin de semana alejado de la quincena.' },
-        '2026-11-27': { cat: 'green', day: 'Viernes', reason: 'Inicio "Ventana Dorada" (Viernes Negro).' },
-        '2026-11-28': { cat: 'green', day: 'Sábado', reason: 'Inicio "Ventana Dorada".' },
-        '2026-11-30': { cat: 'blue', day: 'Lunes', reason: 'Día de pago de quincena.' },
-        '2026-12-01': { cat: 'green', day: 'Martes', reason: 'Exhibición de Vehículos. Bajo riesgo climático (temporada seca) y en plena "Ventana Dorada" con alto poder adquisitivo (aguinaldo).' },
-        '2026-12-04': { cat: 'green', day: 'Viernes', reason: 'Plena "Ventana Dorada" (aguinaldo).' },
-        '2026-12-05': { cat: 'green', day: 'Sábado', reason: 'Plena "Ventana Dorada". Oportunidad máxima.' },
-        '2026-12-11': { cat: 'green', day: 'Viernes', reason: 'Plena "Ventana Dorada".' },
-        '2026-12-12': { cat: 'green', day: 'Sábado', reason: 'Plena "Ventana Dorada".' },
-        '2026-12-15': { cat: 'blue', day: 'Martes', reason: 'Día de pago de quincena.' },
-        '2026-12-18': { cat: 'yellow', day: 'Viernes', reason: 'Víspera de final del Campeonato Nacional. Quincena y aguinaldo, pero con atención dividida.' },
-        '2026-12-19': { cat: 'red', day: 'Sábado', reason: 'Potencial final del Campeonato Nacional (Apertura). Evento de visualización masiva en plena época de aguinaldo.' },
-        '2026-12-25': { cat: 'red', day: 'Viernes', reason: 'Feriado (Navidad). Fiestas de Zapote. Éxodo masivo.' },
-        '2026-12-26': { cat: 'red', day: 'Sábado', reason: 'Fiestas de Zapote en pleno apogeo. Éxodo de fin de año.' },
-        '2026-12-31': { cat: 'blue', day: 'Jueves', reason: 'Día de pago de quincena.' }
+        // --- ENERO 2026 ---
+        '2026-01-01': { cat: 'red', day: 'Jueves', reason: 'Año Nuevo.' },
+        '2026-01-15': { cat: 'blue', day: 'Jueves', reason: 'Quincena.' },
+        '2026-01-16': { cat: 'red', day: 'Viernes', reason: 'Inicio Fiestas Palmares. Éxodo.' },
+        '2026-01-17': { cat: 'red', day: 'Sábado', reason: 'Fiestas Palmares.' },
+        '2026-01-24': { cat: 'red', day: 'Sábado', reason: 'Cierre Palmares.' },
+        '2026-01-30': { cat: 'blue', day: 'Viernes', reason: 'Quincena. Veda Electoral inicia medianoche.' },
+        '2026-01-31': { cat: 'red', day: 'Sábado', reason: 'VEDA ELECTORAL. Ley Seca probable.' },
+
+        // --- FEBRERO 2026 ---
+        '2026-02-01': { cat: 'red', day: 'Domingo', reason: 'ELECCIONES NACIONALES. País enfocado en urnas.' },
+        '2026-02-07': { cat: 'yellow', day: 'Sábado', reason: 'Viva los 90s Fest (Parque Viva). Público adulto contemporáneo (target similar).' },
+        '2026-02-13': { cat: 'green', day: 'Viernes', reason: 'Quincena + Pre-San Valentín.' },
+        '2026-02-14': { cat: 'green', day: 'Sábado', reason: 'San Valentín. Demanda Máxima.' },
+        '2026-02-28': { cat: 'red', day: 'Sábado', reason: 'X-Knights (Estadio Nacional). Evento familiar masivo. Pago fin de mes.' },
+
+        // --- MARZO 2026 ---
+        '2026-03-13': { cat: 'green', day: 'Viernes', reason: 'Fin de semana Quincena.' },
+        '2026-03-15': { cat: 'blue', day: 'Domingo', reason: 'Quincena.' },
+        '2026-03-18': { cat: 'yellow', day: 'Miércoles', reason: 'Tyler, The Creator (Parque Viva). Público joven/nicho.' },
+        '2026-03-25': { cat: 'yellow', day: 'Miércoles', reason: 'THE KILLERS (Parque Viva). Competencia directa público adulto/rock.' },
+        '2026-03-28': { cat: 'red', day: 'Sábado', reason: 'Inicio Semana Santa (Éxodo).' },
+        '2026-03-30': { cat: 'blue', day: 'Lunes', reason: 'Pago Fin de Mes.' },
+
+        // --- ABRIL 2026 ---
+        '2026-04-02': { cat: 'red', day: 'Jueves', reason: 'Jueves Santo.' },
+        '2026-04-03': { cat: 'red', day: 'Viernes', reason: 'Viernes Santo (Ley Seca).' },
+        '2026-04-05': { cat: 'red', day: 'Domingo', reason: 'Posible 2da Ronda Electoral.' },
+        '2026-04-11': { cat: 'red', day: 'Sábado', reason: 'Feriado Juan Santamaría. Fin de semana largo.' },
+        '2026-04-15': { cat: 'blue', day: 'Miércoles', reason: 'Quincena.' },
+        '2026-04-29': { cat: 'yellow', day: 'Miércoles', reason: 'Laura Pausini (Estadio Nacional). Público adulto balada.' },
+        '2026-04-30': { cat: 'blue', day: 'Jueves', reason: 'Pago Fin de Mes.' },
+
+        // --- MAYO 2026 ---
+        '2026-05-01': { cat: 'red', day: 'Viernes', reason: 'Día del Trabajador. Feriado.' },
+        '2026-05-15': { cat: 'blue', day: 'Viernes', reason: 'Quincena.' },
+        '2026-05-30': { cat: 'red', day: 'Sábado', reason: 'ED SHEERAN (Estadio Nacional). Competencia Masiva. Tráfico Sabana.' },
+
+        // --- JUNIO 2026 ---
+        '2026-06-11': { cat: 'yellow', day: 'Jueves', reason: 'Inicio MUNDIAL 2026.' },
+        '2026-06-15': { cat: 'blue', day: 'Lunes', reason: 'Quincena.' },
+        '2026-06-20': { cat: 'green', day: 'Sábado', reason: 'Día del Padre.' },
+        '2026-06-30': { cat: 'blue', day: 'Martes', reason: 'Pago Fin de Mes.' },
+
+        // --- JULIO 2026 ---
+        '2026-07-15': { cat: 'blue', day: 'Miércoles', reason: 'Quincena.' },
+        '2026-07-19': { cat: 'red', day: 'Domingo', reason: 'Final Mundial 2026.' },
+        '2026-07-25': { cat: 'red', day: 'Sábado', reason: 'Anexión Nicoya. Feriado/Éxodo.' },
+        '2026-07-31': { cat: 'blue', day: 'Viernes', reason: 'Pago Fin de Mes.' },
+
+        // --- AGOSTO 2026 ---
+        '2026-08-01': { cat: 'red', day: 'Sábado', reason: 'Romería. Caos vial Cartago.' },
+        '2026-08-14': { cat: 'green', day: 'Viernes', reason: 'Víspera Día Madre + Quincena.' },
+        '2026-08-15': { cat: 'green', day: 'Sábado', reason: 'Día de la Madre. Restaurantes llenos.' },
+
+        // --- SEPTIEMBRE 2026 ---
+        '2026-09-14': { cat: 'green', day: 'Lunes', reason: 'Desfile Faroles.' },
+        '2026-09-15': { cat: 'blue', day: 'Martes', reason: 'Independencia. Feriado.' },
+        '2026-09-30': { cat: 'blue', day: 'Miércoles', reason: 'Pago Fin de Mes.' },
+
+        // --- OCTUBRE 2026 ---
+        '2026-10-15': { cat: 'blue', day: 'Jueves', reason: 'Quincena.' },
+        '2026-10-31': { cat: 'green', day: 'Sábado', reason: 'Halloween. Alta demanda bares.' },
+
+        // --- NOVIEMBRE 2026 ---
+        '2026-11-15': { cat: 'blue', day: 'Domingo', reason: 'Quincena.' },
+        '2026-11-18': { cat: 'yellow', day: 'Miércoles', reason: 'Eros Ramazzotti (Estadio Nacional). Público adulto.' },
+        '2026-11-27': { cat: 'green', day: 'Viernes', reason: 'Black Friday.' },
+        '2026-11-30': { cat: 'blue', day: 'Lunes', reason: 'Pago Fin de Mes.' },
+
+        // --- DICIEMBRE 2026 ---
+        '2026-12-01': { cat: 'green', day: 'Martes', reason: 'Inicio Aguinaldos 2026.' },
+        '2026-12-15': { cat: 'blue', day: 'Martes', reason: 'Quincena.' },
+        '2026-12-25': { cat: 'red', day: 'Viernes', reason: 'Navidad.' }
     };
-    // --- FIN DE DATOS ACTUALIZADOS ---
-
-    const analysisContent = [
-        { title: 'El Restaurante como Destino: Celebraciones Familiares', content: 'Este es un factor clave que puede anular otros riesgos. Fechas como el Día de la Madre y el Día del Padre son oportunidades de primer nivel (Verde), ya que las familias buscan activamente un lugar especial para celebrar. En estos días, la competencia externa tiene un impacto menor porque Antologías no es solo una opción de ocio, sino el destino principal de la celebración.' },
-        { title: 'El Pulso Económico: Quincenas y Aguinaldo', content: 'El factor más influyente. Los fines de semana que caen en día de pago o inmediatamente después son los mejores. El poder de compra disminuisce para el fin de semana siguiente. La "Ventana Dorada" (finales de noviembre a la tercera semana de diciembre) es el pico de gasto anual gracias al aguinaldo.' },
-        { title: 'El Éxodo Urbano: Vacaciones y Fines de Semana Largos', content: 'Los feriados que crean fines de semana de 3 días y las vacaciones escolares (julio y diciembre-febrero) provocan una salida masiva de la población de la GAM hacia zonas turísticas, reduciendo drásticamente la audiencia potencial.' },
-        { title: 'Las Grandes Fiestas Populares: Competencia Masiva', content: 'Eventos como las Fiestas de Zapote y Palmares son una competencia directa y abrumadora. La Romería (1-2 de agosto) paraliza la actividad social. Estas fechas son de altísimo riesgo, aunque abren la puerta a la contraprogramación.' },
-        { title: 'El Fenómeno "Sillón-Ball": Eventos Deportivos', content: 'Partidos clave de "La Sele", las finales y los "Clásicos" del torneo local, y eventos internacionales como la final de la Champions League o el Super Bowl mantienen a la audiencia en casa. Dado que sus eventos inician post 8:00 PM, los partidos vespertinos representan un riesgo menor (Amarillo), pues el público puede salir después. Sin embargo, los partidos en horario estelar (post 7:00 PM) siguen siendo un riesgo alto (Rojo) por el conflicto directo.' },
-        { title: 'El Escenario Competitivo: La Batalla por la Atención', content: 'Mega-conciertos en recintos como el Estadio Nacional o Parque Viva consumen el presupuesto de ocio y la atención del mercado para ese fin de semana. Es crucial monitorear los anuncios de nuevos eventos y analizar el solapamiento de audiencias.' },
-        { title: 'El Factor Político: Elecciones Nacionales 2026', content: 'Las elecciones generales (1 de febrero y posible segunda ronda el 5 de abril de 2026) dominarán la atención pública. Los fines de semana de las elecciones son de nula actividad comercial y deben marcarse como de riesgo máximo.' },
-        { title: 'Análisis del Público: Actual vs. Potencial', content: 'Tus datos demográficos revelan dos perfiles: 1) **Público Actual (Seguidores):** Un núcleo leal, mayoritariamente femenino (64-71%), con edades entre 35-54 años y concentrado en la GAM. Este perfil valida la estrategia de enfocar esfuerzos en fechas de celebración familiar (Día de la Madre/Padre) y quincenas. 2) **Público Potencial (Alcance):** Un mercado mucho más amplio y joven (25-44 años), con una distribución de género equitativa y presencia nacional. Para atraer a este grupo, se podrían considerar eventos con artistas de géneros más actuales o promociones específicas para un público más joven en fechas de riesgo medio (amarillas).' },
-        {
-            title: 'Análisis de Público y Competencia',
-            content: 'La investigación confirma la percepción inicial: Fiestas como las de Palmares atraen un público significativamente más joven (18-35 años) con afinidad por géneros urbanos y artistas internacionales, representando un mercado distinto al núcleo del restaurante. En contraste, las fiestas de Zapote se orientan a un público más familiar con talento nacional, y las de Santa Cruz a un perfil cultural-folclórico. Musicalmente, la competencia directa y fuerte para el público objetivo (35-54 años) son los conciertos de baladistas y artistas clásicos en español (ej. Chayanne, Joaquín Sabina, Pandora & Flans en 2025). A esto se suman giras de artistas de pop-rock internacionales consolidados (ej. Eros Ramazzotti en nov. 2026) y leyendas del rock (Guns N\' Roses en oct. 2025), que compiten directamente por el mismo segmento demográfico. Géneros como Reggaetón o Rock Alternativo (ej. Foster the People en nov. 2025), aunque populares, son una competencia indirecta al atraer a un segmento de edad diferente. Finalmente, el análisis político indica una alta probabilidad de una segunda ronda electoral en abril de 2026 debido a la fragmentación partidaria histórica, un factor estratégico clave a considerar para la planificación de ese trimestre.'
-        }
-    ];
 
     const climateData = [
-        { month: 'Enero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
-        { month: 'Febrero', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
-        { month: 'Marzo', risk: '🟢', justification: 'Plena temporada seca. Muy baja probabilidad de lluvia. Planificar con confianza.' },
-        { month: 'Abril', risk: '🟢', justification: 'Final de la temporada seca. El riesgo de lluvia sigue siendo bajo. Planificar con confianza.' },
-        { month: 'Mayo', risk: '🟡', justification: 'Inicio de la temporada lluviosa. Aumenta la probabilidad de aguaceros vespertinos. Tener un Plan B (carpas).' },
-        { month: 'Junio', risk: '🟡', justification: 'Plena temporada lluviosa. Alta probabilidad de lluvias por la tarde/noche. Plan B es esencial.' },
-        { month: 'Julio', risk: '🟡', justification: 'Temporada lluviosa. Posibilidad del "Veranillo de San Juan" pero no es garantizado. Plan B es esencial.' },
-        { month: 'Agosto', risk: '🟡', justification: 'Temporada lluviosa. Mes caracterizado por alta precipitación. Plan B es esencial.' },
-        { month: 'Septiembre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
-        { month: 'Octubre', risk: '🔴', justification: 'Pico de la temporada lluviosa. Muy alta probabilidad de lluvia fuerte. Considerar posponer o asegurar cobertura completa.' },
-        { month: 'Noviembre', risk: '🟡', justification: 'Mes de transición hacia la temporada seca, pero aún con alta probabilidad de lluvia. Plan B es esencial.' },
-        { month: 'Diciembre', risk: '🟢', justification: 'Inicio de la temporada seca. La probabilidad de lluvia disminuisce drásticamente. Planificar con confianza.' },
+        { month: 'Enero', risk: '🟢', justification: 'Seco. Ideal para terrazas.' },
+        { month: 'Febrero', risk: '🟢', justification: 'Seco y ventoso.' },
+        { month: 'Marzo', risk: '🟢', justification: 'Seco y caliente.' },
+        { month: 'Abril', risk: '🟡', justification: 'Transición. Lluvias finales mes.' },
+        { month: 'Mayo', risk: '🟡', justification: 'Inicio lluvias vespertinas.' },
+        { month: 'Junio', risk: '🟡', justification: 'Lluvias regulares.' },
+        { month: 'Julio', risk: '🟡', justification: 'Veranillo posible.' },
+        { month: 'Agosto', risk: '🟡', justification: 'Lluvias.' },
+        { month: 'Septiembre', risk: '🔴', justification: 'RIESGO ALTO. Temporales.' },
+        { month: 'Octubre', risk: '🔴', justification: 'RIESGO MÁXIMO. Lluvias intensas.' },
+        { month: 'Noviembre', risk: '🟡', justification: 'Transición hacia seco.' },
+        { month: 'Diciembre', risk: '🟢', justification: 'Vientos alisios, clima fresco.' },
     ];
 
-    // Función para inyectar los estilos de color dinámicamente
+    const analysisContent = [
+        { title: 'El Fenómeno Bad Bunny (Dic 2025)', content: 'La confirmación del concierto de Bad Bunny para el 5 y 6 de diciembre 2025 altera el inicio de la temporada alta. Se espera colapso vial en La Sabana y alrededores desde la tarde. Recomendación: Enfocar marketing en "After-Party" o almuerzos previos, evitar eventos que requieran puntualidad estricta en la noche.' },
+        { title: 'Conciertos 2026 Confirmados', content: '2026 trae grandes nombres: The Killers (Marzo) y Ed Sheeran (Mayo). Ed Sheeran en particular (Sábado 30 Mayo) será un evento masivo en el Estadio Nacional que competirá por el presupuesto de ocio de fin de mes.' },
+        { title: 'Elecciones y Ley Seca', content: 'Recuerde que febrero y abril 2026 son meses electorales. La Ley Seca suele aplicar el día previo y el día de la elección, prohibiendo la venta de licor. Planifique inventario y personal acorde a esta restricción.' }
+    ];
+
+    // --- LOGIC FUNCTIONS ---
+
     const injectColorStyles = (palette) => {
         let style = document.getElementById('dynamic-color-styles');
         if (!style) {
@@ -818,74 +464,23 @@ document.addEventListener('DOMContentLoaded', () => {
             .bg-red-opportunity { background-color: ${palette.opportunityLow.bg}; color: ${palette.opportunityLow.text}; }
             .bg-blue-payday { background-color: ${palette.payday.bg}; color: ${palette.payday.text}; }
         `;
-
-        const root = document.documentElement; 
-
-        // Actualizar los colores de borde de las tarjetas de estrategia según la paleta activa
+        
+        const root = document.documentElement;
         root.style.setProperty('--strategy-green-border', palette.opportunityHigh.bg);
         root.style.setProperty('--strategy-red-border', palette.opportunityLow.bg);
-        root.style.setProperty('--strategy-yellow-border', palette.opportunityMedium.bg); 
-
-        // Actualizar el fondo y el color del texto de las tarjetas de estrategia
+        root.style.setProperty('--strategy-yellow-border', palette.opportunityMedium.bg);
+        
         if (isColorblindMode) {
-            root.style.setProperty('--strategy-green-bg', `${palette.opportunityHigh.bg}20`); 
-            root.style.setProperty('--strategy-green-text', '#CC99FF'); 
-
-            root.style.setProperty('--strategy-red-bg', `${palette.opportunityLow.bg}20`); 
-            root.style.setProperty('--strategy-red-text', '#FFCC99'); 
-
-            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
-            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
-
+            root.style.setProperty('--strategy-green-bg', `${palette.opportunityHigh.bg}20`);
+            root.style.setProperty('--strategy-green-text', '#CC99FF');
+            root.style.setProperty('--strategy-red-bg', `${palette.opportunityLow.bg}20`);
+            root.style.setProperty('--strategy-red-text', '#FFCC99');
         } else {
             root.style.setProperty('--strategy-green-bg', `rgba(46, 125, 50, 0.2)`);
             root.style.setProperty('--strategy-green-text', `#A7D9A9`);
-
             root.style.setProperty('--strategy-red-bg', `rgba(198, 40, 40, 0.2)`);
             root.style.setProperty('--strategy-red-text', `#FFCDD2`);
-
-            root.style.setProperty('--strategy-yellow-bg', `rgba(255, 193, 7, 0.2)`);
-            root.style.setProperty('--strategy-yellow-text', `#FFECB3`);
         }
-    };
-
-    // Función para generar un icono dinámico y un manifiesto para PWA
-    const setupPwaAssets = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 192;
-        canvas.height = 192;
-        const ctx = canvas.getContext('2d');
-
-        ctx.fillStyle = '#6D5D4B'; 
-        ctx.fillRect(0, 0, 192, 192);
-        ctx.font = 'bold 120px sans-serif';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('A', 192 / 2, 192 / 2 + 10);
-        
-        const iconUrl = canvas.toDataURL('image/png');
-        
-        document.getElementById('apple-touch-icon-link').href = iconUrl;
-
-        const manifest = {
-            "name": "Planificador Antologías",
-            "short_name": "Antologías",
-            "start_url": ".",
-            "display": "standalone",
-            "background_color": "#121212",
-            "theme_color": "#1E1E1E",
-            "icons": [
-                {
-                    "src": iconUrl,
-                    "sizes": "192x192",
-                    "type": "image/png"
-                }
-            ]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        const manifestUrl = URL.createObjectURL(manifestBlob);
-        document.getElementById('manifest-link').href = manifestUrl;
     };
 
     const getDayClass = (dateString) => {
@@ -899,98 +494,80 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'bg-neutral-day';
     };
 
-    const generateCalendar = (year) => {
+    const generateMonthGrid = (year, month) => {
         const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         const dayNames = ["D", "L", "K", "M", "J", "V", "S"];
-        let calendarHTML = `<div id="calendar-grid-${year}" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">`;
         
-        const startMonth = (year === 2025) ? 6 : 0;
-
-        for (let month = startMonth; month < 12; month++) {
-            calendarHTML += `<div class="p-4 dark-mode-surface rounded-xl shadow-sm">
+        let html = `<div class="p-4 dark-mode-surface rounded-xl shadow-sm h-full">
                 <h3 class="font-bold text-center mb-3 text-lg dark-mode-text-header">${monthNames[month]} ${year}</h3>
                 <div class="calendar-grid-header text-xs">`;
-            dayNames.forEach(day => {
-                calendarHTML += `<div class="font-semibold text-center dark-mode-text-accent">${day}</div>`;
-            });
-            calendarHTML += `</div><div class="calendar-grid text-sm">`;
+        
+        dayNames.forEach(day => html += `<div class="font-semibold text-center dark-mode-text-accent">${day}</div>`);
+        html += `</div><div class="calendar-grid text-sm">`;
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            for (let i = 0; i < firstDay; i++) {
-                calendarHTML += `<div class="bg-empty-day rounded-full"></div>`;
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(year, month, day);
-                const dateString = date.toISOString().split('T')[0];
-                const dayClass = getDayClass(dateString);
-                
-                let additionalClasses = "day flex items-center justify-center font-semibold rounded-full cursor-pointer";
-                if (dayClass === 'bg-neutral-day') {
-                    additionalClasses += " text-gray-400";
-                }
-                
-                calendarHTML += `<div class="${dayClass} ${additionalClasses}" data-date="${dateString}">${day}${eventData[dateString]?.cat === 'green' ? '<span class="priority-star">⭐</span>' : ''}</div>`;
-            }
-            calendarHTML += `</div></div>`;
+        for (let i = 0; i < firstDay; i++) {
+            html += `<div class="bg-empty-day rounded-full"></div>`;
         }
-        calendarHTML += `</div>`;
-        return calendarHTML;
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateObj = new Date(year, month, day);
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            const dateString = `${y}-${m}-${d}`;
+            
+            const dayClass = getDayClass(dateString);
+            let extraClasses = "day flex items-center justify-center font-semibold rounded-full cursor-pointer";
+            if (dayClass === 'bg-neutral-day') extraClasses += " text-gray-400";
+            
+            const hasStar = eventData[dateString]?.cat === 'green' ? '<span class="priority-star">⭐</span>' : '';
+            html += `<div class="${dayClass} ${extraClasses}" data-date="${dateString}">${day}${hasStar}</div>`;
+        }
+        html += `</div></div>`;
+        return html;
     };
-    
-    function showDayDetails(dateString) {
+
+    const renderCalendars = (view) => {
+        let html = `<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">`;
+        
+        if (view === '2025-end') {
+            html += generateMonthGrid(2025, 11); // Only Dec 2025
+        } else {
+            for (let m = 0; m < 12; m++) {
+                html += generateMonthGrid(2026, m);
+            }
+        }
+        html += `</div>`;
+        calendarsContainer.innerHTML = html;
+    };
+
+    const showDayDetails = (dateString) => {
         const data = eventData[dateString];
-        const date = new Date(dateString + 'T00:00:00');
+        const [y, m, d] = dateString.split('-');
+        const date = new Date(y, m - 1, d);
+        
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = date.toLocaleDateString('es-ES', options);
+        const formattedDate = date.toLocaleDateString('es-CR', options);
 
-        const textColorClass = body.classList.contains('light-mode') ? 'text-gray-700' : 'text-gray-100';
-        const mutedTextColorClass = body.classList.contains('light-mode') ? 'text-gray-600' : 'text-gray-300';
-        const veryMutedTextColorClass = body.classList.contains('light-mode') ? 'text-gray-500' : 'text-gray-500';
-
-        let html = `<h4 class="font-bold text-lg ${textColorClass} capitalize">${formattedDate}</h4>`;
+        let html = `<h4 class="font-bold text-lg capitalize mb-2">${formattedDate}</h4>`;
         
         if (data) {
-            let emoji, statusText;
-            if(data.cat === 'green') {
-                emoji = '🟢'; statusText = 'Oportunidad Alta';
-            } else if (data.cat === 'yellow') {
-                emoji = '🟡'; statusText = 'Riesgo Medio';
-            } else if (data.cat === 'red') {
-                emoji = '🔴'; statusText = 'Riesgo Alto';
-            } else if (data.cat === 'blue') {
-                emoji = '🔵'; statusText = 'Día de Pago';
-            }
+            let emoji = data.cat === 'green' ? '🟢' : data.cat === 'yellow' ? '🟡' : data.cat === 'red' ? '🔴' : '🔵';
+            let text = data.cat === 'green' ? 'Oportunidad Alta' : data.cat === 'yellow' ? 'Riesgo Medio' : data.cat === 'red' ? 'Riesgo Alto' : 'Día de Pago';
+            let color = currentActiveColorPalette.opportunityHigh.bg;
+            if (data.cat === 'yellow') color = currentActiveColorPalette.opportunityMedium.bg;
+            if (data.cat === 'red') color = currentActiveColorPalette.opportunityLow.bg;
+            if (data.cat === 'blue') color = currentActiveColorPalette.payday.bg;
 
-            let detailColor = '';
-            if (data.cat === 'green') detailColor = currentActiveColorPalette.opportunityHigh.bg;
-            else if (data.cat === 'yellow') detailColor = currentActiveColorPalette.opportunityMedium.bg;
-            else if (data.cat === 'red') detailColor = currentActiveColorPalette.opportunityLow.bg;
-            else if (data.cat === 'blue') detailColor = currentActiveColorPalette.payday.bg;
-
-            html += `<p class="font-semibold" style="color: ${detailColor};">${emoji} ${statusText}</p>`;
-            html += `<p class="text-sm ${mutedTextColorClass} mt-2"><span class="font-semibold">Justificación:</span> ${data.reason}</p>`;
-
-            // Add suggestion for counter-programming on days affected by concerts
-            const reasonLower = data.reason.toLowerCase();
-            const concertKeywords = ['concierto', 'competencia masiva', 'competencia:', 'competencia directa', 'competencia fuerte', 'festival picnic', 'ana gabriel', 'gandhi sinfónico'];
-            if (concertKeywords.some(keyword => reasonLower.includes(keyword))) {
-                 html += `<p class="text-xs italic ${body.classList.contains('light-mode') ? 'text-amber-600' : 'text-amber-400'} mt-3 border-l-2 border-amber-500 pl-2"><span class="font-semibold">Sugerencia:</span> Programar un evento de género antagónico (ej. jazz, trova) para atraer al público que no asiste al evento masivo.</p>`;
-            }
-
+            html += `<p class="font-bold text-lg" style="color:${color}">${emoji} ${text}</p>`;
+            html += `<p class="mt-4 text-sm"><span class="font-semibold opacity-75">Justificación:</span><br>${data.reason}</p>`;
         } else {
-            const dayOfWeek = date.getDay();
-            if (dayOfWeek === 5 || dayOfWeek === 6) {
-                 html += `<p class="font-semibold ${mutedTextColorClass}">⚪ Oportunidad Neutra</p>`;
-                 html += `<p class="text-sm ${veryMutedTextColorClass} mt-2"><span class="font-semibold">Justificación:</span> Fin de semana regular sin factores negativos o positivos mayores identificados. Se considera una buena oportunidad base. </p>`;
-            } else {
-                 html += `<p class="font-semibold ${veryMutedTextColorClass}">Día entre semana</p>`;
-                 html += `<p class="text-sm ${veryMutedTextColorClass} mt-2">No se han analizado factores estratégicos específicos para esta fecha.</p>`;
-            }
+             html += `<p class="opacity-50">Día regular sin eventos críticos registrados.</p>`;
         }
-        
+
         if (window.innerWidth < 1024) {
             detailsContentMobile.innerHTML = html;
             modal.classList.remove('hidden');
@@ -1001,325 +578,63 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             detailsContentDesktop.innerHTML = html;
         }
-    }
+    };
 
-    function closeModal() {
-        modal.classList.add('opacity-0');
-        modal.querySelector('div').classList.add('scale-95');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
+    // --- UI & EVENT LISTENERS ---
 
-    // Función para actualizar los estilos de los botones de año
-    function updateYearButtonStyles() {
-        const year2025Btn = document.getElementById('year-2025');
-        const year2026Btn = document.getElementById('year-2026');
-        const isLightMode = body.classList.contains('light-mode');
-
-        year2025Btn.classList.remove('year-btn-active-dark', 'year-btn-inactive-dark', 'year-btn-active-light', 'year-btn-inactive-light');
-        year2026Btn.classList.remove('year-btn-active-dark', 'year-btn-inactive-dark', 'year-btn-active-light', 'year-btn-inactive-light');
+    const updateActiveYearBtn = (view) => {
+        currentViewYear = view;
+        const btn25 = document.getElementById('year-2025-btn');
+        const btn26 = document.getElementById('year-2026-btn');
         
-        if (currentYear === 2025) {
-            year2025Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
-            year2026Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
-        } else { 
-            year2026Btn.classList.add(isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark');
-            year2025Btn.classList.add(isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark');
-        }
-    }
+        const activeClass = isLightMode ? 'year-btn-active-light' : 'year-btn-active-dark';
+        const inactiveClass = isLightMode ? 'year-btn-inactive-light' : 'year-btn-inactive-dark';
 
-    function updateActiveYear(year) {
-        currentYear = year;
-        document.getElementById('calendar-grid-2025').classList.toggle('hidden', year !== 2025);
-        document.getElementById('calendar-grid-2026').classList.toggle('hidden', year !== 2026);
-        
-        detailsContentDesktop.innerHTML = '<p class="text-center dark-mode-text-muted pt-8">Selecciona una fecha en el calendario.</p>';
-        if(selectedDayElement) {
-            selectedDayElement.classList.remove('selected');
-            selectedDayElement = null;
-        }
-
-        updateYearButtonStyles(); 
-        updateChartColors(); 
-        createPaydayChart(); 
-    }
-    
-    function updateFilterButtonLabels() {
-        const labelsToUse = isColorblindMode ? colorblindFilterButtonLabels : filterButtonLabels;
-        filterButtons.forEach(button => {
-            const dataFilter = button.dataset.filter;
-            button.innerHTML = `<span>${labelsToUse[dataFilter]}</span>`; 
+        [btn25, btn26].forEach(b => {
+            b.classList.remove('year-btn-active-light', 'year-btn-active-dark', 'year-btn-inactive-light', 'year-btn-inactive-dark');
         });
-    }
 
-    function filterCalendar(category) {
-        const allDays = document.querySelectorAll('.day');
-        allDays.forEach(day => {
-            day.classList.remove('day-filtered');
-            if (category === 'all') return;
+        if (view === '2025-end') {
+            btn25.classList.add(activeClass);
+            btn26.classList.add(inactiveClass);
+        } else {
+            btn26.classList.add(activeClass);
+            btn25.classList.add(inactiveClass);
+        }
+        renderCalendars(view);
+    };
 
-            let dayCategory = '';
-            if (day.classList.contains('bg-green-opportunity')) dayCategory = 'green';
-            else if (day.classList.contains('bg-yellow-opportunity')) dayCategory = 'yellow';
-            else if (day.classList.contains('bg-red-opportunity')) dayCategory = 'red';
-            else if (day.classList.contains('bg-blue-payday')) dayCategory = 'blue';
+    const applyTheme = (light) => {
+        if (light) {
+            body.classList.add('light-mode');
+            themeToggleBtn.textContent = '🌙';
+        } else {
+            body.classList.remove('light-mode');
+            themeToggleBtn.textContent = '☀️';
+        }
+        updateActiveYearBtn(currentViewYear);
+        injectColorStyles(currentActiveColorPalette);
+    };
+
+    const filterCalendar = (cat) => {
+        const days = document.querySelectorAll('.day');
+        days.forEach(d => {
+            d.classList.remove('day-filtered');
+            if (cat === 'all') return;
             
-            if (category !== dayCategory) {
-                day.classList.add('day-filtered');
-            }
+            const dDate = d.dataset.date;
+            const dData = eventData[dDate];
+            const dCat = dData ? dData.cat : 'neutral';
+
+            if (cat !== dCat) d.classList.add('day-filtered');
         });
-    }
+    };
 
-    function countOpportunities(year) {
-        const counts = { green: 0, yellow: 0, red: 0 };
-        for (const dateString in eventData) {
-            if (dateString.startsWith(year)) {
-                const date = new Date(dateString + 'T00:00:00');
-                const dayOfWeek = date.getDay();
-                if (dayOfWeek === 5 || dayOfWeek === 6) { 
-                    if (eventData[dateString].cat === 'green') counts.green++;
-                    if (eventData[dateString].cat === 'yellow') counts.yellow++;
-                    if (eventData[dateString].cat === 'red') counts.red++;
-                }
-            }
-        }
-        return counts;
-    }
-
-    function countPaydays(year) {
-        let count = 0;
-        for (const dateString in eventData) {
-            if (dateString.startsWith(year) && eventData[dateString].cat === 'blue') {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    function updateChartColors() {
-        if (!opportunityChart) return;
-
-        const isLightMode = body.classList.contains('light-mode');
-
-        const gridColor = isLightMode ? '#BBBBBB' : '#444444';
-        const tickColor = isLightMode ? '#333333' : '#E0E0E0';
-        const labelColor = isLightMode ? '#333333' : '#E0E0E0';
-        const tooltipBg = isLightMode ? '#FFFFFF' : '#121212';
-        const tooltipBorder = isLightMode ? '#CCCCCC' : '#444444';
-        const tooltipColor = isLightMode ? '#333333' : '#E0E0E0';
-
-        opportunityChart.options.scales.y.grid.color = gridColor;
-        opportunityChart.options.scales.y.ticks.color = tickColor;
-        opportunityChart.options.scales.y.title.color = labelColor;
-        opportunityChart.options.scales.x.ticks.color = tickColor;
-
-        opportunityChart.options.plugins.legend.labels.color = labelColor;
-        opportunityChart.options.plugins.tooltip.backgroundColor = tooltipBg;
-        opportunityChart.options.plugins.tooltip.borderColor = tooltipBorder;
-        opportunityChart.options.plugins.tooltip.titleColor = tooltipColor;
-        opportunityChart.options.plugins.tooltip.bodyColor = tooltipColor;
-
-        const activeColor = isLightMode ? '#6D5D4B' : '#A99D8B'; 
-        const inactiveColor = isLightMode ? '#AAAAAA' : '#555555';
-        const activeBorder = isLightMode ? '#4A3D30' : '#6D5D4B';
-        const inactiveBorder = isLightMode ? '#888888' : '#888888';
-
-        opportunityChart.data.datasets[0].backgroundColor = currentYear === 2025 ? activeColor : inactiveColor;
-        opportunityChart.data.datasets[0].borderColor = currentYear === 2025 ? activeBorder : inactiveBorder;
-        
-        opportunityChart.data.datasets[1].backgroundColor = currentYear === 2026 ? activeColor : inactiveColor;
-        opportunityChart.data.datasets[1].borderColor = currentYear === 2026 ? activeBorder : inactiveBorder;
-        
-        opportunityChart.update();
-
-        if (paydayChart) {
-            paydayChart.options.scales.y.grid.color = gridColor;
-            paydayChart.options.scales.y.ticks.color = tickColor;
-            paydayChart.options.scales.y.title.color = labelColor;
-            paydayChart.options.scales.x.ticks.color = tickColor;
-            paydayChart.options.plugins.legend.labels.color = labelColor;
-            paydayChart.options.plugins.tooltip.backgroundColor = tooltipBg;
-            paydayChart.options.plugins.tooltip.borderColor = tooltipBorder;
-            paydayChart.options.plugins.tooltip.titleColor = tooltipColor;
-            paydayChart.options.plugins.tooltip.bodyColor = tooltipColor;
-
-            paydayChart.data.datasets[0].backgroundColor = currentYear === 2025 ? currentActiveColorPalette.payday.bg : inactiveColor;
-            paydayChart.data.datasets[0].borderColor = currentYear === 2025 ? currentActiveColorPalette.payday.bg : inactiveBorder;
-            paydayChart.data.datasets[1].backgroundColor = currentYear === 2026 ? currentActiveColorPalette.payday.bg : inactiveColor;
-            paydayChart.data.datasets[1].borderColor = currentYear === 2026 ? currentActiveColorPalette.payday.bg : inactiveBorder;
-            paydayChart.update();
-        }
-    }
-
-    function createChart() {
-        const ctx = document.getElementById('opportunityChart').getContext('2d');
-        const counts2025 = countOpportunities('2025');
-        const counts2026 = countOpportunities('2026');
-        
-        opportunityChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['🟢 Oportunidad Alta', '🟡 Riesgo Medio', '🔴 Riesgo Alto'],
-                datasets: [
-                    {
-                        label: '2025',
-                        data: [counts2025.green, counts2025.yellow, counts2025.red],
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    },
-                    {
-                        label: '2026',
-                        data: [counts2026.green, counts2026.yellow, counts2026.red],
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: '#444444' 
-                        },
-                        ticks: {
-                           stepSize: 5,
-                            color: '#E0E0E0' 
-                        },
-                        title: {
-                            display: true,
-                            text: 'Número de Viernes y Sábados',
-                            font: { size: 14 },
-                            color: '#E0E0E0' 
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#E0E0E0' 
-                        }
-                    }
-                },
-                plugins: {
-                     legend: {
-                        position: 'top',
-                        labels: {
-                            color: '#E0E0E0' 
-                        }
-                     },
-                     tooltip: {
-                        backgroundColor: '#121212', 
-                        titleFont: { size: 16 },
-                        bodyFont: { size: 14 },
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) { label += ': '; }
-                                if (context.parsed.y !== null) { label += context.parsed.y + ' días'; }
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    function createPaydayChart() {
-        const ctx = document.getElementById('paydayChart').getContext('2d');
-        const paydays2025 = countPaydays('2025');
-        const paydays2026 = countPaydays('2026');
-
-        if (paydayChart) {
-            paydayChart.destroy(); 
-        }
-        
-        paydayChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['🔵 Días de Pago'],
-                datasets: [
-                    {
-                        label: '2025',
-                        data: [paydays2025],
-                        backgroundColor: currentActiveColorPalette.payday.bg, 
-                        borderColor: currentActiveColorPalette.payday.bg, 
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    },
-                    {
-                        label: '2026',
-                        data: [paydays2026],
-                        backgroundColor: currentActiveColorPalette.payday.bg, 
-                        borderColor: currentActiveColorPalette.payday.bg, 
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: '#444444'
-                        },
-                        ticks: {
-                           stepSize: 1, 
-                            color: '#E0E0E0'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Número de Días de Pago',
-                            font: { size: 14 },
-                            color: '#E0E0E0'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#E0E0E0'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            color: '#E0E0E0'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#121212',
-                        titleFont: { size: 16 },
-                        bodyFont: { size: 14 },
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) { label += ': '; }
-                                if (context.parsed.y !== null) { label += context.parsed.y + ' días'; }
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    function createAccordion() {
+    // Init Analysis Accordion
+    const initAccordion = () => {
         const container = document.getElementById('accordion-container');
         let html = '';
-        analysisContent.forEach((item) => {
+        analysisContent.forEach(item => {
             html += `
                 <div class="border dark-mode-border rounded-lg">
                     <button class="accordion-button w-full flex justify-between items-center text-left p-4 bg-[#383838] hover:bg-[#444444] rounded-lg transition-colors duration-300">
@@ -1332,187 +647,101 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>`;
         });
         container.innerHTML = html;
-
-        container.querySelectorAll('.accordion-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                const icon = button.querySelector('svg');
+        
+        container.querySelectorAll('.accordion-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('svg');
+                const isOpen = content.style.maxHeight;
                 
-                const isOpening = !content.style.maxHeight || content.style.maxHeight === '0px'; 
-
                 container.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
-                container.querySelectorAll('.accordion-button svg').forEach(i => i.style.transform = 'rotate(0deg)');
-                
-                if (isOpening) {
+                container.querySelectorAll('svg').forEach(s => s.style.transform = 'rotate(0deg)');
+
+                if (!isOpen) {
                     content.style.maxHeight = content.scrollHeight + "px";
                     icon.style.transform = 'rotate(180deg)';
                 }
             });
         });
-    }
+    };
 
-    function createClimateTable() {
-        const tableBody = document.querySelector('#climate-table tbody');
+    // Init Climate Table
+    const initClimate = () => {
+        const tbody = document.querySelector('#climate-table tbody');
         let html = '';
-        climateData.forEach(item => {
-            let riskClass = '';
-            if (item.risk === '🟢') riskClass = 'text-green-300 bg-green-900';
-            if (item.risk === '🟡') riskClass = 'text-yellow-300 bg-yellow-900';
-            if (item.risk === '🔴') riskClass = 'text-red-300 bg-red-900';
-
-            html += `
-                <tr class="border-b dark-mode-border">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-100 whitespace-nowrap">${item.month}</th>
-                    <td class="px-6 py-4"><span class="font-bold px-2 py-1 rounded-full ${riskClass}">${item.risk}</span></td>
-                    <td class="px-6 py-4">${item.justification}</td>
-                </tr>
-            `;
+        climateData.forEach(c => {
+            let colorClass = c.risk.includes('🟢') ? 'text-green-400' : c.risk.includes('🟡') ? 'text-yellow-400' : 'text-red-400';
+            html += `<tr class="border-b dark-mode-border">
+                <th class="px-6 py-4 font-medium text-gray-100">${c.month}</th>
+                <td class="px-6 py-4 ${colorClass} font-bold text-lg">${c.risk}</td>
+                <td class="px-6 py-4">${c.justification}</td>
+            </tr>`;
         });
-        tableBody.innerHTML = html;
-    }
+        tbody.innerHTML = html;
+    };
 
-    // Función para aplicar el tema (claro/oscuro)
-    const applyTheme = (lightMode) => {
-        if (lightMode) {
-            body.classList.add('light-mode');
-            themeToggleBtn.textContent = '🌙'; 
-        } else {
-            body.classList.remove('light-mode');
-            themeToggleBtn.textContent = '☀️'; 
+    // Listeners
+    document.getElementById('year-2025-btn').addEventListener('click', () => updateActiveYearBtn('2025-end'));
+    document.getElementById('year-2026-btn').addEventListener('click', () => updateActiveYearBtn('2026'));
+    document.getElementById('print-btn').addEventListener('click', () => window.print());
+    
+    themeToggleBtn.addEventListener('click', () => {
+        isLightMode = !isLightMode;
+        localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        applyTheme(isLightMode);
+    });
+
+    document.getElementById('colorblind-toggle').addEventListener('click', () => {
+        isColorblindMode = !isColorblindMode;
+        localStorage.setItem('colorblind', isColorblindMode);
+        currentActiveColorPalette = isColorblindMode ? colorblindColorPalette : defaultColorPalette;
+        injectColorStyles(currentActiveColorPalette);
+        renderCalendars(currentViewYear);
+    });
+
+    calendarsContainer.addEventListener('click', (e) => {
+        const d = e.target.closest('.day');
+        if (d) {
+            if (selectedDayElement) selectedDayElement.classList.remove('selected');
+            d.classList.add('selected');
+            selectedDayElement = d;
+            showDayDetails(d.dataset.date);
         }
-        filterButtons.forEach(btn => {
-            btn.classList.remove('bg-[#383838]'); 
-            if (!lightMode && !btn.classList.contains('filter-btn-active')) {
-                btn.classList.add('bg-[#383838]'); 
-            }
-        });
-        updateYearButtonStyles(); 
-        updateChartColors(); 
-    };
+    });
 
-    // Función para actualizar el modo daltónico
-    const updateColorblindMode = (enable) => {
-        isColorblindMode = enable;
-        localStorage.setItem('colorblind', enable);
-        currentActiveColorPalette = enable ? colorblindColorPalette : defaultColorPalette;
-        injectColorStyles(currentActiveColorPalette); 
-        
-        calendarsContainer.innerHTML = generateCalendar(2025) + generateCalendar(2026);
-        document.getElementById('calendar-grid-2026').classList.add('hidden'); 
-        createClimateTable(); 
-        updateActiveYear(currentYear); 
-        updateFilterButtonLabels(); 
-        updateStrategyCardTitles(); 
-
-        colorblindToggleBtn.textContent = isColorblindMode ? '🎨' : '🌈'; 
-    };
-
-    // Función para actualizar los títulos de las tarjetas de estrategia (incluyendo emojis)
-    function updateStrategyCardTitles() {
-        const strategyGreenTitle = document.getElementById('strategy-green-title');
-        const strategyRedTitle = document.getElementById('strategy-red-title');
-
-        if (isColorblindMode) {
-            if (strategyGreenTitle) {
-                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E3;</span> Fechas Púrpuras: Maximizar`; // Emoji de círculo púrpura
-            }
-            if (strategyRedTitle) {
-                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">&#x1F7E0;</span> Fechas Naranjas: Mitigar`; // Emoji de círculo naranja
-            }
-        } else {
-            if (strategyGreenTitle) {
-                strategyGreenTitle.innerHTML = `<span class="text-3xl mr-3">🟢</span> Fechas Verdes: Maximizar`;
-            }
-            if (strategyRedTitle) {
-                strategyRedTitle.innerHTML = `<span class="text-3xl mr-3">🔴</span> Fechas Rojas: Mitigar`;
-            }
-        }
-    }
-
-    // Función principal de inicialización de la aplicación
-    const initApp = () => {
-        setupPwaAssets();
-        applyTheme(isLightMode); 
-        updateColorblindMode(isColorblindMode); 
-        createAccordion();
-        createChart(); 
-        createPaydayChart(); 
-        updateActiveYear(2025); 
-        setupEventListeners();
-    };
-
-    // Configuración de los escuchadores de eventos
-    const setupEventListeners = () => {
-        document.getElementById('year-2025').addEventListener('click', () => updateActiveYear(2025));
-        document.getElementById('year-2026').addEventListener('click', () => updateActiveYear(2026));
-        document.getElementById('print-btn').addEventListener('click', () => window.print());
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => {
-                    btn.classList.remove('filter-btn-active');
-                    btn.classList.remove('bg-[#383838]'); 
-                    if (!isLightMode && !btn.classList.contains('filter-btn-active')) {
-                        btn.classList.add('bg-[#383838]'); 
-                    }
-                });
-                button.classList.add('filter-btn-active');
-                filterCalendar(button.dataset.filter);
+    Object.keys(navButtons).forEach(key => {
+        navButtons[key].addEventListener('click', () => {
+            Object.values(views).forEach(v => v.classList.add('hidden'));
+            Object.values(navButtons).forEach(b => {
+                b.classList.remove('nav-active');
+                b.classList.add('nav-inactive');
             });
+            views[key].classList.remove('hidden');
+            navButtons[key].classList.add('nav-active');
+            navButtons[key].classList.remove('nav-inactive');
         });
+    });
 
-        calendarsContainer.addEventListener('click', (e) => {
-            const dayElement = e.target.closest('.day');
-            if (dayElement) {
-                const date = dayElement.dataset.date;
-                if (selectedDayElement) {
-                    selectedDayElement.classList.remove('selected');
-                }
-                dayElement.classList.add('selected');
-                selectedDayElement = dayElement;
-                showDayDetails(date);
-            }
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('filter-btn-active'));
+            btn.classList.add('filter-btn-active');
+            filterCalendar(btn.dataset.filter);
         });
+    });
 
-        modalCloseBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
+    modalCloseBtn.addEventListener('click', () => {
+        modal.classList.add('opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    });
 
-        themeToggleBtn.addEventListener('click', () => {
-            isLightMode = !isLightMode;
-            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
-            applyTheme(isLightMode);
-        });
-
-        colorblindToggleBtn.addEventListener('click', () => {
-            updateColorblindMode(!isColorblindMode);
-        });
-
-        Object.keys(navButtons).forEach(key => {
-            navButtons[key].addEventListener('click', () => {
-                // Hide all views
-                Object.values(views).forEach(view => view.classList.add('hidden'));
-                // Deactivate all buttons
-                Object.values(navButtons).forEach(button => {
-                    button.classList.remove('nav-active');
-                    button.classList.add('nav-inactive');
-                });
-                // Show selected view
-                views[key].classList.remove('hidden');
-                // Activate selected button
-                navButtons[key].classList.add('nav-active');
-                navButtons[key].classList.remove('nav-inactive');
-            });
-        });
-    };
-
-    // Inicializar la aplicación cuando el DOM esté completamente cargado
-    initApp();
+    // Init
+    injectColorStyles(currentActiveColorPalette);
+    applyTheme(isLightMode);
+    renderCalendars(currentViewYear);
+    initAccordion();
+    initClimate();
 });
 </script>
 </body>
 </html>
-
