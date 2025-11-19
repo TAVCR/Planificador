@@ -122,7 +122,7 @@
         <header class="text-center mb-8 flex flex-col sm:flex-row justify-between items-center">
             <div class="flex flex-col items-center sm:items-start flex-grow">
                 <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Oficial 2025-2026</h1>
-                <p class="text-lg dark-mode-text-accent mt-2">Antologías CR | Estrategia Dinámica</p>
+                <p class="text-lg dark-mode-text-accent mt-2">Antologías CR (Desamparados) | Estrategia Dinámica</p>
             </div>
             <div class="flex space-x-2 mt-4 sm:mt-0 sm:ml-4">
                 <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300">☀️</button>
@@ -220,7 +220,7 @@
                              <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li><strong>Si hay Rock:</strong> Ofrecer Noche Latina/Salsa.</li>
                                 <li><strong>Si hay Urbano:</strong> Ofrecer Trova/Rock Clásico.</li>
-                                <li><strong>Si hay Caos Vial:</strong> Promocionar "After-Party".</li>
+                                <li><strong>Si hay Caos Vial:</strong> Promocionar "Refugio lejos del caos" (Desamparados).</li>
                                 <li><strong>Enero:</strong> Minimizar inventario perecedero.</li>
                             </ul>
                         </div>
@@ -313,10 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const fixedEvents = {
         // --- DICIEMBRE 2025 ---
         '2025-12-02': { cat: 'yellow', reason: 'Concierto Limp Bizkit (Parque Viva).', contingency: 'Contra-programación: Noche Latina / Bailable.' },
-        '2025-12-05': { cat: 'red', reason: 'BAD BUNNY (Estadio Nacional). Caos vial Sabana.', contingency: 'Enfoque: After-Party para el público que sale del concierto.' },
-        '2025-12-06': { cat: 'red', reason: 'BAD BUNNY (Estadio Nacional). 2da Fecha.', contingency: 'Enfoque: After-Party. Evitar música urbana para no competir.' },
+        '2025-12-05': { cat: 'red', reason: 'BAD BUNNY (Estadio Nacional). Competencia Masiva.', contingency: 'Ubicación Desamparados: Ventaja por lejanía del caos. Ofrecer "Refugio" post-trabajo.' },
+        '2025-12-06': { cat: 'red', reason: 'BAD BUNNY (Estadio Nacional). 2da Fecha.', contingency: 'Enfocar en público local que NO va al concierto.' },
         '2025-12-25': { cat: 'red', reason: 'Navidad + Zapote.', contingency: 'Cerrado o Menú Navideño familiar.' },
-        '2025-12-26': { cat: 'red', reason: 'Tope Nacional.', contingency: 'Difícil acceso. Promociones agresivas para locales a pie.' },
+        '2025-12-26': { cat: 'red', reason: 'Tope Nacional.', contingency: 'Desamparados lejos del Tope: Oportunidad para público local que evita el centro.' },
         '2025-12-31': { cat: 'yellow', reason: 'Fin de Año.', contingency: 'Solo reservas prepagadas.' },
 
         // --- ENERO 2026 ---
@@ -324,11 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-01-16': { cat: 'red', reason: 'Inicio Palmares (Éxodo).', contingency: 'Atraer al público adulto mayor que no va a fiestas cívicas.' },
         '2026-01-17': { cat: 'red', reason: 'Fiestas Palmares.', contingency: 'Atraer al público adulto mayor.' },
         '2026-01-24': { cat: 'red', reason: 'Cierre Palmares.', contingency: 'Atraer al público adulto mayor.' },
-        // CAMBIO: Veda Electoral eliminada, ahora es Sábado de Quincena normal.
         '2026-01-31': { cat: 'green', reason: 'Sábado de Quincena (Sin Ley Seca).', contingency: 'Oportunidad recuperada tras derogación de Ley Seca. Full operación.' },
 
         // --- FEBRERO 2026 ---
-        // CAMBIO: Elecciones ahora sin prohibición de alcohol.
         '2026-02-01': { cat: 'yellow', reason: 'ELECCIONES NACIONALES (Sin Ley Seca).', contingency: 'Promo "After-Voto": Descuento al mostrar dedo manchado.' },
         '2026-02-07': { cat: 'yellow', reason: 'Viva los 90s Fest (Parque Viva).', contingency: 'Contra-programación: Rock en Español o Plancha.' },
         '2026-02-14': { cat: 'green', reason: 'San Valentín. Demanda Máxima Parejas.', contingency: 'Reservas obligatorias. Menú romántico.' },
@@ -342,14 +340,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- ABRIL 2026 ---
         '2026-04-02': { cat: 'red', reason: 'Jueves Santo.', contingency: 'Cerrado o menú mariscos.' },
         '2026-04-03': { cat: 'red', reason: 'Viernes Santo (Ley Seca Religiosa/Muni).', contingency: 'Cerrado (Por costumbre municipal).' },
-        // CAMBIO: 2da Ronda sin Ley Seca.
         '2026-04-05': { cat: 'yellow', reason: 'Posible 2da Ronda Electoral (Sin Ley Seca).', contingency: 'Promo "After-Voto".' },
         '2026-04-11': { cat: 'red', reason: 'Feriado Juan Santamaría (Finde Largo).', contingency: 'Promociones para los que se quedan en la ciudad.' },
         '2026-04-29': { cat: 'yellow', reason: 'Laura Pausini (Estadio Nacional).', contingency: 'Contra-programación: Rock Clásico / 80s.' },
 
         // --- MAYO 2026 ---
-        '2026-05-01': { cat: 'red', reason: 'Día del Trabajador.', contingency: 'Promoción: "El que trabaja se relaja" (Happy Hour extendido).' },
-        '2026-05-30': { cat: 'red', reason: 'ED SHEERAN (Estadio Nacional). Masivo.', contingency: 'Evitar acceso vehicular. Promocionar a vecinos a pie.' },
+        '2026-05-01': { cat: 'yellow', reason: 'Día del Trabajador (Viernes). Dinero disponible vs Éxodo.', contingency: 'Happy Hour extendido para quienes se quedan en la ciudad.' },
+        '2026-05-02': { cat: 'yellow', reason: 'Fin de semana largo (Post-1ro Mayo). Posible éxodo.', contingency: 'Enfocarse en público local cautivo.' },
+        // CAMBIO: Lógica de presupuesto + Desamparados
+        '2026-05-29': { cat: 'red', reason: 'Víspera de Ed Sheeran. Presupuesto de ocio agotado (Ahorro para mañana).', contingency: 'Promociones de bajo costo / "Pre-Despiche" económico.' },
+        '2026-05-30': { cat: 'red', reason: 'ED SHEERAN (Estadio Nacional). Competencia Masiva por dinero, NO por tráfico.', contingency: 'Ubicación Desamparados: Lejos del caos vial. Atraer al público local que huye del tumulto.' },
 
         // --- JUNIO 2026 ---
         '2026-06-11': { cat: 'yellow', reason: 'Inicio MUNDIAL 2026.', contingency: 'Si hay TVs: Promo Fútbol. Si no: Ambiente Anti-Fútbol.' },
@@ -377,12 +377,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const generatedEventData = {};
 
     const isPaydayNearby = (day) => {
-        // Regla: Fin de semana de quincena es el más cercano al 15 o 30
         return (day >= 13 && day <= 17) || (day >= 28) || (day <= 2);
     };
 
     const generateFullYearData = () => {
-        // Loop from Dec 1 2025 to Dec 31 2026
         const startDate = new Date(2025, 11, 1);
         const endDate = new Date(2026, 11, 31);
 
@@ -391,42 +389,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const m = String(d.getMonth() + 1).padStart(2, '0');
             const dayNum = String(d.getDate()).padStart(2, '0');
             const dateKey = `${y}-${m}-${dayNum}`;
-            const dayOfWeek = d.getDay(); // 0 Sun, 5 Fri, 6 Sat
+            const dayOfWeek = d.getDay(); 
 
-            // Priority 1: Fixed Events (Override everything)
             if (fixedEvents[dateKey]) {
                 generatedEventData[dateKey] = { ...fixedEvents[dateKey], day: getDayName(dayOfWeek) };
                 continue;
             }
 
-            // Priority 2: Paydays (15th and 30th/End of Month)
             if (d.getDate() === 15 || d.getDate() === 30 || (d.getDate() === 28 && d.getMonth() === 1)) {
                  generatedEventData[dateKey] = { cat: 'blue', day: getDayName(dayOfWeek), reason: 'Día de Pago.' };
                  continue;
             }
 
-            // Priority 3: Logic for Weekends (Fri/Sat)
             if (dayOfWeek === 5 || dayOfWeek === 6) {
-                
-                // --- LÓGICA CUESTA DE ENERO ---
-                if (d.getMonth() === 0) { // Enero (Index 0)
+                if (d.getMonth() === 0) { // Enero
                      if (isPaydayNearby(d.getDate())) {
                         generatedEventData[dateKey] = { 
-                            cat: 'yellow', // Degraded from Green
+                            cat: 'yellow', 
                             day: getDayName(dayOfWeek), 
                             reason: 'Quincena en Cuesta de Enero (Gasto Escolar/Marchamo).',
                             contingency: 'Ofertas de valor (Combos familiares). No subir precios.'
                         };
                     } else {
                         generatedEventData[dateKey] = { 
-                            cat: 'red', // Degraded from Yellow
+                            cat: 'red', 
                             day: getDayName(dayOfWeek), 
                             reason: 'Cuesta de Enero: Presupuesto de ocio agotado.',
                             contingency: 'Minimizar costos operativos. Eventos de bajo costo.'
                         };
                     }
                 } 
-                // --- RESTO DEL AÑO ---
                 else {
                     if (isPaydayNearby(d.getDate())) {
                         generatedEventData[dateKey] = { 
@@ -467,8 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const analysisContent = [
         { title: 'Actualización: ¡Fin de la Ley Seca!', content: 'La derogación de la prohibición de venta de alcohol en elecciones transforma los días 31 de enero, 1 de febrero y 5 de abril en oportunidades comerciales. En lugar de cerrar o esconder inventario, prepárese para un flujo constante de personas. El sábado 31 de enero (Quincena) pasa de ser un día muerto a un día de alto potencial.' },
+        { title: 'Desamparados vs La Sabana', content: 'La ubicación en Desamparados es una ventaja estratégica durante megaconciertos en el Estadio Nacional. Mientras La Sabana colapsa por tráfico, Desamparados opera con normalidad vial. La estrategia debe ser venderse como un "Refugio" accesible para el público local que quiere salir pero no quiere lidiar con presas.' },
         { title: 'La Cuesta de Enero', content: 'Enero es el mes más difícil. Aunque el clima es perfecto (Verano), el presupuesto del cliente está comprometido por la entrada a clases, uniformes y marchamo. La estrategia debe cambiar de "Experiencia Premium" a "Solidaridad Económica". No es momento de subir precios, sino de ofrecer combos.' },
-        { title: 'Estrategia de Contra-Programación', content: 'La clave para 2026 no es competir contra los gigantes, sino capturar al público que no asiste a ellos. Ejemplo: Si Ed Sheeran toca balada pop, Antologías debe ofrecer una noche de Rock Clásico o Trova para el público que busca algo diferente.' },
         { title: 'El Ciclo de la Quincena', content: 'En Costa Rica, el comportamiento de consumo es binario: Hay dinero (Quincena) o no hay. Hemos automatizado el calendario para marcar en VERDE los fines de semana cercanos al 15 y 30. Esos días no se hacen descuentos, se vende experiencia.' }
     ];
 
