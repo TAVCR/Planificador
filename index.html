@@ -142,7 +142,7 @@
             <div id="view-calendario">
                 <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">
                     Los fines de semana de quincena se marcan automáticamente como <span class="text-green-500 font-bold">Oportunidad Alta</span>. 
-                    <br><span class="text-amber-500 text-sm font-bold">NOTA: En Enero aplica la "Regla de la Cuesta": Todo riesgo aumenta un nivel.</span>
+                    <br><span class="text-amber-500 text-sm font-bold">NOTA: En Enero aplica la "Regla de la Cuesta": Riesgos aumentan un nivel.</span>
                 </p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
                     <button id="year-2025-btn" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">Cierre 2025</button>
@@ -324,10 +324,12 @@ document.addEventListener('DOMContentLoaded', () => {
         '2026-01-16': { cat: 'red', reason: 'Inicio Palmares (Éxodo).', contingency: 'Atraer al público adulto mayor que no va a fiestas cívicas.' },
         '2026-01-17': { cat: 'red', reason: 'Fiestas Palmares.', contingency: 'Atraer al público adulto mayor.' },
         '2026-01-24': { cat: 'red', reason: 'Cierre Palmares.', contingency: 'Atraer al público adulto mayor.' },
-        '2026-01-31': { cat: 'red', reason: 'VEDA ELECTORAL (Ley Seca probable).', contingency: 'Cero alcohol. Enfocarse en gastronomía y café.' },
+        // CAMBIO: Veda Electoral eliminada, ahora es Sábado de Quincena normal.
+        '2026-01-31': { cat: 'green', reason: 'Sábado de Quincena (Sin Ley Seca).', contingency: 'Oportunidad recuperada tras derogación de Ley Seca. Full operación.' },
 
         // --- FEBRERO 2026 ---
-        '2026-02-01': { cat: 'red', reason: 'ELECCIONES NACIONALES.', contingency: 'Ley Seca. Menú de Almuerzo familiar post-voto.' },
+        // CAMBIO: Elecciones ahora sin prohibición de alcohol.
+        '2026-02-01': { cat: 'yellow', reason: 'ELECCIONES NACIONALES (Sin Ley Seca).', contingency: 'Promo "After-Voto": Descuento al mostrar dedo manchado.' },
         '2026-02-07': { cat: 'yellow', reason: 'Viva los 90s Fest (Parque Viva).', contingency: 'Contra-programación: Rock en Español o Plancha.' },
         '2026-02-14': { cat: 'green', reason: 'San Valentín. Demanda Máxima Parejas.', contingency: 'Reservas obligatorias. Menú romántico.' },
         '2026-02-28': { cat: 'red', reason: 'X-Knights (Estadio Nacional).', contingency: 'Ambiente tranquilo/acústico para quienes huyen del ruido.' },
@@ -339,8 +341,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- ABRIL 2026 ---
         '2026-04-02': { cat: 'red', reason: 'Jueves Santo.', contingency: 'Cerrado o menú mariscos.' },
-        '2026-04-03': { cat: 'red', reason: 'Viernes Santo (Ley Seca).', contingency: 'Cerrado.' },
-        '2026-04-05': { cat: 'red', reason: 'Posible 2da Ronda Electoral.', contingency: 'Ley Seca.' },
+        '2026-04-03': { cat: 'red', reason: 'Viernes Santo (Ley Seca Religiosa/Muni).', contingency: 'Cerrado (Por costumbre municipal).' },
+        // CAMBIO: 2da Ronda sin Ley Seca.
+        '2026-04-05': { cat: 'yellow', reason: 'Posible 2da Ronda Electoral (Sin Ley Seca).', contingency: 'Promo "After-Voto".' },
         '2026-04-11': { cat: 'red', reason: 'Feriado Juan Santamaría (Finde Largo).', contingency: 'Promociones para los que se quedan en la ciudad.' },
         '2026-04-29': { cat: 'yellow', reason: 'Laura Pausini (Estadio Nacional).', contingency: 'Contra-programación: Rock Clásico / 80s.' },
 
@@ -463,10 +466,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const analysisContent = [
+        { title: 'Actualización: ¡Fin de la Ley Seca!', content: 'La derogación de la prohibición de venta de alcohol en elecciones transforma los días 31 de enero, 1 de febrero y 5 de abril en oportunidades comerciales. En lugar de cerrar o esconder inventario, prepárese para un flujo constante de personas. El sábado 31 de enero (Quincena) pasa de ser un día muerto a un día de alto potencial.' },
         { title: 'La Cuesta de Enero', content: 'Enero es el mes más difícil. Aunque el clima es perfecto (Verano), el presupuesto del cliente está comprometido por la entrada a clases, uniformes y marchamo. La estrategia debe cambiar de "Experiencia Premium" a "Solidaridad Económica". No es momento de subir precios, sino de ofrecer combos.' },
         { title: 'Estrategia de Contra-Programación', content: 'La clave para 2026 no es competir contra los gigantes, sino capturar al público que no asiste a ellos. Ejemplo: Si Ed Sheeran toca balada pop, Antologías debe ofrecer una noche de Rock Clásico o Trova para el público que busca algo diferente.' },
-        { title: 'El Ciclo de la Quincena', content: 'En Costa Rica, el comportamiento de consumo es binario: Hay dinero (Quincena) o no hay (Semana de Aclamación). Hemos automatizado el calendario para marcar en VERDE los fines de semana cercanos al 15 y 30. Esos días no se hacen descuentos, se vende experiencia. Los fines de semana amarillos (lejanos al pago) son para promociones de volumen (2x1).' },
-        { title: 'Factor Vial y Bad Bunny', content: 'El 5 y 6 de diciembre de 2025 serán caóticos. La Sabana estará cerrada. La estrategia debe ser: "Ven antes del caos" (Almuerzos tardíos) o "After-Party" (para cuando termine el concierto y la gente quiera seguir la fiesta pero bajar la adrenalina).' }
+        { title: 'El Ciclo de la Quincena', content: 'En Costa Rica, el comportamiento de consumo es binario: Hay dinero (Quincena) o no hay. Hemos automatizado el calendario para marcar en VERDE los fines de semana cercanos al 15 y 30. Esos días no se hacen descuentos, se vende experiencia.' }
     ];
 
     // --- VISUAL LOGIC ---
