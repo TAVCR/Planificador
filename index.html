@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planificador Antologías 2026 (Dinámico)</title>
+    <title>Planificador Antologías 2026 (Lógica CR)</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -122,7 +122,7 @@
         <header class="text-center mb-8 flex flex-col sm:flex-row justify-between items-center">
             <div class="flex flex-col items-center sm:items-start flex-grow">
                 <h1 class="text-3xl md:text-5xl font-bold dark-mode-text-header">Planificador Oficial 2025-2026</h1>
-                <p class="text-lg dark-mode-text-accent mt-2">Antologías CR (Desamparados) | Estrategia Dinámica</p>
+                <p class="text-lg dark-mode-text-accent mt-2">Antologías CR | Pagos & Riesgos</p>
             </div>
             <div class="flex space-x-2 mt-4 sm:mt-0 sm:ml-4">
                 <button id="theme-toggle" class="px-4 py-2.5 text-lg bg-gray-700 text-gray-200 font-semibold rounded-lg hover:bg-gray-600 transition-all duration-300">☀️</button>
@@ -141,8 +141,10 @@
             <!-- CALENDAR VIEW -->
             <div id="view-calendario">
                 <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">
-                    Los fines de semana de quincena se marcan automáticamente como <span class="text-green-500 font-bold">Oportunidad Alta</span>. 
-                    <br><span class="text-amber-500 text-sm font-bold">NOTA: En Enero aplica la "Regla de la Cuesta": Riesgos aumentan un nivel.</span>
+                    <strong class="text-blue-400">Pagos:</strong> Día hábil anterior. 
+                    <span class="text-green-500 font-bold">Verde:</span> Efecto Quincena inmediato.
+                    <span class="text-yellow-500 font-bold">Amarillo:</span> Efecto diluido (ej. Sábado tras pago Jueves).
+                    <br><span class="text-amber-500 text-xs font-bold">NOTA: Diciembre muestra riesgos específicos sobre la Época Dorada.</span>
                 </p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
                     <button id="year-2025-btn" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">Cierre 2025</button>
@@ -152,9 +154,9 @@
                 
                 <div class="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 gap-y-2 mb-4 text-xs sm:text-sm text-gray-700">
                     <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-green-opportunity mr-2 border border-gray-400"></span>Oportunidad Alta</div>
-                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-yellow-opportunity mr-2 border border-gray-400"></span>Riesgo Medio</div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-yellow-opportunity mr-2 border border-gray-400"></span>Riesgo Moderado/Diluido</div>
                     <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-red-opportunity mr-2 border border-gray-400"></span>Riesgo Alto</div>
-                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-payday mr-2 border border-gray-400"></span>Día de Pago</div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-payday mr-2 border border-gray-400"></span>Día de Pago Real</div>
                 </div>
 
                 <div id="filter-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 p-2 dark-mode-surface rounded-full max-w-2xl mx-auto">
@@ -173,7 +175,7 @@
                     <div id="details-panel" class="hidden lg:block lg:col-span-4 p-6 dark-mode-surface rounded-2xl shadow-lg self-start sticky top-8">
                         <h3 class="font-bold text-xl mb-4 dark-mode-text-header">Detalles y Estrategia</h3>
                         <div id="details-content-desktop" class="dark-mode-text-muted space-y-3 min-h-[150px]">
-                            <p class="text-center dark-mode-text-muted pt-8 opacity-75">Selecciona una fecha para ver el análisis y medidas de contingencia.</p>
+                            <p class="text-center dark-mode-text-muted pt-8 opacity-75">Selecciona una fecha para ver el análisis.</p>
                         </div>
                     </div>
                 </div>
@@ -195,32 +197,29 @@
                     <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 dark-mode-text-header">Matriz de Contingencia</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
                         <div id="strategy-card-green" class="strategy-card p-6 rounded-lg shadow-md" data-category="green">
-                            <h3 id="strategy-green-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Ofensiva (Fines de Quincena)</h3>
-                            <p class="text-sm mb-3 italic">Cuando hay liquidez en el mercado.</p>
+                            <h3 id="strategy-green-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟢</span> Ofensiva (Quincena Real)</h3>
+                            <p class="text-sm mb-3 italic">Liquidez inmediata.</p>
                             <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Eventos "Premium" con cover o consumo mínimo.</li>
+                                <li>Si el pago cayó jueves/viernes: Happy Hour agresivo.</li>
+                                <li>Diciembre: Cenas navideñas y reservas de grupos.</li>
                                 <li>Promociones de botellas enteras.</li>
-                                <li>Música en vivo de alta energía.</li>
-                                <li><strong>Especiales:</strong> Día de la Madre, Padre, San Valentín.</li>
                             </ul>
                         </div>
                         <div id="strategy-card-yellow" class="strategy-card p-6 rounded-lg shadow-md" data-category="yellow">
-                            <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Defensiva (Fines Regulares)</h3>
-                            <p class="text-sm mb-3 italic">Cuando el presupuesto es limitado.</p>
+                            <h3 class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🟡</span> Defensiva (Efecto Diluido)</h3>
+                            <p class="text-sm mb-3 italic">Presupuesto limitado / Días posteriores al pago.</p>
                             <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li>Promociones 2x1 en coctelería y cerveza.</li>
+                                <li>Promociones 2x1 en coctelería.</li>
                                 <li>Eventos de nicho o entrada gratuita.</li>
-                                <li>Enfoque en fidelización de clientes locales.</li>
-                                <li><strong>Enero:</strong> Menús económicos por "Cuesta de Enero".</li>
+                                <li><strong>Enero:</strong> Menús económicos ("Cuesta de Enero").</li>
                             </ul>
                         </div>
                          <div id="strategy-card-red" class="strategy-card p-6 rounded-lg shadow-md" data-category="red">
                             <h3 id="strategy-red-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Contra-programación</h3>
-                             <p class="text-sm mb-3 italic">Cuando hay un "Goliath" o Crisis.</p>
+                             <p class="text-sm mb-3 italic">Eventos Masivos / Cierres.</p>
                              <ul class="list-disc list-inside space-y-2 text-sm">
-                                <li><strong>Si hay Rock:</strong> Ofrecer Noche Latina/Salsa.</li>
-                                <li><strong>Si hay Urbano:</strong> Ofrecer Trova/Rock Clásico.</li>
-                                <li><strong>Si hay Caos Vial:</strong> Promocionar "Refugio lejos del caos" (Desamparados).</li>
+                                <li><strong>25/26/31 Dic:</strong> Cierre o Mínimo costo.</li>
+                                <li><strong>Si hay Caos Vial:</strong> Promocionar "Refugio en Desamparados".</li>
                                 <li><strong>Enero:</strong> Minimizar inventario perecedero.</li>
                             </ul>
                         </div>
@@ -308,6 +307,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterButtons = document.querySelectorAll('.filter-btn');
 
     // ============================================================================
+    // LOGICA DE PAGOS COSTA RICA (CRITICO)
+    // ============================================================================
+    // Feriados Bancarios y Obligatorios que mueven el pago
+    const crHolidays = [
+        '2025-12-25', // Navidad
+        '2026-01-01', // Año Nuevo
+        '2026-04-02', // Jueves Santo (Bancario)
+        '2026-04-03', // Viernes Santo
+        '2026-04-11', // Juan Santamaría
+        '2026-05-01', // Día Trabajador
+        '2026-07-25', // Anexión
+        '2026-08-02', // Virgen Angeles (No pago oblig, pero feriado)
+        '2026-08-15', // Día Madre
+        '2026-09-15', // Independencia
+        '2026-12-25'  // Navidad
+    ];
+
+    const getCalculatedPaydays = () => {
+        const paydays = new Set();
+        // Check from Dec 2025 to Dec 2026
+        for (let year = 2025; year <= 2026; year++) {
+            for (let month = 0; month < 12; month++) {
+                if (year === 2025 && month < 11) continue; // Skip early 2025
+
+                // --- QUINCENA (15) ---
+                let date15 = new Date(year, month, 15);
+                while (date15.getDay() === 0 || date15.getDay() === 6 || isHoliday(date15)) {
+                    date15.setDate(date15.getDate() - 1); // Shift back
+                }
+                paydays.add(formatDate(date15));
+
+                // --- FIN DE MES ---
+                let lastDay = new Date(year, month + 1, 0); // Last day of current month
+                while (lastDay.getDay() === 0 || lastDay.getDay() === 6 || isHoliday(lastDay)) {
+                    lastDay.setDate(lastDay.getDate() - 1); // Shift back
+                }
+                paydays.add(formatDate(lastDay));
+            }
+        }
+        return paydays;
+    };
+
+    const isHoliday = (d) => {
+        return crHolidays.includes(formatDate(d));
+    };
+
+    const formatDate = (d) => {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    };
+
+    // ============================================================================
     // DATA - EVENTOS FIJOS (Overrides)
     // ============================================================================
     const fixedEvents = {
@@ -315,124 +368,164 @@ document.addEventListener('DOMContentLoaded', () => {
         '2025-12-02': { cat: 'yellow', reason: 'Concierto Limp Bizkit (Parque Viva).', contingency: 'Contra-programación: Noche Latina / Bailable.' },
         '2025-12-05': { cat: 'red', reason: 'BAD BUNNY (Estadio Nacional). Competencia Masiva.', contingency: 'Ubicación Desamparados: Ventaja por lejanía del caos. Ofrecer "Refugio" post-trabajo.' },
         '2025-12-06': { cat: 'red', reason: 'BAD BUNNY (Estadio Nacional). 2da Fecha.', contingency: 'Enfocar en público local que NO va al concierto.' },
-        '2025-12-25': { cat: 'red', reason: 'Navidad + Zapote.', contingency: 'Cerrado o Menú Navideño familiar.' },
-        '2025-12-26': { cat: 'red', reason: 'Tope Nacional.', contingency: 'Desamparados lejos del Tope: Oportunidad para público local que evita el centro.' },
-        '2025-12-31': { cat: 'yellow', reason: 'Fin de Año.', contingency: 'Solo reservas prepagadas.' },
+        '2025-12-13': { cat: 'red', reason: 'FESTIVAL DE LA LUZ (San José Centro).', contingency: 'Caos vial en el centro. Atraer público local que evita las multitudes. After-Festival.' },
+        
+        // EXCEPCIONES DICIEMBRE 2025
+        '2025-12-25': { cat: 'red', reason: 'Navidad + Zapote. Cierre usual.', contingency: 'Cerrado o Menú Navideño familiar (Almuerzo).' },
+        '2025-12-26': { cat: 'red', reason: 'Tope Nacional.', contingency: 'Dificultad de acceso general en San José. Riesgo Alto.' },
+        '2025-12-31': { cat: 'red', reason: 'Fin de Año. Cierre Temprano.', contingency: 'Restaurante cierra temprano. No hay turno nocturno.' },
 
         // --- ENERO 2026 ---
         '2026-01-01': { cat: 'red', reason: 'Año Nuevo.', contingency: 'Cerrado.' },
-        '2026-01-16': { cat: 'red', reason: 'Inicio Palmares (Éxodo).', contingency: 'Atraer al público adulto mayor que no va a fiestas cívicas.' },
+        '2026-01-16': { cat: 'red', reason: 'Inicio Palmares (Éxodo).', contingency: 'Atraer al público adulto mayor.' },
         '2026-01-17': { cat: 'red', reason: 'Fiestas Palmares.', contingency: 'Atraer al público adulto mayor.' },
         '2026-01-24': { cat: 'red', reason: 'Cierre Palmares.', contingency: 'Atraer al público adulto mayor.' },
-        '2026-01-31': { cat: 'green', reason: 'Sábado de Quincena (Sin Ley Seca).', contingency: 'Oportunidad recuperada tras derogación de Ley Seca. Full operación.' },
+        '2026-01-31': { cat: 'green', reason: 'Sábado de Quincena (Sin Ley Seca).', contingency: 'Oportunidad recuperada tras derogación de Ley Seca.' },
 
         // --- FEBRERO 2026 ---
         '2026-02-01': { cat: 'yellow', reason: 'ELECCIONES NACIONALES (Sin Ley Seca).', contingency: 'Promo "After-Voto": Descuento al mostrar dedo manchado.' },
-        '2026-02-07': { cat: 'yellow', reason: 'Viva los 90s Fest (Parque Viva).', contingency: 'Contra-programación: Rock en Español o Plancha.' },
-        '2026-02-14': { cat: 'green', reason: 'San Valentín. Demanda Máxima Parejas.', contingency: 'Reservas obligatorias. Menú romántico.' },
-        '2026-02-28': { cat: 'red', reason: 'X-Knights (Estadio Nacional).', contingency: 'Ambiente tranquilo/acústico para quienes huyen del ruido.' },
+        '2026-02-07': { cat: 'yellow', reason: 'Viva los 90s Fest (Parque Viva).', contingency: 'Contra-programación: Rock en Español.' },
+        '2026-02-14': { cat: 'green', reason: 'San Valentín.', contingency: 'Reservas obligatorias. Menú romántico.' },
+        '2026-02-28': { cat: 'red', reason: 'X-Knights (Estadio Nacional).', contingency: 'Ambiente tranquilo.' },
 
         // --- MARZO 2026 ---
-        '2026-03-18': { cat: 'yellow', reason: 'Tyler, The Creator (Parque Viva).', contingency: 'Público muy joven. No afecta target adulto.' },
-        '2026-03-25': { cat: 'yellow', reason: 'THE KILLERS (Parque Viva).', contingency: 'Contra-programación: Noche de Salsa/Merengue.' },
-        '2026-03-28': { cat: 'red', reason: 'Inicio Semana Santa (Éxodo).', contingency: 'Reducir inventario perecedero.' },
+        '2026-03-18': { cat: 'yellow', reason: 'Tyler, The Creator.', contingency: 'Público muy joven.' },
+        '2026-03-25': { cat: 'yellow', reason: 'THE KILLERS (Parque Viva).', contingency: 'Contra-programación: Salsa.' },
+        '2026-03-27': { cat: 'red', reason: 'Viernes previo a Semana Santa. Inicio Éxodo masivo a playas.', contingency: 'Reducir inventario perecedero. Enfoque en almuerzos.' },
+        '2026-03-28': { cat: 'red', reason: 'Inicio Semana Santa (Éxodo consolidado).', contingency: 'Operación mínima o cierre técnico.' },
 
         // --- ABRIL 2026 ---
         '2026-04-02': { cat: 'red', reason: 'Jueves Santo.', contingency: 'Cerrado o menú mariscos.' },
-        '2026-04-03': { cat: 'red', reason: 'Viernes Santo (Ley Seca Religiosa/Muni).', contingency: 'Cerrado (Por costumbre municipal).' },
-        '2026-04-05': { cat: 'yellow', reason: 'Posible 2da Ronda Electoral (Sin Ley Seca).', contingency: 'Promo "After-Voto".' },
-        '2026-04-11': { cat: 'red', reason: 'Feriado Juan Santamaría (Finde Largo).', contingency: 'Promociones para los que se quedan en la ciudad.' },
-        '2026-04-29': { cat: 'yellow', reason: 'Laura Pausini (Estadio Nacional).', contingency: 'Contra-programación: Rock Clásico / 80s.' },
+        '2026-04-03': { cat: 'red', reason: 'Viernes Santo (Feriado).', contingency: 'Cerrado.' },
+        '2026-04-05': { cat: 'yellow', reason: 'Posible 2da Ronda (Sin Ley Seca).', contingency: 'Promo "After-Voto".' },
+        '2026-04-11': { cat: 'yellow', reason: 'Feriado Juan Santamaría en Sábado (Sin Éxodo).', contingency: 'Público se queda en la ciudad. Promoción local.' },
+        '2026-04-29': { cat: 'yellow', reason: 'Laura Pausini.', contingency: 'Contra-programación: Rock.' },
 
         // --- MAYO 2026 ---
-        '2026-05-01': { cat: 'yellow', reason: 'Día del Trabajador (Viernes). Dinero disponible vs Éxodo.', contingency: 'Happy Hour extendido para quienes se quedan en la ciudad.' },
-        '2026-05-02': { cat: 'yellow', reason: 'Fin de semana largo (Post-1ro Mayo). Posible éxodo.', contingency: 'Enfocarse en público local cautivo.' },
-        // CAMBIO: Lógica de presupuesto + Desamparados
-        '2026-05-29': { cat: 'red', reason: 'Víspera de Ed Sheeran. Presupuesto de ocio agotado (Ahorro para mañana).', contingency: 'Promociones de bajo costo / "Pre-Despiche" económico.' },
-        '2026-05-30': { cat: 'red', reason: 'ED SHEERAN (Estadio Nacional). Competencia Masiva por dinero, NO por tráfico.', contingency: 'Ubicación Desamparados: Lejos del caos vial. Atraer al público local que huye del tumulto.' },
+        '2026-05-01': { cat: 'yellow', reason: 'Día del Trabajador (Viernes). Dinero vs Éxodo.', contingency: 'Happy Hour extendido.' },
+        '2026-05-02': { cat: 'yellow', reason: 'Fin de semana largo (Post-1ro Mayo).', contingency: 'Enfoque público local.' },
+        '2026-05-29': { cat: 'red', reason: 'Víspera Ed Sheeran. Presupuesto agotado.', contingency: 'Promociones bajo costo / Pre-Despiche.' },
+        '2026-05-30': { cat: 'red', reason: 'ED SHEERAN (Estadio). Competencia Económica.', contingency: 'Atraer público local (Desamparados).' },
 
         // --- JUNIO 2026 ---
-        '2026-06-11': { cat: 'yellow', reason: 'Inicio MUNDIAL 2026.', contingency: 'Si hay TVs: Promo Fútbol. Si no: Ambiente Anti-Fútbol.' },
-        '2026-06-21': { cat: 'green', reason: 'Día del Padre (3er Domingo).', contingency: 'Menú especial de carnes y destilados.' },
+        '2026-06-11': { cat: 'yellow', reason: 'Inicio MUNDIAL 2026.', contingency: 'Si hay TVs: Fútbol. Si no: Anti-Fútbol.' },
+        '2026-06-21': { cat: 'green', reason: 'Día del Padre.', contingency: 'Menú carnes.' },
 
         // --- JULIO 2026 ---
         '2026-07-19': { cat: 'red', reason: 'Final Mundial 2026.', contingency: 'Pantallas gigantes o cerrar.' },
-        '2026-07-25': { cat: 'red', reason: 'Anexión Nicoya (Éxodo).', contingency: 'Evento temático Guanacasteco.' },
+        '2026-07-25': { cat: 'green', reason: 'Anexión Nicoya en Sábado (Sin Éxodo).', contingency: 'Evento temático Guanacasteco. Celebración en la ciudad.' },
+        '2026-07-31': { cat: 'red', reason: 'Viernes de Pago pero Inicio Romería. La gente camina a Cartago.', contingency: 'Noche muerta por Romería. Enfocarse en almuerzos o cerrar temprano.' },
 
         // --- AGOSTO 2026 ---
-        '2026-08-01': { cat: 'red', reason: 'Romería.', contingency: 'Cerrar temprano.' },
-        '2026-08-15': { cat: 'green', reason: 'Día de la Madre.', contingency: 'Reservas obligatorias. Menú especial.' },
+        '2026-08-01': { cat: 'red', reason: 'Romería (Día Principal).', contingency: 'Cerrar temprano.' },
+        '2026-08-15': { cat: 'green', reason: 'Día de la Madre (Sábado).', contingency: 'Reservas obligatorias. Restaurante lleno.' },
 
         // --- SEPTIEMBRE 2026 ---
         '2026-09-15': { cat: 'blue', reason: 'Independencia.', contingency: 'Platos típicos.' },
 
         // --- NOVIEMBRE 2026 ---
         '2026-11-18': { cat: 'yellow', reason: 'Eros Ramazzotti.', contingency: 'Noche de Rock.' },
-        '2026-11-27': { cat: 'green', reason: 'Black Friday.', contingency: 'Ofertas agresivas en tragos.' },
+        '2026-11-27': { cat: 'green', reason: 'Black Friday.', contingency: 'Ofertas tragos.' },
 
         // --- DICIEMBRE 2026 ---
-        '2026-12-25': { cat: 'red', reason: 'Navidad.', contingency: 'Cerrado.' }
+        '2026-12-12': { cat: 'red', reason: 'FESTIVAL DE LA LUZ (Estimado).', contingency: 'San José Centro colapsado. Enfoque en público de Desamparados que evita el centro.' },
+        // EXCEPCIONES DICIEMBRE 2026
+        '2026-12-25': { cat: 'red', reason: 'Navidad.', contingency: 'Cerrado.' },
+        '2026-12-26': { cat: 'red', reason: 'Tope Nacional / Post-Navidad.', contingency: 'Riesgo alto por Tope y resaca navideña.' },
+        '2026-12-31': { cat: 'red', reason: 'Fin de Año. Cierre Temprano.', contingency: 'Cierre temprano.' }
     };
 
     const generatedEventData = {};
-
-    const isPaydayNearby = (day) => {
-        return (day >= 13 && day <= 17) || (day >= 28) || (day <= 2);
-    };
+    const calculatedPaydays = getCalculatedPaydays(); // Calculate all paydays first
 
     const generateFullYearData = () => {
         const startDate = new Date(2025, 11, 1);
         const endDate = new Date(2026, 11, 31);
 
         for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const dayNum = String(d.getDate()).padStart(2, '0');
-            const dateKey = `${y}-${m}-${dayNum}`;
-            const dayOfWeek = d.getDay(); 
+            const dateKey = formatDate(d);
+            const dayOfWeek = d.getDay(); // 0 Sun, 5 Fri, 6 Sat
+            const dayOfMonth = d.getDate();
 
+            // 1. Check Fixed Events (Overrides everything including Dec logic)
             if (fixedEvents[dateKey]) {
                 generatedEventData[dateKey] = { ...fixedEvents[dateKey], day: getDayName(dayOfWeek) };
                 continue;
             }
 
-            if (d.getDate() === 15 || d.getDate() === 30 || (d.getDate() === 28 && d.getMonth() === 1)) {
-                 generatedEventData[dateKey] = { cat: 'blue', day: getDayName(dayOfWeek), reason: 'Día de Pago.' };
-                 continue;
+            // 2. Check Actual Payday (Calculated)
+            if (calculatedPaydays.has(dateKey)) {
+                generatedEventData[dateKey] = { 
+                    cat: 'blue', 
+                    day: getDayName(dayOfWeek), 
+                    reason: 'Día de Pago Real (Adelantado si fin de semana).',
+                    contingency: 'Máxima Oportunidad. Full Inventario.'
+                };
+                continue;
             }
 
+            // 3. Logic for Weekends (Fri/Sat)
             if (dayOfWeek === 5 || dayOfWeek === 6) {
-                if (d.getMonth() === 0) { // Enero
-                     if (isPaydayNearby(d.getDate())) {
+                // Check proximity to a calculated payday
+                let isGreen = false;
+                
+                // Check yesterday (T-1)
+                let d1 = new Date(d); d1.setDate(d.getDate() - 1);
+                if (calculatedPaydays.has(formatDate(d1))) isGreen = true;
+
+                // Logic for "Dilution":
+                // Friday: Green if Today(Fri) or Yesterday(Thu) was payday.
+                // Saturday: Green ONLY if Yesterday(Fri) was payday. If payday was Thu, Sat is Yellow.
+                
+                // Apply Dilution Logic:
+                if (dayOfWeek === 6) { // Saturday
+                     // Check T-2 (Thursday) - if payday was Thu, Sat should be Yellow (reset isGreen)
+                     let d2 = new Date(d); d2.setDate(d.getDate() - 2);
+                     if (calculatedPaydays.has(formatDate(d2)) && !calculatedPaydays.has(formatDate(d1))) {
+                         isGreen = false; // Diluted effect
+                     }
+                }
+
+                if (d.getMonth() === 11) { // DICIEMBRE: ÉPOCA DORADA
+                    // Specific Check for December Weekends that are NOT fixed events
+                    generatedEventData[dateKey] = { 
+                        cat: 'green', 
+                        day: getDayName(dayOfWeek), 
+                        reason: 'Época Dorada (Diciembre).',
+                        contingency: 'Alta Demanda. Full Personal.'
+                    };
+                }
+                else if (d.getMonth() === 0) { // Enero - Cuesta de Enero
+                     if (isGreen) {
                         generatedEventData[dateKey] = { 
                             cat: 'yellow', 
                             day: getDayName(dayOfWeek), 
-                            reason: 'Quincena en Cuesta de Enero (Gasto Escolar/Marchamo).',
-                            contingency: 'Ofertas de valor (Combos familiares). No subir precios.'
+                            reason: 'Quincena en Cuesta de Enero.',
+                            contingency: 'Ofertas de valor (Combos).'
                         };
                     } else {
                         generatedEventData[dateKey] = { 
                             cat: 'red', 
                             day: getDayName(dayOfWeek), 
-                            reason: 'Cuesta de Enero: Presupuesto de ocio agotado.',
-                            contingency: 'Minimizar costos operativos. Eventos de bajo costo.'
+                            reason: 'Cuesta de Enero: Sin dinero.',
+                            contingency: 'Minimizar costos.'
                         };
                     }
                 } 
-                else {
-                    if (isPaydayNearby(d.getDate())) {
+                else { // Rest of Year
+                    if (isGreen) {
                         generatedEventData[dateKey] = { 
                             cat: 'green', 
                             day: getDayName(dayOfWeek), 
-                            reason: 'Fin de Semana de Quincena.',
-                            contingency: 'Maximizar ventas. Evento "Premium".'
+                            reason: 'Fin de Semana de Pago.',
+                            contingency: 'Maximizar ventas.'
                         };
                     } else {
                         generatedEventData[dateKey] = { 
                             cat: 'yellow', 
                             day: getDayName(dayOfWeek), 
-                            reason: 'Fin de semana regular (No quincena).',
-                            contingency: 'Promociones 2x1 o Happy Hour extendido para atraer flujo.'
+                            reason: 'Fin de semana regular (Efecto Diluido).',
+                            contingency: 'Promociones 2x1.'
                         };
                     }
                 }
@@ -443,25 +536,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const getDayName = (d) => ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][d];
 
     const climateData = [
-        { month: 'Enero', risk: '🟢', estrategia: 'Clima perfecto, pero bolsillo vacío. Terraza abierta.' },
+        { month: 'Enero', risk: '🟢', estrategia: 'Clima perfecto, bolsillo vacío. Terraza.' },
         { month: 'Febrero', risk: '🟢', estrategia: 'Eventos al aire libre.' },
-        { month: 'Marzo', risk: '🟢', estrategia: 'Bebidas frías/refrescantes.' },
-        { month: 'Abril', risk: '🟡', estrategia: 'Tener toldos listos por si acaso.' },
-        { month: 'Mayo', risk: '🟡', estrategia: 'Promoción "Si llueve, 2x1".' },
-        { month: 'Junio', risk: '🟡', estrategia: 'Música acogedora adentro.' },
-        { month: 'Julio', risk: '🟡', estrategia: 'Veranillo: Aprovechar ventanas de sol.' },
-        { month: 'Agosto', risk: '🟡', estrategia: 'Romería afecta tráfico.' },
-        { month: 'Septiembre', risk: '🔴', estrategia: 'Eventos Indoor. Café y postres.' },
-        { month: 'Octubre', risk: '🔴', estrategia: 'Riesgo inundaciones. Delivery fuerte.' },
-        { month: 'Noviembre', risk: '🟡', estrategia: 'Transición. Fiestas de cierre de año.' },
-        { month: 'Diciembre', risk: '🟢', estrategia: 'Clima perfecto. Ventana Dorada.' },
+        { month: 'Marzo', risk: '🟢', estrategia: 'Bebidas frías.' },
+        { month: 'Abril', risk: '🟡', estrategia: 'Toldos listos.' },
+        { month: 'Mayo', risk: '🟡', estrategia: 'Promo Lluvia.' },
+        { month: 'Junio', risk: '🟡', estrategia: 'Acogedor adentro.' },
+        { month: 'Julio', risk: '🟡', estrategia: 'Veranillo.' },
+        { month: 'Agosto', risk: '🟡', estrategia: 'Romería.' },
+        { month: 'Septiembre', risk: '🔴', estrategia: 'Eventos Indoor.' },
+        { month: 'Octubre', risk: '🔴', estrategia: 'Riesgo inundaciones.' },
+        { month: 'Noviembre', risk: '🟡', estrategia: 'Transición.' },
+        { month: 'Diciembre', risk: '🟢', estrategia: 'Clima perfecto.' },
     ];
 
     const analysisContent = [
-        { title: 'Actualización: ¡Fin de la Ley Seca!', content: 'La derogación de la prohibición de venta de alcohol en elecciones transforma los días 31 de enero, 1 de febrero y 5 de abril en oportunidades comerciales. En lugar de cerrar o esconder inventario, prepárese para un flujo constante de personas. El sábado 31 de enero (Quincena) pasa de ser un día muerto a un día de alto potencial.' },
-        { title: 'Desamparados vs La Sabana', content: 'La ubicación en Desamparados es una ventaja estratégica durante megaconciertos en el Estadio Nacional. Mientras La Sabana colapsa por tráfico, Desamparados opera con normalidad vial. La estrategia debe ser venderse como un "Refugio" accesible para el público local que quiere salir pero no quiere lidiar con presas.' },
-        { title: 'La Cuesta de Enero', content: 'Enero es el mes más difícil. Aunque el clima es perfecto (Verano), el presupuesto del cliente está comprometido por la entrada a clases, uniformes y marchamo. La estrategia debe cambiar de "Experiencia Premium" a "Solidaridad Económica". No es momento de subir precios, sino de ofrecer combos.' },
-        { title: 'El Ciclo de la Quincena', content: 'En Costa Rica, el comportamiento de consumo es binario: Hay dinero (Quincena) o no hay. Hemos automatizado el calendario para marcar en VERDE los fines de semana cercanos al 15 y 30. Esos días no se hacen descuentos, se vende experiencia.' }
+        { title: 'Calendario de Pagos Ajustado', content: 'Este calendario aplica la regla costarricense: Si la quincena (15 o 30) cae sábado, domingo o feriado, el pago se realiza el día hábil anterior. Esto es crucial: Si el 15 es domingo, se paga el viernes 13, convirtiendo ese viernes en un día de "Oportunidad Azul" inmediata, en lugar de esperar al lunes.' },
+        { title: 'Efecto Desamparados', content: 'La ubicación en Desamparados es una ventaja competitiva durante eventos masivos en La Sabana. Mientras el oeste colapsa, Desamparados funciona normal. La estrategia debe ser "Tu refugio local lejos del caos".' },
+        { title: 'Fin de la Ley Seca', content: 'Las elecciones de 2026 ya no tendrán prohibición de venta de licor. El sábado 31 de enero (Quincena) se recupera como un día de alta venta.' }
     ];
 
     // --- VISUAL LOGIC ---
@@ -525,10 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let day = 1; day <= daysInMonth; day++) {
             const dateObj = new Date(year, month, day);
-            const y = dateObj.getFullYear();
-            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-            const d = String(dateObj.getDate()).padStart(2, '0');
-            const dateString = `${y}-${m}-${d}`;
+            const dateString = formatDate(dateObj);
             
             const dayClass = getDayClass(dateString);
             let extraClasses = "day flex items-center justify-center font-semibold rounded-full cursor-pointer";
