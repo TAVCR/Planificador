@@ -141,7 +141,8 @@
             <!-- CALENDAR VIEW -->
             <div id="view-calendario">
                 <p class="text-center dark-mode-text-muted mb-6 max-w-3xl mx-auto">
-                    Los fines de semana de quincena se marcan automáticamente como <span class="text-green-500 font-bold">Oportunidad Alta</span>. Los fines de semana regulares son <span class="text-yellow-500 font-bold">Riesgo Moderado</span>, salvo eventos de fuerza mayor.
+                    Los fines de semana de quincena se marcan automáticamente como <span class="text-green-500 font-bold">Oportunidad Alta</span>. 
+                    <br><span class="text-amber-500 text-sm font-bold">NOTA: En Enero aplica la "Regla de la Cuesta": Todo riesgo aumenta un nivel.</span>
                 </p>
                 <div class="flex justify-center items-center mb-6 space-x-4">
                     <button id="year-2025-btn" class="year-btn px-8 py-2.5 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">Cierre 2025</button>
@@ -210,15 +211,17 @@
                                 <li>Promociones 2x1 en coctelería y cerveza.</li>
                                 <li>Eventos de nicho o entrada gratuita.</li>
                                 <li>Enfoque en fidelización de clientes locales.</li>
+                                <li><strong>Enero:</strong> Menús económicos por "Cuesta de Enero".</li>
                             </ul>
                         </div>
                          <div id="strategy-card-red" class="strategy-card p-6 rounded-lg shadow-md" data-category="red">
                             <h3 id="strategy-red-title" class="font-bold text-xl mb-3 flex items-center"><span class="text-3xl mr-3">🔴</span> Contra-programación</h3>
-                             <p class="text-sm mb-3 italic">Cuando hay un "Goliath" (Concierto Masivo).</p>
+                             <p class="text-sm mb-3 italic">Cuando hay un "Goliath" o Crisis.</p>
                              <ul class="list-disc list-inside space-y-2 text-sm">
                                 <li><strong>Si hay Rock:</strong> Ofrecer Noche Latina/Salsa.</li>
                                 <li><strong>Si hay Urbano:</strong> Ofrecer Trova/Rock Clásico.</li>
-                                <li><strong>Si hay Caos Vial:</strong> Promocionar "After-Party" o "Pre-Despiche".</li>
+                                <li><strong>Si hay Caos Vial:</strong> Promocionar "After-Party".</li>
+                                <li><strong>Enero:</strong> Minimizar inventario perecedero.</li>
                             </ul>
                         </div>
                     </div>
@@ -307,8 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================================
     // DATA - EVENTOS FIJOS (Overrides)
     // ============================================================================
-    // Importante: Solo se definen eventos que ROMPEN la regla general.
-    // El resto se calcula dinámicamente en generateFullYearData()
     const fixedEvents = {
         // --- DICIEMBRE 2025 ---
         '2025-12-02': { cat: 'yellow', reason: 'Concierto Limp Bizkit (Parque Viva).', contingency: 'Contra-programación: Noche Latina / Bailable.' },
@@ -374,8 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isPaydayNearby = (day) => {
         // Regla: Fin de semana de quincena es el más cercano al 15 o 30
-        // Si es 13, 14, 15, 16, 17 -> Green
-        // Si es 28, 29, 30, 31, 1, 2 -> Green
         return (day >= 13 && day <= 17) || (day >= 28) || (day <= 2);
     };
 
@@ -405,20 +404,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Priority 3: Logic for Weekends (Fri/Sat)
             if (dayOfWeek === 5 || dayOfWeek === 6) {
-                if (isPaydayNearby(d.getDate())) {
-                    generatedEventData[dateKey] = { 
-                        cat: 'green', 
-                        day: getDayName(dayOfWeek), 
-                        reason: 'Fin de Semana de Quincena.',
-                        contingency: 'Maximizar ventas. Evento "Premium".'
-                    };
-                } else {
-                    generatedEventData[dateKey] = { 
-                        cat: 'yellow', 
-                        day: getDayName(dayOfWeek), 
-                        reason: 'Fin de semana regular (No quincena).',
-                        contingency: 'Promociones 2x1 o Happy Hour extendido para atraer flujo.'
-                    };
+                
+                // --- LÓGICA CUESTA DE ENERO ---
+                if (d.getMonth() === 0) { // Enero (Index 0)
+                     if (isPaydayNearby(d.getDate())) {
+                        generatedEventData[dateKey] = { 
+                            cat: 'yellow', // Degraded from Green
+                            day: getDayName(dayOfWeek), 
+                            reason: 'Quincena en Cuesta de Enero (Gasto Escolar/Marchamo).',
+                            contingency: 'Ofertas de valor (Combos familiares). No subir precios.'
+                        };
+                    } else {
+                        generatedEventData[dateKey] = { 
+                            cat: 'red', // Degraded from Yellow
+                            day: getDayName(dayOfWeek), 
+                            reason: 'Cuesta de Enero: Presupuesto de ocio agotado.',
+                            contingency: 'Minimizar costos operativos. Eventos de bajo costo.'
+                        };
+                    }
+                } 
+                // --- RESTO DEL AÑO ---
+                else {
+                    if (isPaydayNearby(d.getDate())) {
+                        generatedEventData[dateKey] = { 
+                            cat: 'green', 
+                            day: getDayName(dayOfWeek), 
+                            reason: 'Fin de Semana de Quincena.',
+                            contingency: 'Maximizar ventas. Evento "Premium".'
+                        };
+                    } else {
+                        generatedEventData[dateKey] = { 
+                            cat: 'yellow', 
+                            day: getDayName(dayOfWeek), 
+                            reason: 'Fin de semana regular (No quincena).',
+                            contingency: 'Promociones 2x1 o Happy Hour extendido para atraer flujo.'
+                        };
+                    }
                 }
             }
         }
@@ -427,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getDayName = (d) => ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][d];
 
     const climateData = [
-        { month: 'Enero', risk: '🟢', estrategia: 'Aprovechar terraza al máximo.' },
+        { month: 'Enero', risk: '🟢', estrategia: 'Clima perfecto, pero bolsillo vacío. Terraza abierta.' },
         { month: 'Febrero', risk: '🟢', estrategia: 'Eventos al aire libre.' },
         { month: 'Marzo', risk: '🟢', estrategia: 'Bebidas frías/refrescantes.' },
         { month: 'Abril', risk: '🟡', estrategia: 'Tener toldos listos por si acaso.' },
@@ -442,6 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const analysisContent = [
+        { title: 'La Cuesta de Enero', content: 'Enero es el mes más difícil. Aunque el clima es perfecto (Verano), el presupuesto del cliente está comprometido por la entrada a clases, uniformes y marchamo. La estrategia debe cambiar de "Experiencia Premium" a "Solidaridad Económica". No es momento de subir precios, sino de ofrecer combos.' },
         { title: 'Estrategia de Contra-Programación', content: 'La clave para 2026 no es competir contra los gigantes, sino capturar al público que no asiste a ellos. Ejemplo: Si Ed Sheeran toca balada pop, Antologías debe ofrecer una noche de Rock Clásico o Trova para el público que busca algo diferente.' },
         { title: 'El Ciclo de la Quincena', content: 'En Costa Rica, el comportamiento de consumo es binario: Hay dinero (Quincena) o no hay (Semana de Aclamación). Hemos automatizado el calendario para marcar en VERDE los fines de semana cercanos al 15 y 30. Esos días no se hacen descuentos, se vende experiencia. Los fines de semana amarillos (lejanos al pago) son para promociones de volumen (2x1).' },
         { title: 'Factor Vial y Bad Bunny', content: 'El 5 y 6 de diciembre de 2025 serán caóticos. La Sabana estará cerrada. La estrategia debe ser: "Ven antes del caos" (Almuerzos tardíos) o "After-Party" (para cuando termine el concierto y la gente quiera seguir la fiesta pero bajar la adrenalina).' }
